@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -74,7 +74,7 @@
 /* WEBPACK VAR INJECTION */(function(global) {/* unused harmony export canvas2d */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ctx2d; });
 /* harmony export (immutable) */ __webpack_exports__["a"] = update;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__input_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__input_js__ = __webpack_require__(2);
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_0__input_js__["c"]; });
 
 
@@ -142,10 +142,35 @@ global.ease = function (obj, a, b, ratio = 0.1, threshold = 0.01) {
         obj[b] = obj[a];
     }
 };
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = function () {
+	return this;
+}();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1, eval)("this");
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+/***/ }),
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -193,32 +218,7 @@ function render_debug() {
 }
 
 global.mouse = mouse;
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = function () {
-	return this;
-}();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1, eval)("this");
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
 /***/ }),
 /* 3 */
@@ -20551,31 +20551,8 @@ function CanvasRenderer(){console.error('THREE.CanvasRenderer has been moved to 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony export (immutable) */ __webpack_exports__["a"] = render;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__global_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_webpack_zepto__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_webpack_zepto__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_webpack_zepto___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_webpack_zepto__);
-var _titles = `城市常住人口（万人）
-公共财政预算收入（亿元）
-食品工业产值（亿元）
-食品生产经营单位数（家）
-食品工业产值年增幅（%）
-食品工业产值占地区生产总值比重（%）
-食品安全经费决算金额（万元）
-食品执法车辆总数（辆）
-执法装备价值（万元）
-食品安全工作考核占比（%）
-检查食品生产经营主体次数（家次）
-抽检数量（批次）
-办案数量（件）
-涉案货值（万元）
-罚没款金额（万元）
-刑事立案数量（件）
-追究刑责人数（人）
-抽检合格率（%）
-创建工作知晓度（%）
-当地食品安全总体满意度（%）
-受理投诉举报数量（件）
-办结投诉举报数量（件）`.split('\n');
-
 
 
 
@@ -20629,50 +20606,11 @@ function render() {
                 __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].stroke();
             });
         }
-
-        renderSticks();
+        holder_left.render();
     });
 }
 
-var selected = 0;
-function renderSticks() {
-    for (var i = 0; i < 22; i++) {
-        let deg = 11 - i;
-        deg = -deg * 3 + 180;
-        deg = deg / 180 * Math.PI - Math.PI;
-        __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].lineCap = "round";
-        __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].lineJoin = "round";
-        __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].strokeStyle = selected != i ? "#02c2f2" : "#fff";
-        pushMatrix(__WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */], () => {
-            // j *= Math.cos(t * 30);
-            // ctx2d.strokeStyle = hsl(0.55, j / 3 + 0.4, 1);
-            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].lineWidth = 3;
-            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].beginPath();
-            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].rotate(deg);
-            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].translate(-400, 0);
-            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].moveTo(0, 0);
-            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].lineTo(-50, 0);
-            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].stroke();
-        });
-    }
-
-    holder_left.render();
-}
-
-// var sticks = [];
-// function updateSticks() {
-//     let deg = _titles.length / 2 * 3;
-//     for (var i = 0; i < _titles.length; i++) {
-//         let stick = sticks[i];
-//         deg -= 3;
-//         stick.css({
-//             "transform-origin": "0% 50%",
-//             transform: `rotate(${deg}deg) translate(-450px, 0px) scale(1, 0.7)`,
-//         });
-//     }
-// }
-
-
+//shit code
 class stick {
     //a stick
     constructor(stickParent, data) {
@@ -20687,14 +20625,13 @@ class stick {
         this.hitBox.css({
             width: '150px',
             height: '50px',
-            opacity: 0.5,
+            opacity: 0,
             background: "Red",
             color: "#2fafff",
             position: "absolute",
             "top": '-25px',
             "left": "-75px",
             "text-align": "right",
-            // "font-weight": "bolder",
             "font-size": "15px"
         });
         this.parent = stickParent;
@@ -20709,6 +20646,20 @@ class stick {
             // "opacity": this.selected_e + 0.5,
             "transform-origin": "50% 50%",
             transform: `rotate(${this.angle_e}deg) translate(-400px, 0px) scale(1, ${this.scale_e})`
+        });
+
+        //do canvas stuff
+        __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].lineCap = "round";
+        __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].lineJoin = "round";
+        __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].strokeStyle = this.selected ? "#fff" : "#02c2f2";
+        pushMatrix(__WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */], () => {
+            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].lineWidth = 3;
+            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].beginPath();
+            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].rotate(this.angle_e / 180 * Math.PI);
+            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].translate(-400, 0);
+            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].moveTo(0, 0);
+            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].lineTo(-50, 0);
+            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].stroke();
         });
     }
 
@@ -20750,7 +20701,7 @@ class stickHolder {
         for (var i = 0; i < this.children.length; i++) {
             let stick = this.children[i];
             stick.selected = this.selection == i ? 1 : 0;
-            deg -= stick.selected ? 6 : 3;
+            deg -= stick.selected || i - 1 == this.selection && this.selection >= 0 ? 6 : 3;
             stick.angle = deg;
             stick.scale = stick.selected ? 1 : 0.5;
             this.children[i].render();
@@ -20758,44 +20709,13 @@ class stickHolder {
     }
 }
 
-var holder_left = new stickHolder(_titles);
+var holder_left = new stickHolder(["城市常住人口（万人）", "公共财政预算收入（亿元）", "食品工业产值（亿元）", "食品生产经营单位数（家）", "食品工业产值年增幅（%）", "食品工业产值占地区生产总值比重（%）", "食品安全经费决算金额（万元）", "食品执法车辆总数（辆）", "执法装备价值（万元）", "食品安全工作考核占比（%）", "检查食品生产经营主体次数（家次）", "抽检数量（批次）", "办案数量（件）", "涉案货值（万元）", "罚没款金额（万元）", "刑事立案数量（件）", "追究刑责人数（人）", "抽检合格率（%）", "创建工作知晓度（%）", "当地食品安全总体满意度（%）", "受理投诉举报数量（件）", "办结投诉举报数量（件）"]);
+
 holder_left.setup();
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
 /***/ }),
 /* 6 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_three__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_d3__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__global_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ring_js__ = __webpack_require__(5);
-
-
-
-
-
-
-function render() {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__global_js__["a" /* update */])();
-    __WEBPACK_IMPORTED_MODULE_3__input_js__["a" /* updateInputEase */]();
-
-    __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].clearRect(0, 0, 1080, 1080);
-    __WEBPACK_IMPORTED_MODULE_4__ring_js__["a" /* render */]();
-
-    __WEBPACK_IMPORTED_MODULE_3__input_js__["b" /* render_debug */]();
-
-    requestAnimationFrame(render);
-}
-
-render();
-
-/***/ }),
-/* 7 */
 /***/ (function(module, exports) {
 
 /* Zepto v1.1.6 - zepto event ajax form ie - zeptojs.com/license */
@@ -22349,6 +22269,38 @@ var Zepto = module.exports = function () {
     };
   }
 })(Zepto);
+
+/***/ }),
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_three__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_d3__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__global_js__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ring_js__ = __webpack_require__(5);
+
+
+
+
+
+
+function render() {
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__global_js__["a" /* update */])();
+    __WEBPACK_IMPORTED_MODULE_3__input_js__["a" /* updateInputEase */]();
+
+    __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].clearRect(0, 0, 1080, 1080);
+    __WEBPACK_IMPORTED_MODULE_4__ring_js__["a" /* render */]();
+
+    __WEBPACK_IMPORTED_MODULE_3__input_js__["b" /* render_debug */]();
+
+    requestAnimationFrame(render);
+}
+
+render();
 
 /***/ })
 /******/ ]);

@@ -1,29 +1,3 @@
-var _titles = `城市常住人口（万人）
-公共财政预算收入（亿元）
-食品工业产值（亿元）
-食品生产经营单位数（家）
-食品工业产值年增幅（%）
-食品工业产值占地区生产总值比重（%）
-食品安全经费决算金额（万元）
-食品执法车辆总数（辆）
-执法装备价值（万元）
-食品安全工作考核占比（%）
-检查食品生产经营主体次数（家次）
-抽检数量（批次）
-办案数量（件）
-涉案货值（万元）
-罚没款金额（万元）
-刑事立案数量（件）
-追究刑责人数（人）
-抽检合格率（%）
-创建工作知晓度（%）
-当地食品安全总体满意度（%）
-受理投诉举报数量（件）
-办结投诉举报数量（件）`.split('\n');
-
-
-
-
 import { ctx2d, mouse } from "./global.js"
 import $ from 'webpack-zepto'
 
@@ -78,52 +52,12 @@ export function render() {
                 ctx2d.stroke();
             });
         }
-
-        renderSticks();
+        holder_left.render();
     })
 }
 
 
-var selected = 0;
-function renderSticks() {
-    for (var i = 0; i < 22; i++) {
-        let deg = 11 - i;
-        deg = -deg * 3 + 180;
-        deg = deg / 180 * Math.PI - Math.PI;
-        ctx2d.lineCap = "round";
-        ctx2d.lineJoin = "round";
-        ctx2d.strokeStyle = selected != i ? "#02c2f2" : "#fff";
-        pushMatrix(ctx2d, () => {
-            // j *= Math.cos(t * 30);
-            // ctx2d.strokeStyle = hsl(0.55, j / 3 + 0.4, 1);
-            ctx2d.lineWidth = 3;
-            ctx2d.beginPath();
-            ctx2d.rotate(deg);
-            ctx2d.translate(-400, 0);
-            ctx2d.moveTo(0, 0);
-            ctx2d.lineTo(-50, 0);
-            ctx2d.stroke();
-        });
-    }
-
-    holder_left.render();
-}
-
-
-// var sticks = [];
-// function updateSticks() {
-//     let deg = _titles.length / 2 * 3;
-//     for (var i = 0; i < _titles.length; i++) {
-//         let stick = sticks[i];
-//         deg -= 3;
-//         stick.css({
-//             "transform-origin": "0% 50%",
-//             transform: `rotate(${deg}deg) translate(-450px, 0px) scale(1, 0.7)`,
-//         });
-//     }
-// }
-
-
+//shit code
 class stick {
     //a stick
     constructor(stickParent, data) {
@@ -138,21 +72,18 @@ class stick {
         this.hitBox.css({
             width: '150px',
             height: '50px',
-            opacity: 0.5,
+            opacity: 0,
             background: "Red",
             color: "#2fafff",
             position: "absolute",
             "top": '-25px',
             "left": "-75px",
             "text-align": "right",
-            // "font-weight": "bolder",
             "font-size": "15px",
-            // transform: `rotate(${deg}deg) translate(-450px, 0px) `
         });
         this.parent = stickParent;
         this.hitBox.appendTo(stickParent.container);
     }
-
 
     render() {
         ease(this, 'angle', 'angle_e');
@@ -163,6 +94,21 @@ class stick {
             "transform-origin": "50% 50%",
             transform: `rotate(${this.angle_e}deg) translate(-400px, 0px) scale(1, ${this.scale_e})`,
         });
+
+        //do canvas stuff
+        ctx2d.lineCap = "round";
+        ctx2d.lineJoin = "round";
+        ctx2d.strokeStyle = this.selected ? "#fff" : "#02c2f2";
+        pushMatrix(ctx2d, () => {
+            ctx2d.lineWidth = 3;
+            ctx2d.beginPath();
+            ctx2d.rotate(this.angle_e / 180 * Math.PI);
+            ctx2d.translate(-400, 0);
+            ctx2d.moveTo(0, 0);
+            ctx2d.lineTo(-50, 0);
+            ctx2d.stroke();
+        });
+
     }
 
 }
@@ -197,13 +143,13 @@ class stickHolder {
         if (!_found) this.selection = -1;
 
         let deg = this.children.length / 2 * 3; //init position
-        if(this.selection >= 0) {
+        if (this.selection >= 0) {
             deg += 3; //fix :)
         }
         for (var i = 0; i < this.children.length; i++) {
             let stick = this.children[i];
             stick.selected = this.selection == i ? 1 : 0;
-            deg -= stick.selected ? 6 : 3;
+            deg -= (stick.selected || ((i - 1) == this.selection && this.selection >= 0)) ? 6 : 3;
             stick.angle = deg;
             stick.scale = stick.selected ? 1 : 0.5;
             this.children[i].render();
@@ -212,5 +158,31 @@ class stickHolder {
 }
 
 
-var holder_left = new stickHolder(_titles);
+var holder_left = new stickHolder(
+    [
+        "城市常住人口（万人）",
+        "公共财政预算收入（亿元）",
+        "食品工业产值（亿元）",
+        "食品生产经营单位数（家）",
+        "食品工业产值年增幅（%）",
+        "食品工业产值占地区生产总值比重（%）",
+        "食品安全经费决算金额（万元）",
+        "食品执法车辆总数（辆）",
+        "执法装备价值（万元）",
+        "食品安全工作考核占比（%）",
+        "检查食品生产经营主体次数（家次）",
+        "抽检数量（批次）",
+        "办案数量（件）",
+        "涉案货值（万元）",
+        "罚没款金额（万元）",
+        "刑事立案数量（件）",
+        "追究刑责人数（人）",
+        "抽检合格率（%）",
+        "创建工作知晓度（%）",
+        "当地食品安全总体满意度（%）",
+        "受理投诉举报数量（件）",
+        "办结投诉举报数量（件）"
+    ]);
+
+
 holder_left.setup();
