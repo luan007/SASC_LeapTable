@@ -1,0 +1,20 @@
+import * as THREE from "three"
+import * as d3 from "d3"
+import { ctx2d, update } from "./global.js"
+import * as input from "./input.js"
+import * as ring from "./ring.js"
+
+function render() {
+    update();
+    input.updateInputEase();
+
+    ctx2d.clearRect(0, 0, 1080, 1080);
+    ring.render();
+    
+    input.render_debug();
+
+    requestAnimationFrame(render);
+}
+
+
+render();

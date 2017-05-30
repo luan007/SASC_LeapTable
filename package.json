@@ -1,0 +1,20 @@
+{
+  "name": "sasc_leaptable",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "d3": "^4.9.1",
+    "three": "^0.85.2",
+    "webpack": "^2.6.1",
+    "webpack-zepto": "0.0.1",
+    "zepto": "^1.2.0"
+  }
+}
