@@ -88,7 +88,7 @@ class stick {
     render() {
         ease(this, 'angle', 'angle_e');
         ease(this, 'scale', 'scale_e');
-        ease(this, 'selected', 'selected_e');
+        ease(this, 'selected', 'selected_e', 0.4);
         this.hitBox.css({
             // "opacity": this.selected_e + 0.5,
             "transform-origin": "50% 50%",
@@ -98,14 +98,21 @@ class stick {
         //do canvas stuff
         ctx2d.lineCap = "round";
         ctx2d.lineJoin = "round";
-        ctx2d.strokeStyle = this.selected ? "#fff" : "#02c2f2";
         pushMatrix(ctx2d, () => {
             ctx2d.lineWidth = 3;
-            ctx2d.beginPath();
             ctx2d.rotate(this.angle_e / 180 * Math.PI);
+
+            ctx2d.beginPath();
+            ctx2d.strokeStyle = hsl(0.56, 1, this.selected_e + 0.1);
+            let arclen = 3 / 180 * Math.PI * this.scale_e;
+            ctx2d.arc(0, 0, 500, -Math.PI - arclen, -Math.PI + arclen);
+            ctx2d.stroke();
+
+            ctx2d.beginPath();
+            ctx2d.strokeStyle = hsl(0.56, 0.8, this.selected_e + 0.4);
             ctx2d.translate(-400, 0);
             ctx2d.moveTo(0, 0);
-            ctx2d.lineTo(-50, 0);
+            ctx2d.lineTo(-50 - this.selected_e * 40, 0);
             ctx2d.stroke();
         });
 
