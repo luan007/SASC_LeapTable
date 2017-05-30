@@ -22173,7 +22173,7 @@ var holder_left = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder
 
 holder_left.setup();
 
-var holder_right = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["农产品质量安全监管工作在县级人民政府绩效考核体系中的比重|%", "关于农产品质量安全纳入财政预算的资金规摸|万元", "县级监管/协管人员|名", "乡镇级监管/协管人员|名", "村级监管/协管人员|名", "群众满意度|%", "质量安全水平|%", "全县设有监管机构的乡镇数|个", "定性检测检测产品数量|个", "定量检测检测产品数量|个", "检测产品数量|个", "“三品一标”产品数量|个", "“三品一标”产地面积占耕地面积的比例", "“三园两场”数量|个", "标准化生产基地面积 总面积占比|%", "标准化生产园（场）占比|%", "纳入追溯平台管理的农产品生产经营主体|个", "纳入监管信息平台管理的农业投入品生产经营主体|个", "组织开展农产品质量安全培训|人次", "开展农产品质量安全执法|次", "开展农产品质量安全宣传|次"], 180);
+var holder_right = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["农产品质量安全监管工作在县级人民政府绩效考核体系中的比重|%", "关于农产品质量安全纳入财政预算的资金规摸|万元", "县级监管/协管人员|名", "乡镇级监管/协管人员|名", "村级监管/协管人员|名", "群众满意度|%", "质量安全水平|%", "全县设有监管机构的乡镇数|个", "定性检测检测产品数量|个", "定量检测检测产品数量|个", "检测产品数量|个", "“三品一标”产品数量|个", "“三品一标”产地面积占耕地面积比|%", "“三园两场”数量|个", "标准化生产基地面积 总面积占比|%", "标准化生产园（场）占比|%", "纳入追溯平台管理的农产品生产经营主体|个", "纳入监管信息平台管理的农业投入品生产经营主体|个", "组织开展农产品质量安全培训|人次", "开展农产品质量安全执法|次", "开展农产品质量安全宣传|次"], 180);
 
 holder_right.setup();
 
@@ -22491,7 +22491,7 @@ class stick {
         if (!this.selected) {
             this.data_e = 0;
         } else {
-            ease(this, 'data', 'data_e', 0.2);
+            ease(this, 'data', 'data_e', 0.4);
         }
         ease(this, 'selected', 'selected_e', 0.4);
         this.hitBox.css({
@@ -22521,36 +22521,41 @@ class stick {
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].stroke();
         });
 
-        pushMatrix(__WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */], () => {
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineWidth = 2;
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].beginPath();
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].setLineDash(lineDashSegs);
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].globalAlpha = this.selected_e;
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(0.56, 0.8, this.selected_e + 0.4);
-            let baseX, baseY;
-            baseX = -Math.cos(deg) * 400;
-            baseY = -Math.sin(deg) * 400;
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].translate(baseX, baseY);
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].moveTo(mirror ? -5 : 5, 0);
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineTo((mirror ? -50 : 50) * this.scale_e * this.scale_e, 0);
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].stroke();
-
-            if (!mirror) {
-                this.dataBox.css({
-                    'display': this.selected ? "block" : "none",
-                    transform: `translate(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 20}px)`
-                });
-            } else {
-                if (!this.dataTitle.measured) {
-                    this.dataTitle.measured = this.dataTitle.width();
+        if (!this.dataTitle.measured) {
+            this.dataTitle.measured = this.dataTitle.width();
+        }
+        if (this.selected) {
+            pushMatrix(__WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */], () => {
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineWidth = 2;
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].beginPath();
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].setLineDash(lineDashSegs);
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].globalAlpha = this.selected_e;
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(0.56, 0.8, this.selected_e + 0.4);
+                let baseX, baseY;
+                baseX = -Math.cos(deg) * 400;
+                baseY = -Math.sin(deg) * 400;
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].translate(baseX, baseY);
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].moveTo(mirror ? -5 : 5, 0);
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineTo((mirror ? -50 : 50) * this.scale_e * this.scale_e, 0);
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].stroke();
+                if (!mirror) {
+                    this.dataBox.css({
+                        'display': "block",
+                        transform: `translate(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 20}px)`
+                    });
+                } else {
+                    this.dataBox.css({
+                        'display': "block",
+                        transform: `translate(${-this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 20}px)`
+                    });
                 }
-                this.dataBox.css({
-                    'display': this.selected ? "block" : "none",
-                    transform: `translate(${-this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 20}px)`
-                });
-            }
-            this.dataNumber.text(Math.round(this.data_e * this.roundTo) / this.roundTo);
-        });
+                this.dataNumber.text(Math.round(this.data_e * this.roundTo) / this.roundTo);
+            });
+        } else {
+            this.dataBox.css({
+                'display': "none"
+            });
+        }
     }
 }
 /* unused harmony export stick */

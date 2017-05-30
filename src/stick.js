@@ -62,7 +62,7 @@ export class stick {
         if (!this.selected) {
             this.data_e = 0;
         } else {
-            ease(this, 'data', 'data_e', 0.2);
+            ease(this, 'data', 'data_e', 0.4);
         }
         ease(this, 'selected', 'selected_e', 0.4);
         this.hitBox.css({
@@ -93,36 +93,42 @@ export class stick {
 
         });
 
-        pushMatrix(ctx2d, () => {
-            ctx2d.lineWidth = 2;
-            ctx2d.beginPath();
-            ctx2d.setLineDash(lineDashSegs);
-            ctx2d.globalAlpha = this.selected_e;
-            ctx2d.strokeStyle = hsl(0.56, 0.8, this.selected_e + 0.4);
-            let baseX, baseY;
-            baseX = -Math.cos(deg) * 400;
-            baseY = -Math.sin(deg) * 400;
-            ctx2d.translate(baseX, baseY);
-            ctx2d.moveTo(mirror ? -5 : 5, 0);
-            ctx2d.lineTo((mirror ? -50 : 50) * this.scale_e * this.scale_e, 0);
-            ctx2d.stroke();
 
-            if (!mirror) {
-                this.dataBox.css({
-                    'display': this.selected ? "block" : "none",
-                    transform: `translate(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 20}px)`,
-                });
-            } else {
-                if (!this.dataTitle.measured) {
-                    this.dataTitle.measured = this.dataTitle.width();
+        if (!this.dataTitle.measured) {
+            this.dataTitle.measured = this.dataTitle.width();
+        }
+        if (this.selected) {
+            pushMatrix(ctx2d, () => {
+                ctx2d.lineWidth = 2;
+                ctx2d.beginPath();
+                ctx2d.setLineDash(lineDashSegs);
+                ctx2d.globalAlpha = this.selected_e;
+                ctx2d.strokeStyle = hsl(0.56, 0.8, this.selected_e + 0.4);
+                let baseX, baseY;
+                baseX = -Math.cos(deg) * 400;
+                baseY = -Math.sin(deg) * 400;
+                ctx2d.translate(baseX, baseY);
+                ctx2d.moveTo(mirror ? -5 : 5, 0);
+                ctx2d.lineTo((mirror ? -50 : 50) * this.scale_e * this.scale_e, 0);
+                ctx2d.stroke();
+                if (!mirror) {
+                    this.dataBox.css({
+                        'display': "block",
+                        transform: `translate(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 20}px)`,
+                    });
+                } else {
+                    this.dataBox.css({
+                        'display': "block",
+                        transform: `translate(${- this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 20}px)`,
+                    });
                 }
-                this.dataBox.css({
-                    'display': this.selected ? "block" : "none",
-                    transform: `translate(${- this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 20}px)`,
-                });
-            }
-            this.dataNumber.text(Math.round(this.data_e * this.roundTo) / this.roundTo);
-        });
+                this.dataNumber.text(Math.round(this.data_e * this.roundTo) / this.roundTo);
+            });
+        } else {
+            this.dataBox.css({
+                'display': "none"
+            });
+        }
     }
 }
 
