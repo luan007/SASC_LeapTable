@@ -10,8 +10,9 @@ function unitRound(unit) {
 //shit code
 export class stick {
     //a stick
-    constructor(stickParent, title, unit, roundTo, baseAngle) {
+    constructor(stickParent, title, unit, roundTo, baseAngle, hue = 0.56) {
         this.selected = 0;
+        this.hue = hue;
         this.selected_e = 0;
         this.angle_e = baseAngle;
         this.angle = baseAngle;
@@ -40,7 +41,7 @@ export class stick {
         this.dataBox = $(`
         <div class='dataViz'>
             <div class='number'><span class='number-text'>18374</span><span>${unit}</span></div>
-            <div class='title'>${title}</div>
+            <div class='title' style='background: ${hsl(this.hue, 0.65, 0.5)}'>${title}</div>
         </div>`);
         this.dataTitle = this.dataBox.find(".title");
         this.dataNumber = this.dataBox.find(".number-text");
@@ -79,13 +80,13 @@ export class stick {
             ctx2d.rotate(deg);
 
             ctx2d.beginPath();
-            ctx2d.strokeStyle = hsl(0.56, 1, this.selected_e + 0.1);
+            ctx2d.strokeStyle = hsl(this.hue, 1, this.selected_e + 0.1);
             let arclen = 4 / 180 * Math.PI * this.scale_e;
             ctx2d.arc(0, 0, 600 - this.visibility_e * 100, -Math.PI - arclen, -Math.PI + arclen);
             ctx2d.stroke();
 
             ctx2d.beginPath();
-            ctx2d.strokeStyle = hsl(0.56, 0.8 * (this.visibility_e + 0.2), this.selected_e + 0.4);
+            ctx2d.strokeStyle = hsl(this.hue, 0.8 * (this.visibility_e + 0.2), this.selected_e + 0.4);
             ctx2d.translate(-500 + this.visibility_e * 100, 0);
             ctx2d.moveTo(0, 0);
             ctx2d.lineTo(-50 * (0.1 + 0.9 * this.visibility_e) - this.selected_e * 40, 0);
@@ -103,7 +104,7 @@ export class stick {
                 ctx2d.beginPath();
                 ctx2d.setLineDash(lineDashSegs);
                 ctx2d.globalAlpha = this.selected_e;
-                ctx2d.strokeStyle = hsl(0.56, 0.8, this.selected_e + 0.4);
+                ctx2d.strokeStyle = hsl(this.hue, 0.8, this.selected_e + 0.4);
                 let baseX, baseY;
                 baseX = -Math.cos(deg) * 400;
                 baseY = -Math.sin(deg) * 400;
@@ -137,7 +138,7 @@ var managedSticks = []
 
 export class stickHolder {
 
-    constructor(dataSet, baseAngle = 0) {
+    constructor(dataSet, baseAngle = 0, hue = 0.56) {
         managedSticks.push(this);
         this.dataSet = dataSet;
         this.children = [];
@@ -145,6 +146,7 @@ export class stickHolder {
         this.visibility = 1;
         this.baseAngle = baseAngle;
         this.visibility_e = 0;
+        this.hue = hue;
         this.container = $(`
         <div 
             id='stickHolder' 
@@ -154,7 +156,12 @@ export class stickHolder {
     setup() {
         this.container.appendTo(document.querySelector("body"));
         this.dataSet.forEach((dt) => {
-            let s = new stick(this, dt.split("|")[0], dt.split("|")[1], unitRound(dt.split("|")[1]), this.baseAngle);
+            let s = new stick(this,
+                dt.split("|")[0],
+                dt.split("|")[1],
+                unitRound(dt.split("|")[1]),
+                this.baseAngle,
+                this.hue);
             this.children.push(s);
         });
     }
@@ -203,3 +210,5 @@ export class stickHolder {
         }
     }
 }
+
+

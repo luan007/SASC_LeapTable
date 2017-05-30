@@ -111,7 +111,7 @@ var holder_right = new stickHolder([
     "组织开展农产品质量安全培训|人次",
     "开展农产品质量安全执法|次",
     "开展农产品质量安全宣传|次"
-], 180);
+], 180, 0.3);
 
 holder_right.setup();
 

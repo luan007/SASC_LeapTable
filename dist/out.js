@@ -22173,7 +22173,7 @@ var holder_left = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder
 
 holder_left.setup();
 
-var holder_right = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["农产品质量安全监管工作在县级人民政府绩效考核体系中的比重|%", "关于农产品质量安全纳入财政预算的资金规摸|万元", "县级监管/协管人员|名", "乡镇级监管/协管人员|名", "村级监管/协管人员|名", "群众满意度|%", "质量安全水平|%", "全县设有监管机构的乡镇数|个", "定性检测检测产品数量|个", "定量检测检测产品数量|个", "检测产品数量|个", "“三品一标”产品数量|个", "“三品一标”产地面积占耕地面积比|%", "“三园两场”数量|个", "标准化生产基地面积 总面积占比|%", "标准化生产园（场）占比|%", "纳入追溯平台管理的农产品生产经营主体|个", "纳入监管信息平台管理的农业投入品生产经营主体|个", "组织开展农产品质量安全培训|人次", "开展农产品质量安全执法|次", "开展农产品质量安全宣传|次"], 180);
+var holder_right = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["农产品质量安全监管工作在县级人民政府绩效考核体系中的比重|%", "关于农产品质量安全纳入财政预算的资金规摸|万元", "县级监管/协管人员|名", "乡镇级监管/协管人员|名", "村级监管/协管人员|名", "群众满意度|%", "质量安全水平|%", "全县设有监管机构的乡镇数|个", "定性检测检测产品数量|个", "定量检测检测产品数量|个", "检测产品数量|个", "“三品一标”产品数量|个", "“三品一标”产地面积占耕地面积比|%", "“三园两场”数量|个", "标准化生产基地面积 总面积占比|%", "标准化生产园（场）占比|%", "纳入追溯平台管理的农产品生产经营主体|个", "纳入监管信息平台管理的农业投入品生产经营主体|个", "组织开展农产品质量安全培训|人次", "开展农产品质量安全执法|次", "开展农产品质量安全宣传|次"], 180, 0.3);
 
 holder_right.setup();
 
@@ -22439,8 +22439,9 @@ function unitRound(unit) {
 //shit code
 class stick {
     //a stick
-    constructor(stickParent, title, unit, roundTo, baseAngle) {
+    constructor(stickParent, title, unit, roundTo, baseAngle, hue = 0.56) {
         this.selected = 0;
+        this.hue = hue;
         this.selected_e = 0;
         this.angle_e = baseAngle;
         this.angle = baseAngle;
@@ -22469,7 +22470,7 @@ class stick {
         this.dataBox = __WEBPACK_IMPORTED_MODULE_0_webpack_zepto___default()(`
         <div class='dataViz'>
             <div class='number'><span class='number-text'>18374</span><span>${unit}</span></div>
-            <div class='title'>${title}</div>
+            <div class='title' style='background: ${hsl(this.hue, 0.65, 0.5)}'>${title}</div>
         </div>`);
         this.dataTitle = this.dataBox.find(".title");
         this.dataNumber = this.dataBox.find(".number-text");
@@ -22508,13 +22509,13 @@ class stick {
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].rotate(deg);
 
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].beginPath();
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(0.56, 1, this.selected_e + 0.1);
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(this.hue, 1, this.selected_e + 0.1);
             let arclen = 4 / 180 * Math.PI * this.scale_e;
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].arc(0, 0, 600 - this.visibility_e * 100, -Math.PI - arclen, -Math.PI + arclen);
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].stroke();
 
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].beginPath();
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(0.56, 0.8 * (this.visibility_e + 0.2), this.selected_e + 0.4);
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(this.hue, 0.8 * (this.visibility_e + 0.2), this.selected_e + 0.4);
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].translate(-500 + this.visibility_e * 100, 0);
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].moveTo(0, 0);
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineTo(-50 * (0.1 + 0.9 * this.visibility_e) - this.selected_e * 40, 0);
@@ -22530,7 +22531,7 @@ class stick {
                 __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].beginPath();
                 __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].setLineDash(lineDashSegs);
                 __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].globalAlpha = this.selected_e;
-                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(0.56, 0.8, this.selected_e + 0.4);
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(this.hue, 0.8, this.selected_e + 0.4);
                 let baseX, baseY;
                 baseX = -Math.cos(deg) * 400;
                 baseY = -Math.sin(deg) * 400;
@@ -22565,7 +22566,7 @@ var managedSticks = [];
 
 class stickHolder {
 
-    constructor(dataSet, baseAngle = 0) {
+    constructor(dataSet, baseAngle = 0, hue = 0.56) {
         managedSticks.push(this);
         this.dataSet = dataSet;
         this.children = [];
@@ -22573,6 +22574,7 @@ class stickHolder {
         this.visibility = 1;
         this.baseAngle = baseAngle;
         this.visibility_e = 0;
+        this.hue = hue;
         this.container = __WEBPACK_IMPORTED_MODULE_0_webpack_zepto___default()(`
         <div 
             id='stickHolder' 
@@ -22582,7 +22584,7 @@ class stickHolder {
     setup() {
         this.container.appendTo(document.querySelector("body"));
         this.dataSet.forEach(dt => {
-            let s = new stick(this, dt.split("|")[0], dt.split("|")[1], unitRound(dt.split("|")[1]), this.baseAngle);
+            let s = new stick(this, dt.split("|")[0], dt.split("|")[1], unitRound(dt.split("|")[1]), this.baseAngle, this.hue);
             this.children.push(s);
         });
     }
@@ -23017,7 +23019,7 @@ exports = module.exports = __webpack_require__(8)(undefined);
 
 
 // module
-exports.push([module.i, ".dataViz {\n  opacity: 1;\n  position: absolute;\n  transform-origin: 50% 50%;\n  font-size: 20px;\n  transition: opacity 0.5s linear;\n}\n.dataViz:hover {\n  opacity: 0.4;\n}\n.dataViz .title {\n  white-space: nowrap;\n  background: #2fafff;\n  color: white;\n  padding: 8px 15px;\n  position: absolute;\n}\n.dataViz .number {\n  height: 0;\n  position: absolute;\n  bottom: -40px;\n  font-size: 80px;\n  left: 2px;\n  white-space: nowrap;\n  color: white;\n  vertical-align: text-top;\n  font-family: 'Not So Stout Deco';\n}\n.dataViz .number span:nth-child(2) {\n  font-family: 'PingFang SC';\n  font-size: 20px;\n  position: absolute;\n  top: 20px;\n  opacity: 0.8;\n}\n", ""]);
+exports.push([module.i, ".dataViz {\n  opacity: 1;\n  position: absolute;\n  transform-origin: 50% 50%;\n  font-size: 20px;\n  transition: opacity 0.5s linear;\n}\n.dataViz:hover {\n  opacity: 0.4;\n}\n.dataViz .title {\n  white-space: nowrap;\n  color: white;\n  padding: 8px 15px;\n  position: absolute;\n}\n.dataViz .number {\n  height: 0;\n  position: absolute;\n  bottom: -40px;\n  font-size: 80px;\n  left: 2px;\n  white-space: nowrap;\n  color: white;\n  vertical-align: text-top;\n  font-family: 'Not So Stout Deco';\n}\n.dataViz .number span:nth-child(2) {\n  font-family: 'PingFang SC';\n  font-size: 20px;\n  position: absolute;\n  top: 20px;\n  opacity: 0.8;\n}\n", ""]);
 
 // exports
 
