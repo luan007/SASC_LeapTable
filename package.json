@@ -12,9 +12,16 @@
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
     "d3": "^4.9.1",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.3",
     "three": "^0.85.2",
     "webpack": "^2.6.1",
     "webpack-zepto": "0.0.1",
     "zepto": "^1.2.0"
+  },
+  "devDependencies": {
+    "css-loader": "^0.28.4",
+    "less-loader": "^4.0.3",
+    "style-loader": "^0.18.1"
   }
 }

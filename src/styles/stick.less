@@ -1,0 +1,39 @@
+.dataViz {
+    opacity: 1;
+    position: absolute;
+    transform-origin: 50% 50%;
+    font-size: 20px;
+    // pointer-events: none;
+
+
+    transition: opacity 0.5s linear;
+    &:hover{
+        opacity: 0.4;
+    }
+
+    .title {
+        white-space: nowrap;
+        background: #2fafff;
+        color: white;
+        padding: 8px 15px;
+        position: absolute;
+    }
+    .number {
+        height: 0;
+        position: absolute;
+        bottom: -40px;
+        font-size: 80px;
+        left: 2px;
+        white-space: nowrap;
+        color: white;
+        vertical-align: text-top;
+        font-family: 'Not So Stout Deco';
+        span:nth-child(2) {
+            font-family: 'PingFang SC';
+            font-size: 20px;
+            position: absolute;
+            top: 20px;
+            opacity: 0.8;
+        }
+    }
+}

@@ -3,6 +3,7 @@ import * as d3 from "d3"
 import { ctx2d, update } from "./global.js"
 import * as input from "./input.js"
 import * as ring from "./ring.js"
+import "./styles/main.less"
 
 function render() {
     update();
