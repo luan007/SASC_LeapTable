@@ -22559,44 +22559,78 @@ var Zepto = module.exports = function () {
 
 //lets do a psys here
 
+
 var particles = [];
-var particleLives = [];
-var _particleLives_swap = [];
+var particleFree = [];
+var _particleFree_swap = [];
 const MAX_PARTICLES = 40000;
+
 for (var i = 0; i < MAX_PARTICLES; i++) {
     particles.push({
         x: 0,
         y: 0,
+        z: 0,
         vx: 0,
         vy: 0,
+        vz: 0,
         ax: 0,
         ay: 0,
+        az: 0,
         r: 1,
         g: 1,
         b: 1,
-        life: 1,
-        lifeV: 0.001,
+        life: 0,
+        lifeV: 0.01,
         bag: {}
     });
-    particleLives.push(i);
 }
+
+function allocateParticle() {
+    if (particleFree.length > 0) {
+        var free = particleFree.pop();
+        var cur = particles[free];
+        return cur;
+    }
+    return undefined; //oops
+}
+
+function emitParticleAt(x, y, z) {
+    var p = allocateParticle();
+    if (!p) return; //failed
+    p.life = 1;
+    p.x = x + (0.5 - Math.random()) * 1000;
+    p.y = y + (0.5 - Math.random()) * 1000;
+    p.z = z + (0.5 - Math.random()) * 1000;
+    p.vz = 0;
+    p.az = Math.random();
+    p.r = 1;
+    p.g = 1;
+    p.b = 1;
+}
+
+var target = undefined;
+
+function targetParticles() {}
 
 function updateParticles() {
     var cur;
-    _particleLives_swap = [];
-    for (var i = 0; i < particleLives.length; i++) {
-        cur = particles[particleLives[i]];
-        if (cur.life <= 0) continue;
+    _particleFree_swap = [];
+    for (var i = 0; i < particles.length; i++) {
+        cur = particles[i];
+        if (cur.life <= 0) {
+            _particleFree_swap.push(i);
+            continue;
+        }
         //cpu-heavy
-
         cur.life -= cur.lifeV;
         cur.vx += cur.ax;
         cur.vy += cur.ay;
+        cur.vz += cur.az;
         cur.x += cur.vx;
         cur.y += cur.vy;
-        _particleLives_swap.push(i);
+        cur.z += cur.vz;
     }
-    particleLives = _particleLives_swap;
+    particleFree = _particleFree_swap;
 }
 
 function renderParticles() {
@@ -22607,7 +22641,6 @@ function renderParticles() {
             cloud.colors[i].r = 0;
             cloud.colors[i].g = 0;
             cloud.colors[i].b = 0;
-
             cloud.vertices[i].x = -10000;
             cloud.vertices[i].y = -10000;
             cloud.vertices[i].z = -10000;
@@ -22615,9 +22648,9 @@ function renderParticles() {
             cloud.vertices[i].x = cur.x;
             cloud.vertices[i].y = cur.y;
             cloud.vertices[i].z = cur.z;
-            cloud.colors[i].r = cur.r;
-            cloud.colors[i].g = cur.g;
-            cloud.colors[i].b = cur.b;
+            cloud.colors[i].r = cur.r * 1 - cur.life;
+            cloud.colors[i].g = cur.g * 1 - cur.life;
+            cloud.colors[i].b = cur.b * 1 - cur.life;
         }
     }
     cloud.verticesNeedUpdate = true;
@@ -22632,7 +22665,7 @@ var path = __WEBPACK_IMPORTED_MODULE_0_d3__["geoPath"]().projection(projector);
 var scene = new __WEBPACK_IMPORTED_MODULE_1_three__["a" /* Scene */]();
 
 var pointCloudMat = new __WEBPACK_IMPORTED_MODULE_1_three__["b" /* PointCloudMaterial */]({
-    size: 2, sizeAttenuation: false,
+    size: 4, sizeAttenuation: true,
     vertexColors: __WEBPACK_IMPORTED_MODULE_1_three__["c" /* VertexColors */],
     blending: __WEBPACK_IMPORTED_MODULE_1_three__["d" /* AdditiveBlending */],
     depthTest: false,
@@ -22640,7 +22673,7 @@ var pointCloudMat = new __WEBPACK_IMPORTED_MODULE_1_three__["b" /* PointCloudMat
 });
 
 var cloud = new __WEBPACK_IMPORTED_MODULE_1_three__["e" /* Geometry */]();
-for (var i = 0; i < 40000; i++) {
+for (var i = 0; i < MAX_PARTICLES; i++) {
     cloud.vertices.push(new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Vector3 */](0, 0, 0));
     cloud.colors.push(new __WEBPACK_IMPORTED_MODULE_1_three__["g" /* Color */](1, 1, 1));
 }
@@ -22660,8 +22693,11 @@ global.test_state = 0;
 
 function render() {
     if (__WEBPACK_IMPORTED_MODULE_4__data_js__["a" /* data */].ready) {
-
         updateParticles();
+
+        for (var i = 0; i < 10; i++) {
+            emitParticleAt(0, 0, 0);
+        }
         renderParticles();
         // camera.position.z = input.mouse.ey + 1080;
         // var points = data.map_postfab.points_uh[global.test_state] ? data.map_postfab.points_uh[global.test_state] : data.map.points_l;
