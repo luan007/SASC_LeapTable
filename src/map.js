@@ -2,6 +2,7 @@ import * as d3 from "d3"
 import * as THREE from "three"
 import "./styles/map.less"
 import * as input from "./input.js"
+
 var projector = d3.geoMercator().center([105.5, 38.7]).scale(800).translate([1080 / 2, 1080 / 2]);
 
 var svg = d3.select("svg");
@@ -9,18 +10,17 @@ var path = d3.geoPath()
     .projection(projector);
 
 
-
 var scene = new THREE.Scene();
 
 var pointCloudMat = new THREE.PointCloudMaterial({
     size: 2, sizeAttenuation: false,
-    color: 0xffffff, vertexColors: THREE.VertexColors
+    vertexColors: THREE.VertexColors
 });
 
 var cloud = new THREE.Geometry();
-for (var i = 0; i < 50000; i++) {
+for (var i = 0; i < 30000; i++) {
     cloud.vertices.push(new THREE.Vector3(0, 0, 0));
-    cloud.colors.push(new THREE.Color(0, 0, 0));
+    cloud.colors.push(new THREE.Color(1, 1, 1));
 }
 
 var pointCloud = new THREE.PointCloud(cloud, pointCloudMat);
@@ -35,13 +35,14 @@ renderer.setClearColor(0x000000, 0);
 // renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(1080, 1080);
 
+
 export function render() {
 
     // console.log(input.mouse.ex - 1080 / 2);
     // pointCloud.position.set(0, 0, 0);
     // camera.position.x = input.mouse.ex;
     camera.position.z = input.mouse.ey + 1080;
-    for (var i = 0; i < cloud.vertices.length; i++) {
+    for (var i = 0; i < points.length; i++) {
         // var j = noise.perlin3(points[i].data.counter / 15 + t / 50, points[i].data.counter / 15 - t / 50, t / 5);
         // j = Math.round(j * 3) / 3;
         // var q = noise.perlin3(points[i].x / 155 + t / 50, points[i].y / 155 - t / 50, t / 5 + points[i].data.counter / 15);
@@ -91,13 +92,28 @@ d3.json("mapdata/china.json", function (error, data) {
                 t.counter = counter++;
             });
 
-        // loadPoints();
-        calculateBorders();
+        loadPoints();
+        // calculateBorders();
     });
 });
 
 
-var points = [];
+global.points = [];
+
+function loadPoints() {
+    d3.json("mapdata/particles/map-highres.json", function (error, pt) {
+        points = pt;
+        for (var i = 0; i < points.length; i += 1) {
+            cloud.vertices[i] = (new THREE.Vector3(
+                -1080 / 2 + points[i].x, 1080 / 2 - points[i].y, 0
+            ));
+            cloud.colors[i] = (new THREE.Color(1, 1, 1));
+        }
+    });
+}
+
+
+
 function calculateBorders() {
     if (true) {
         var svg = document.querySelector("svg");
@@ -146,18 +162,4 @@ function calculateBorders() {
         cloud.colors[i] = (new THREE.Color(1, 1, 1));
     }
 
-}
-
-
-
-function loadPoints() {
-    d3.json("mapdata/points_2.json", function (error, points) {
-
-        for (var i = 0; i < points.length; i += 10) {
-            cloud.vertices[i] = (new THREE.Vector3(
-                points[i].x, 1080 - points[i].y, 0
-            ));
-            cloud.colors[i] = (new THREE.Color(1, 1, 1));
-        }
-    });
 }
