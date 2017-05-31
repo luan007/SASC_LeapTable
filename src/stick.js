@@ -1,6 +1,7 @@
 import $ from 'webpack-zepto'
 import "./styles/stick.less"
 import { ctx2d, mouse } from "./global.js"
+import * as input from "./input.js"
 const lineDashSegs = [3, 3];
 
 function unitRound(unit) {
@@ -116,6 +117,12 @@ export class stick {
                     this.dataBox.get(0).style.transform = `translate(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 20}px)`;
                 } else {
                     this.dataBox.get(0).style.transform = `translate(${- this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 20}px)`;
+                }
+                if (hoveringElement && (hoveringElement.parentElement == this.dataBox.get(0)
+                    || (hoveringElement.parentElement && hoveringElement.parentElement.parentElement == this.dataBox.get(0)))) {
+                    this.dataBox.get(0).style.opacity = 0.3;
+                } else {
+                    this.dataBox.get(0).style.opacity = 1;
                 }
                 this.dataNumber.text(Math.round(this.data_e * this.roundTo) / this.roundTo);
             });

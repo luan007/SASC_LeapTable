@@ -103,11 +103,11 @@ global.test_set_target = function (id) {
             particles[i].targetChase = true;
             particles[i].tx = particles[i].bag.tx = particle_target[i].x;
             particles[i].ty = particles[i].bag.ty = particle_target[i].y;
-            particles[i].tz = particles[i].bag.tz = particle_target[i].z;
-
-
+            particles[i].tr = particles[i].tg = particles[i].tb = 0.4;
+        } else {
+            particles[i].targetChase = false;
+            particles[i].tr = particles[i].tg = particles[i].tb = 0;
         }
-        particles[i].targetChase = false;
     }
 }
 global.test_set_highlight = function (id) {
@@ -125,21 +125,23 @@ function particle_set_highlight(p, i) {
     }
 }
 
-function particle_rushTo(p, index) {
-    if (!particle_target || index >= particle_target.length) return;
+function particle_rushTo(p) {
+    if (!p.targetChase) return;
     //force allocation here -< bad
     p.life = 1; //always alive
     //calculate acc
-    var target = particle_target[index];
-    p.ax += (target.x - p.x - 1080 / 2) * 0.005;
-    p.ay += (1080 / 2 - target.y - p.y) * 0.005;
-    p.vx *= 0.93;
-    p.vy *= 0.93;
+    p.ax = (p.tx - p.x - 1080 / 2) * 0.01;
+    p.ay = (1080 / 2 - p.ty - p.y) * 0.01;
+    p.az = (-p.z) * 0.1;
+    p.vx *= 0.85;
+    p.vy *= 0.85;
+    p.vz *= 0.85;
 }
 
 function particle_shuffle(p) {
-    p.ax += (Math.random() - 0.5) * .2;
-    p.ay += (Math.random() - 0.5) * .2;
+    p.ax += (Math.random() - 0.5) * .52;
+    p.ay += (Math.random() - 0.5) * .52;
+    p.az += (Math.random() - 0.5) * .52;
 }
 
 function updateParticles() {
@@ -151,9 +153,7 @@ function updateParticles() {
         cur.ax = 0;
         cur.ay = 0;
 
-        if (particle_target) {
-            particle_rushTo(cur, i);
-        }
+        particle_rushTo(cur);
         if (cur.life <= 0) {
             cur.x = 0;
             cur.y = 0;
@@ -162,12 +162,11 @@ function updateParticles() {
             continue;
         }
 
-        particle_set_highlight(cur, i);
+        // particle_set_highlight(cur, i);
 
         ease(cur, 'tr', 'r');
         ease(cur, 'tg', 'g');
         ease(cur, 'tb', 'b');
-
 
         if (shuffle > 0) {
             particle_shuffle(cur);
@@ -234,7 +233,7 @@ for (var i = 0; i < MAX_PARTICLES; i++) {
 var pointCloud = new THREE.PointCloud(cloud, pointCloudMat);
 scene.add(pointCloud);
 
-var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 30000);
+var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 6000);
 camera.position.set(0, 0, 1080 + 80); //and this
 scene.add(camera);
 
@@ -252,7 +251,9 @@ export function render() {
         //     emitParticleAt(0, 0, 0);
         // }
         renderParticles();
-        // camera.position.z = input.mouse.ey + 1080;
+        camera.position.y = (-input.mouse.ey + 1080 / 2) * 0.9;
+        camera.position.x = (+input.mouse.ex - 1080 / 2) * 0.9;
+        camera.position.z = input.mouse.ez / 1.5 + 50;
         // var points = data.map_postfab.points_uh[global.test_state] ? data.map_postfab.points_uh[global.test_state] : data.map.points_l;
         // for (var i = 0; i < cloud.vertices.length; i++) {
         //     if (i < points.length) {
@@ -305,6 +306,7 @@ function init() {
     // loadPoints();
 }
 
+pointCloud.frustumCulled = false;
 
 data_event.on("ready", init);
 
