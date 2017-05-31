@@ -22586,13 +22586,42 @@ function updateParticles() {
     _particleLives_swap = [];
     for (var i = 0; i < particleLives.length; i++) {
         cur = particles[particleLives[i]];
-        if (cur.life > 0) {
-            //does job
-            cur.life -= cur.lifeV;
-            _particleLives_swap.push(i);
-        }
+        if (cur.life <= 0) continue;
+        //cpu-heavy
+
+        cur.life -= cur.lifeV;
+        cur.vx += cur.ax;
+        cur.vy += cur.ay;
+        cur.x += cur.vx;
+        cur.y += cur.vy;
+        _particleLives_swap.push(i);
     }
     particleLives = _particleLives_swap;
+}
+
+function renderParticles() {
+    var cur;
+    for (var i = 0; i < MAX_PARTICLES; i++) {
+        cur = particles[i];
+        if (cur.life <= 0) {
+            cloud.colors[i].r = 0;
+            cloud.colors[i].g = 0;
+            cloud.colors[i].b = 0;
+
+            cloud.vertices[i].x = -10000;
+            cloud.vertices[i].y = -10000;
+            cloud.vertices[i].z = -10000;
+        } else {
+            cloud.vertices[i].x = cur.x;
+            cloud.vertices[i].y = cur.y;
+            cloud.vertices[i].z = cur.z;
+            cloud.colors[i].r = cur.r;
+            cloud.colors[i].g = cur.g;
+            cloud.colors[i].b = cur.b;
+        }
+    }
+    cloud.verticesNeedUpdate = true;
+    cloud.colorsNeedUpdate = true;
 }
 
 //dont ever touch these plz - -
@@ -22633,24 +22662,22 @@ function render() {
     if (__WEBPACK_IMPORTED_MODULE_4__data_js__["a" /* data */].ready) {
 
         updateParticles();
-
-        camera.position.z = __WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].ey + 1080;
-        var points = __WEBPACK_IMPORTED_MODULE_4__data_js__["a" /* data */].map_postfab.points_uh[global.test_state] ? __WEBPACK_IMPORTED_MODULE_4__data_js__["a" /* data */].map_postfab.points_uh[global.test_state] : __WEBPACK_IMPORTED_MODULE_4__data_js__["a" /* data */].map.points_l;
-        for (var i = 0; i < cloud.vertices.length; i++) {
-            if (i < points.length) {
-                cloud.vertices[i].x = points[i].x - 1080 / 2 + Math.sin(t * 30 + points[i].y) * 3;
-                cloud.vertices[i].y = -points[i].y + 1080 / 2 + Math.cos(t * 10 + points[i].x) * 3;
-                cloud.colors[i].r = 1;
-                cloud.colors[i].g = 1;
-                cloud.colors[i].b = 1;
-            } else {
-                cloud.colors[i].r = 0;
-                cloud.colors[i].g = 0;
-                cloud.colors[i].b = 0;
-            }
-        }
-        cloud.verticesNeedUpdate = true;
-        cloud.colorsNeedUpdate = true;
+        renderParticles();
+        // camera.position.z = input.mouse.ey + 1080;
+        // var points = data.map_postfab.points_uh[global.test_state] ? data.map_postfab.points_uh[global.test_state] : data.map.points_l;
+        // for (var i = 0; i < cloud.vertices.length; i++) {
+        //     if (i < points.length) {
+        //         cloud.vertices[i].x = points[i].x - 1080 / 2 + Math.sin(t * 30 + points[i].y) * 3;
+        //         cloud.vertices[i].y = -points[i].y + 1080 / 2 + Math.cos(t * 10 + points[i].x) * 3;
+        //         cloud.colors[i].r = 1;
+        //         cloud.colors[i].g = 1;
+        //         cloud.colors[i].b = 1;
+        //     } else {
+        //         cloud.colors[i].r = 0;
+        //         cloud.colors[i].g = 0;
+        //         cloud.colors[i].b = 0;
+        //     }
+        // }
         renderer.render(scene, camera);
     }
 }
