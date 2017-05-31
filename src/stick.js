@@ -56,7 +56,7 @@ export class stick {
 
     render() {
 
-        let mirror = this.baseAngle >= 180;
+        var mirror = this.baseAngle >= 180;
 
         ease(this, 'angle', 'angle_e');
         ease(this, 'scale', 'scale_e');
@@ -66,14 +66,13 @@ export class stick {
             ease(this, 'data', 'data_e', 0.4);
         }
         ease(this, 'selected', 'selected_e', 0.4);
-        this.hitBox.css({
-            transform: `rotate(${this.angle_e}deg) translate(-${Math.round(500 - this.visibility_e * 100)}px, 0px) scale(1, ${this.scale_e})`,
-        });
+
+        this.hitBox.get(0).style.transform = `rotate(${this.angle_e}deg) translate(-${Math.round(500 - this.visibility_e * 100)}px, 0px) scale(1, ${this.scale_e})`;
 
         //do canvas stuff
         ctx2d.lineCap = "round";
         ctx2d.lineJoin = "round";
-        let deg = this.angle_e / 180 * Math.PI;
+        var deg = this.angle_e / 180 * Math.PI;
 
         pushMatrix(ctx2d, () => {
             ctx2d.lineWidth = 3;
@@ -81,7 +80,7 @@ export class stick {
 
             ctx2d.beginPath();
             ctx2d.strokeStyle = hsl(this.hue, 1, this.selected_e + 0.1);
-            let arclen = 4 / 180 * Math.PI * this.scale_e;
+            var arclen = 4 / 180 * Math.PI * this.scale_e;
             ctx2d.arc(0, 0, 600 - this.visibility_e * 100, -Math.PI - arclen, -Math.PI + arclen);
             ctx2d.stroke();
 
@@ -105,30 +104,23 @@ export class stick {
                 ctx2d.setLineDash(lineDashSegs);
                 ctx2d.globalAlpha = this.selected_e;
                 ctx2d.strokeStyle = hsl(this.hue, 0.8, this.selected_e + 0.4);
-                let baseX, baseY;
+                var baseX, baseY;
                 baseX = -Math.cos(deg) * 400;
                 baseY = -Math.sin(deg) * 400;
                 ctx2d.translate(baseX, baseY);
                 ctx2d.moveTo(mirror ? -5 : 5, 0);
                 ctx2d.lineTo((mirror ? -50 : 50) * this.scale_e * this.scale_e, 0);
                 ctx2d.stroke();
+                this.dataBox.get(0).style.display = "block";
                 if (!mirror) {
-                    this.dataBox.css({
-                        'display': "block",
-                        transform: `translate(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 20}px)`,
-                    });
+                    this.dataBox.get(0).style.transform = `translate(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 20}px)`;
                 } else {
-                    this.dataBox.css({
-                        'display': "block",
-                        transform: `translate(${- this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 20}px)`,
-                    });
+                    this.dataBox.get(0).style.transform = `translate(${- this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 20}px)`;
                 }
                 this.dataNumber.text(Math.round(this.data_e * this.roundTo) / this.roundTo);
             });
         } else {
-            this.dataBox.css({
-                'display': "none"
-            });
+            this.dataBox.get(0).style.display = "none";
         }
     }
 }
@@ -156,7 +148,7 @@ export class stickHolder {
     setup() {
         this.container.appendTo(document.querySelector("body"));
         this.dataSet.forEach((dt) => {
-            let s = new stick(this,
+            var s = new stick(this,
                 dt.split("|")[0],
                 dt.split("|")[1],
                 unitRound(dt.split("|")[1]),
@@ -173,7 +165,7 @@ export class stickHolder {
         }
 
         ease(this, 'visibility', 'visibility_e', 0.06, 0.00001);
-        let _found = false;
+        var _found = false;
         for (var i = 0; i < this.children.length; i++) {
             if (global.hoveringElement == this.children[i].hitBox.get(0)) {
                 _found = true;
@@ -193,14 +185,14 @@ export class stickHolder {
             }
         }
 
-        let deg_span = 4;
+        var deg_span = 4;
 
-        let deg = this.children.length / 2 * deg_span + this.baseAngle; //init position
+        var deg = this.children.length / 2 * deg_span + this.baseAngle; //init position
         if (this.selection >= 0) {
             deg += deg_span; //fix :)
         }
         for (var i = 0; i < this.children.length; i++) {
-            let stick = this.children[i];
+            var stick = this.children[i];
             stick.visibility_e = this.visibility_e;
             stick.selected = this.selection == i ? 1 : 0;
             deg -= (stick.selected || ((i - 1) == this.selection && this.selection >= 0)) ? (deg_span * 2) : deg_span;

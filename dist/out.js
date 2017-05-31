@@ -17575,7 +17575,7 @@ function updateLink (link, options, obj) {
 "use strict";
 /* unused harmony export WebGLRenderTargetCube */
 /* unused harmony export WebGLRenderTarget */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return WebGLRenderer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return WebGLRenderer; });
 /* unused harmony export ShaderLib */
 /* unused harmony export UniformsLib */
 /* unused harmony export UniformsUtils */
@@ -17629,7 +17629,7 @@ function updateLink (link, options, obj) {
 /* unused harmony export LightShadow */
 /* unused harmony export Light */
 /* unused harmony export StereoCamera */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return PerspectiveCamera; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return PerspectiveCamera; });
 /* unused harmony export OrthographicCamera */
 /* unused harmony export CubeCamera */
 /* unused harmony export ArrayCamera */
@@ -17656,7 +17656,7 @@ function updateLink (link, options, obj) {
 /* unused harmony export InstancedBufferGeometry */
 /* unused harmony export BufferGeometry */
 /* unused harmony export GeometryIdCount */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return Geometry; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return Geometry; });
 /* unused harmony export InterleavedBufferAttribute */
 /* unused harmony export InstancedInterleavedBuffer */
 /* unused harmony export InterleavedBuffer */
@@ -17687,10 +17687,10 @@ function updateLink (link, options, obj) {
 /* unused harmony export Line3 */
 /* unused harmony export Euler */
 /* unused harmony export Vector4 */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return Vector3; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return Vector3; });
 /* unused harmony export Vector2 */
 /* unused harmony export Quaternion */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return Color; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return Color; });
 /* unused harmony export MorphBlendMesh */
 /* unused harmony export ImmediateRenderObject */
 /* unused harmony export VertexNormalsHelper */
@@ -17814,7 +17814,7 @@ function updateLink (link, options, obj) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return VertexColors; });
 /* unused harmony export NoBlending */
 /* unused harmony export NormalBlending */
-/* unused harmony export AdditiveBlending */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return AdditiveBlending; });
 /* unused harmony export SubtractiveBlending */
 /* unused harmony export MultiplyBlending */
 /* unused harmony export CustomBlending */
@@ -17924,7 +17924,7 @@ function updateLink (link, options, obj) {
 /* unused harmony export LinePieces */
 /* unused harmony export MeshFaceMaterial */
 /* unused harmony export MultiMaterial */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return PointCloud; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return PointCloud; });
 /* unused harmony export Particle */
 /* unused harmony export ParticleSystem */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return PointCloudMaterial; });
@@ -22550,13 +22550,53 @@ var Zepto = module.exports = function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__styles_map_less__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__styles_map_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__styles_map_less__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__data_js__ = __webpack_require__(19);
 
 
 
 
 
+
+//lets do a psys here
+
+var particles = [];
+var particleLives = [];
+var _particleLives_swap = [];
+const MAX_PARTICLES = 40000;
+for (var i = 0; i < MAX_PARTICLES; i++) {
+    particles.push({
+        x: 0,
+        y: 0,
+        vx: 0,
+        vy: 0,
+        ax: 0,
+        ay: 0,
+        r: 1,
+        g: 1,
+        b: 1,
+        life: 1,
+        lifeV: 0.001,
+        bag: {}
+    });
+    particleLives.push(i);
+}
+
+function updateParticles() {
+    var cur;
+    _particleLives_swap = [];
+    for (var i = 0; i < particleLives.length; i++) {
+        cur = particles[particleLives[i]];
+        if (cur.life > 0) {
+            //does job
+            cur.life -= cur.lifeV;
+            _particleLives_swap.push(i);
+        }
+    }
+    particleLives = _particleLives_swap;
+}
+
+//dont ever touch these plz - -
 var projector = __WEBPACK_IMPORTED_MODULE_0_d3__["geoMercator"]().center([105.5, 38.7]).scale(800).translate([1080 / 2, 1080 / 2]);
-
 var svg = __WEBPACK_IMPORTED_MODULE_0_d3__["select"]("svg");
 var path = __WEBPACK_IMPORTED_MODULE_0_d3__["geoPath"]().projection(projector);
 
@@ -22564,133 +22604,85 @@ var scene = new __WEBPACK_IMPORTED_MODULE_1_three__["a" /* Scene */]();
 
 var pointCloudMat = new __WEBPACK_IMPORTED_MODULE_1_three__["b" /* PointCloudMaterial */]({
     size: 2, sizeAttenuation: false,
-    vertexColors: __WEBPACK_IMPORTED_MODULE_1_three__["c" /* VertexColors */]
+    vertexColors: __WEBPACK_IMPORTED_MODULE_1_three__["c" /* VertexColors */],
+    blending: __WEBPACK_IMPORTED_MODULE_1_three__["d" /* AdditiveBlending */],
+    depthTest: false,
+    transparent: true
 });
 
-var cloud = new __WEBPACK_IMPORTED_MODULE_1_three__["d" /* Geometry */]();
-for (var i = 0; i < 30000; i++) {
-    cloud.vertices.push(new __WEBPACK_IMPORTED_MODULE_1_three__["e" /* Vector3 */](0, 0, 0));
-    cloud.colors.push(new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Color */](1, 1, 1));
+var cloud = new __WEBPACK_IMPORTED_MODULE_1_three__["e" /* Geometry */]();
+for (var i = 0; i < 40000; i++) {
+    cloud.vertices.push(new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Vector3 */](0, 0, 0));
+    cloud.colors.push(new __WEBPACK_IMPORTED_MODULE_1_three__["g" /* Color */](1, 1, 1));
 }
 
-var pointCloud = new __WEBPACK_IMPORTED_MODULE_1_three__["g" /* PointCloud */](cloud, pointCloudMat);
+var pointCloud = new __WEBPACK_IMPORTED_MODULE_1_three__["h" /* PointCloud */](cloud, pointCloudMat);
 scene.add(pointCloud);
 
-var camera = new __WEBPACK_IMPORTED_MODULE_1_three__["h" /* PerspectiveCamera */](50, 1, 0.1, 30000);
-camera.position.set(0, 0, 1080 + 80);
+var camera = new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* PerspectiveCamera */](50, 1, 0.1, 30000);
+camera.position.set(0, 0, 1080 + 80); //and this
 scene.add(camera);
 
-var renderer = new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* WebGLRenderer */]({ antialias: true, alpha: true, canvas: document.querySelector('#canvasMap') });
+var renderer = new __WEBPACK_IMPORTED_MODULE_1_three__["j" /* WebGLRenderer */]({ antialias: true, alpha: true, canvas: document.querySelector('#canvasMap') });
 renderer.setClearColor(0x000000, 0);
-// renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(1080, 1080);
 
+global.test_state = 0;
+
 function render() {
+    if (__WEBPACK_IMPORTED_MODULE_4__data_js__["a" /* data */].ready) {
 
-    // console.log(input.mouse.ex - 1080 / 2);
-    // pointCloud.position.set(0, 0, 0);
-    // camera.position.x = input.mouse.ex;
-    camera.position.z = __WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].ey + 1080;
-    for (var i = 0; i < points.length; i++) {
-        // var j = noise.perlin3(points[i].data.counter / 15 + t / 50, points[i].data.counter / 15 - t / 50, t / 5);
-        // j = Math.round(j * 3) / 3;
-        // var q = noise.perlin3(points[i].x / 155 + t / 50, points[i].y / 155 - t / 50, t / 5 + points[i].data.counter / 15);
-        // j += Math.round(q * 5) / 5;
-        // j = Math.max(j, 0);
-        // j += 0.5;
-        if (i < points.length) {
-            cloud.vertices[i].x = points[i].x - 1080 / 2 + Math.sin(t * 30 + points[i].y) * 30;
-            cloud.vertices[i].y = -points[i].y + 1080 / 2 + Math.cos(t * 10 + points[i].x) * 30;
-        }
-    }
-    cloud.verticesNeedUpdate = true;
-    cloud.colorsNeedUpdate = true;
-    renderer.render(scene, camera);
-}
+        updateParticles();
 
-var s = 6;
-var counter = 0;
-__WEBPACK_IMPORTED_MODULE_0_d3__["json"]("mapdata/china.json", function (error, data) {
-    __WEBPACK_IMPORTED_MODULE_0_d3__["json"]("mapdata/combined.json", function (err, d) {
-        var cities = d.cities;
-        var counties = d.counties;
-        d.cities = cities.map(c => {
-            c.proj = projector(c.pos);
-            c.projLowRes = [Math.round(c.proj[0] / s) * s, Math.round(c.proj[1] / s) * s];
-            return c;
-        });
-        d.counties = counties.map(c => {
-            c.proj = projector(c.pos);
-            c.projLowRes = [Math.round(c.proj[0] / s) * s, Math.round(c.proj[1] / s) * s];
-            return c;
-        });
-        svg.append("g").attr("class", "map states").selectAll("path").data(data.features).enter().append("path").attr("d", path).each(t => {
-            t.counter = counter++;
-        });
-
-        loadPoints();
-        // calculateBorders();
-    });
-});
-
-global.points = [];
-
-function loadPoints() {
-    __WEBPACK_IMPORTED_MODULE_0_d3__["json"]("mapdata/particles/map-highres.json", function (error, pt) {
-        points = pt;
-        for (var i = 0; i < points.length; i += 1) {
-            cloud.vertices[i] = new __WEBPACK_IMPORTED_MODULE_1_three__["e" /* Vector3 */](-1080 / 2 + points[i].x, 1080 / 2 - points[i].y, 0);
-            cloud.colors[i] = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Color */](1, 1, 1);
-        }
-    });
-}
-
-function calculateBorders() {
-    if (true) {
-        var svg = document.querySelector("svg");
-        for (var x = 0; x < 1080; x += s) {
-            console.log("Progress", Math.round(x / 1080 * 1000) / 10 + "%");
-            // console.log(x);
-            for (var y = 0; y < 1080; y += s) {
-                var color = undefined;
-                var data;
-                document.elementsFromPoint(x * 1, y * 1).forEach(j => {
-                    if (j.tagName.toUpperCase() == 'PATH') {
-                        color = hsl(1, 0, j.__data__.counter / 60 + 0.5);
-                        color = "#fff";
-                        data = j.__data__;
-                    }
-                });
-                if (color) {
-                    var p = {
-                        x: x,
-                        y: y,
-                        id: data.properties.id
-                    };
-                    points.push(p);
-                    // console.log(points.length);
-                    // _comb.cities.forEach((d) => {
-                    //     if (d.projLowRes[0] == x && d.projLowRes[1] == y) {
-                    //         p.color = "#f00";
-                    //     }
-                    // });
-                    // _comb.counties.forEach((d) => {
-                    //     if (d.projLowRes[0] == x && d.projLowRes[1] == y) {
-                    //         p.color = "#0f0";
-                    //     }
-                    // });
-                }
+        camera.position.z = __WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].ey + 1080;
+        var points = __WEBPACK_IMPORTED_MODULE_4__data_js__["a" /* data */].map_postfab.points_uh[global.test_state] ? __WEBPACK_IMPORTED_MODULE_4__data_js__["a" /* data */].map_postfab.points_uh[global.test_state] : __WEBPACK_IMPORTED_MODULE_4__data_js__["a" /* data */].map.points_l;
+        for (var i = 0; i < cloud.vertices.length; i++) {
+            if (i < points.length) {
+                cloud.vertices[i].x = points[i].x - 1080 / 2 + Math.sin(t * 30 + points[i].y) * 3;
+                cloud.vertices[i].y = -points[i].y + 1080 / 2 + Math.cos(t * 10 + points[i].x) * 3;
+                cloud.colors[i].r = 1;
+                cloud.colors[i].g = 1;
+                cloud.colors[i].b = 1;
+            } else {
+                cloud.colors[i].r = 0;
+                cloud.colors[i].g = 0;
+                cloud.colors[i].b = 0;
             }
         }
-    }
-
-    global.points = points;
-
-    for (var i = 0; i < points.length; i++) {
-        cloud.vertices[i] = new __WEBPACK_IMPORTED_MODULE_1_three__["e" /* Vector3 */](points[i].x - 1080 / 2, 1080 / 2 - points[i].y, 0);
-        cloud.colors[i] = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Color */](1, 1, 1);
+        cloud.verticesNeedUpdate = true;
+        cloud.colorsNeedUpdate = true;
+        renderer.render(scene, camera);
     }
 }
+
+//when data arrives
+function init() {
+
+    // var cities = d.cities;
+    // var counties = d.counties;
+    // d.cities = cities.map((c) => {
+    //     c.proj = projector(c.pos);
+    //     c.projLowRes = [
+    //         Math.round(c.proj[0] / s) * s,
+    //         Math.round(c.proj[1] / s) * s
+    //     ];
+    //     return c;
+    // });
+    // d.counties = counties.map((c) => {
+    //     c.proj = projector(c.pos);
+    //     c.projLowRes = [
+    //         Math.round(c.proj[0] / s) * s,
+    //         Math.round(c.proj[1] / s) * s
+    //     ];
+    //     return c;
+    // });
+
+    svg.append("g").attr("class", "map states").selectAll("path").data(__WEBPACK_IMPORTED_MODULE_4__data_js__["a" /* data */].map.geojson.features).enter().append("path").attr("d", path);
+
+    // loadPoints();
+}
+
+__WEBPACK_IMPORTED_MODULE_4__data_js__["b" /* event */].on("ready", init);
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
 /***/ }),
@@ -23006,7 +22998,7 @@ class stick {
 
     render() {
 
-        let mirror = this.baseAngle >= 180;
+        var mirror = this.baseAngle >= 180;
 
         ease(this, 'angle', 'angle_e');
         ease(this, 'scale', 'scale_e');
@@ -23016,14 +23008,13 @@ class stick {
             ease(this, 'data', 'data_e', 0.4);
         }
         ease(this, 'selected', 'selected_e', 0.4);
-        this.hitBox.css({
-            transform: `rotate(${this.angle_e}deg) translate(-${Math.round(500 - this.visibility_e * 100)}px, 0px) scale(1, ${this.scale_e})`
-        });
+
+        this.hitBox.get(0).style.transform = `rotate(${this.angle_e}deg) translate(-${Math.round(500 - this.visibility_e * 100)}px, 0px) scale(1, ${this.scale_e})`;
 
         //do canvas stuff
         __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineCap = "round";
         __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineJoin = "round";
-        let deg = this.angle_e / 180 * Math.PI;
+        var deg = this.angle_e / 180 * Math.PI;
 
         pushMatrix(__WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */], () => {
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineWidth = 3;
@@ -23031,7 +23022,7 @@ class stick {
 
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].beginPath();
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(this.hue, 1, this.selected_e + 0.1);
-            let arclen = 4 / 180 * Math.PI * this.scale_e;
+            var arclen = 4 / 180 * Math.PI * this.scale_e;
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].arc(0, 0, 600 - this.visibility_e * 100, -Math.PI - arclen, -Math.PI + arclen);
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].stroke();
 
@@ -23053,30 +23044,23 @@ class stick {
                 __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].setLineDash(lineDashSegs);
                 __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].globalAlpha = this.selected_e;
                 __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(this.hue, 0.8, this.selected_e + 0.4);
-                let baseX, baseY;
+                var baseX, baseY;
                 baseX = -Math.cos(deg) * 400;
                 baseY = -Math.sin(deg) * 400;
                 __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].translate(baseX, baseY);
                 __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].moveTo(mirror ? -5 : 5, 0);
                 __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineTo((mirror ? -50 : 50) * this.scale_e * this.scale_e, 0);
                 __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].stroke();
+                this.dataBox.get(0).style.display = "block";
                 if (!mirror) {
-                    this.dataBox.css({
-                        'display': "block",
-                        transform: `translate(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 20}px)`
-                    });
+                    this.dataBox.get(0).style.transform = `translate(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 20}px)`;
                 } else {
-                    this.dataBox.css({
-                        'display': "block",
-                        transform: `translate(${-this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 20}px)`
-                    });
+                    this.dataBox.get(0).style.transform = `translate(${-this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 20}px)`;
                 }
                 this.dataNumber.text(Math.round(this.data_e * this.roundTo) / this.roundTo);
             });
         } else {
-            this.dataBox.css({
-                'display': "none"
-            });
+            this.dataBox.get(0).style.display = "none";
         }
     }
 }
@@ -23105,7 +23089,7 @@ class stickHolder {
     setup() {
         this.container.appendTo(document.querySelector("body"));
         this.dataSet.forEach(dt => {
-            let s = new stick(this, dt.split("|")[0], dt.split("|")[1], unitRound(dt.split("|")[1]), this.baseAngle, this.hue);
+            var s = new stick(this, dt.split("|")[0], dt.split("|")[1], unitRound(dt.split("|")[1]), this.baseAngle, this.hue);
             this.children.push(s);
         });
     }
@@ -23117,7 +23101,7 @@ class stickHolder {
         }
 
         ease(this, 'visibility', 'visibility_e', 0.06, 0.00001);
-        let _found = false;
+        var _found = false;
         for (var i = 0; i < this.children.length; i++) {
             if (global.hoveringElement == this.children[i].hitBox.get(0)) {
                 _found = true;
@@ -23137,14 +23121,14 @@ class stickHolder {
             }
         }
 
-        let deg_span = 4;
+        var deg_span = 4;
 
-        let deg = this.children.length / 2 * deg_span + this.baseAngle; //init position
+        var deg = this.children.length / 2 * deg_span + this.baseAngle; //init position
         if (this.selection >= 0) {
             deg += deg_span; //fix :)
         }
         for (var i = 0; i < this.children.length; i++) {
-            let stick = this.children[i];
+            var stick = this.children[i];
             stick.visibility_e = this.visibility_e;
             stick.selected = this.selection == i ? 1 : 0;
             deg -= stick.selected || i - 1 == this.selection && this.selection >= 0 ? deg_span * 2 : deg_span;
@@ -23267,8 +23251,8 @@ if(false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* unused harmony export event */
-/* unused harmony export data */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return event; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return data; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_d3__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_events__ = __webpack_require__(20);
@@ -23284,9 +23268,27 @@ var data = {
         points_l: undefined, //low
         points_uh: undefined, //ultra high,
         markers: undefined //positions / cities + counties
-    }
+    },
+    map_postfab: {
+        points_h: undefined,
+        points_l: undefined,
+        points_uh: undefined
+    },
+    ready: false
 };
 //grab json
+
+//split points into datastructures for further biz
+function postfab_points(name) {
+    var pts = data.map[name];
+    data.map_postfab[name] = {};
+    for (var i = 0; i < pts.length; i++) {
+        if (!data.map_postfab[name][pts[i].id]) {
+            data.map_postfab[name][pts[i].id] = [];
+        }
+        data.map_postfab[name][pts[i].id].push(pts[i]);
+    }
+}
 
 function loadAll(data, cb) {
     var l = [];
@@ -23298,8 +23300,23 @@ function loadAll(data, cb) {
     })(0);
 }
 
-loadAll(["mapdata/china.json", "mapdata/combined.json", "mapdata/map-highres.json", "mapdata/map-lowres.json", "mapdata/map-uhighres.json"], d => {
-    console.log(d);
+loadAll(["mapdata/china.json", "mapdata/combined.json", "mapdata/particles/map-highres.json", "mapdata/particles/map-lowres.json", "mapdata/particles/map-uhighres.json"], d => {
+    data.map.geojson = d[0];
+    data.map.markers = d[1];
+    data.map.points_h = d[2];
+    data.map.points_l = d[3];
+    data.map.points_uh = d[4];
+
+    postfab_points("points_h");
+    postfab_points("points_l");
+    postfab_points("points_uh");
+
+    console.log("p.uh\nlength=", data.map.points_uh.length, " [CAP] ");
+    console.log("p.h\nlength=", data.map.points_h.length);
+    console.log("p.l\nlength=", data.map.points_l.length);
+
+    data.ready = true;
+    event.emit("ready");
 });
 
 /***/ }),
