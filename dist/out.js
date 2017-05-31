@@ -17594,7 +17594,7 @@ function updateLink (link, options, obj) {
 "use strict";
 /* unused harmony export WebGLRenderTargetCube */
 /* unused harmony export WebGLRenderTarget */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return WebGLRenderer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return WebGLRenderer; });
 /* unused harmony export ShaderLib */
 /* unused harmony export UniformsLib */
 /* unused harmony export UniformsUtils */
@@ -17608,12 +17608,12 @@ function updateLink (link, options, obj) {
 /* unused harmony export SkinnedMesh */
 /* unused harmony export Skeleton */
 /* unused harmony export Bone */
-/* unused harmony export Mesh */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return Mesh; });
 /* unused harmony export LineSegments */
 /* unused harmony export LineLoop */
 /* unused harmony export Line */
 /* unused harmony export Points */
-/* unused harmony export Group */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return Group; });
 /* unused harmony export VideoTexture */
 /* unused harmony export DataTexture */
 /* unused harmony export CompressedTexture */
@@ -17682,7 +17682,7 @@ function updateLink (link, options, obj) {
 /* unused harmony export InstancedBufferAttribute */
 /* unused harmony export Face3 */
 /* unused harmony export Object3D */
-/* unused harmony export Raycaster */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return Raycaster; });
 /* unused harmony export Layers */
 /* unused harmony export EventDispatcher */
 /* unused harmony export Clock */
@@ -17707,7 +17707,7 @@ function updateLink (link, options, obj) {
 /* unused harmony export Euler */
 /* unused harmony export Vector4 */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return Vector3; });
-/* unused harmony export Vector2 */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "p", function() { return Vector2; });
 /* unused harmony export Quaternion */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return Color; });
 /* unused harmony export MorphBlendMesh */
@@ -17769,7 +17769,7 @@ function updateLink (link, options, obj) {
 /* unused harmony export SphereBufferGeometry */
 /* unused harmony export RingGeometry */
 /* unused harmony export RingBufferGeometry */
-/* unused harmony export PlaneGeometry */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return PlaneGeometry; });
 /* unused harmony export PlaneBufferGeometry */
 /* unused harmony export LatheGeometry */
 /* unused harmony export LatheBufferGeometry */
@@ -17798,7 +17798,7 @@ function updateLink (link, options, obj) {
 /* unused harmony export MeshNormalMaterial */
 /* unused harmony export MeshLambertMaterial */
 /* unused harmony export MeshDepthMaterial */
-/* unused harmony export MeshBasicMaterial */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return MeshBasicMaterial; });
 /* unused harmony export LineDashedMaterial */
 /* unused harmony export LineBasicMaterial */
 /* unused harmony export Material */
@@ -22651,6 +22651,8 @@ var Zepto = module.exports = function () {
 
 
 
+var svg = document.querySelector("svg");
+
 function shuffleArr(array) {
     var currentIndex = array.length,
         temporaryValue,
@@ -22881,11 +22883,23 @@ var camera = new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* PerspectiveCamera */
 camera.position.set(0, 0, 1080 + 80); //and this
 scene.add(camera);
 
-var renderer = new __WEBPACK_IMPORTED_MODULE_1_three__["j" /* WebGLRenderer */]({ antialias: true, alpha: true, canvas: document.querySelector('#canvasMap') });
+var planeMaterial = new __WEBPACK_IMPORTED_MODULE_1_three__["j" /* MeshBasicMaterial */]({ color: 0xffaaff, transparent: true, opacity: 0 });
+var plane = new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Mesh */](new __WEBPACK_IMPORTED_MODULE_1_three__["l" /* PlaneGeometry */](1080, 1080), planeMaterial);
+// plane.doubleSided = ;
+plane.position.z = 0;
+plane.rotation.z = 0; // Not sure what this number represents.
+var hitGroup = new __WEBPACK_IMPORTED_MODULE_1_three__["m" /* Group */]();
+hitGroup.add(plane);
+scene.add(hitGroup);
+
+var renderer = new __WEBPACK_IMPORTED_MODULE_1_three__["n" /* WebGLRenderer */]({ antialias: true, alpha: true, canvas: document.querySelector('#canvasMap') });
 renderer.setClearColor(0x000000, 0);
 renderer.setSize(1080, 1080);
 
 global.test_state = 0;
+
+var raycaster = new __WEBPACK_IMPORTED_MODULE_1_three__["o" /* Raycaster */]();
+var mouse = new __WEBPACK_IMPORTED_MODULE_1_three__["p" /* Vector2 */]();
 
 function render() {
     if (__WEBPACK_IMPORTED_MODULE_5__data_js__["a" /* data */].ready) {
@@ -22898,6 +22912,27 @@ function render() {
         camera.position.y = (-__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].ey + 1080 / 2) * 0.9;
         camera.position.x = (+__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].ex - 1080 / 2) * 0.9;
         camera.position.z = __WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].ez / 1.5 + 50;
+
+        //try pos..
+        mouse.x = __WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].ex / 1080 * 2 - 1;
+        mouse.y = 1 - __WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].ey / 1080 * 2;
+        // console.log(mouse);
+        raycaster.setFromCamera(mouse, camera);
+
+        var intersects = raycaster.intersectObject(plane);
+        if (intersects.length > 0) {
+            var point = intersects[0].point;
+            var x = point.x + 1080 / 2;
+            var y = 1080 / 2 - point.y;
+            // console.log(x, y);
+            var elems = document.elementsFromPoint(x, y);
+            for (var i = 0; i < elems.length; i++) {
+                if (elems[i].tagName.toUpperCase() == "PATH") {
+                    console.log("hit", elems[i].__data__.properties.id);
+                    break;
+                }
+            }
+        }
         // var points = data.map_postfab.points_uh[global.test_state] ? data.map_postfab.points_uh[global.test_state] : data.map.points_l;
         // for (var i = 0; i < cloud.vertices.length; i++) {
         //     if (i < points.length) {

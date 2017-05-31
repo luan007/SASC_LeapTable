@@ -5,6 +5,8 @@ import * as input from "./input.js"
 import "./global.js"
 import { data, event as data_event } from "./data.js"
 
+var svg = document.querySelector("svg");
+
 function shuffleArr(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -237,11 +239,25 @@ var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 6000);
 camera.position.set(0, 0, 1080 + 80); //and this
 scene.add(camera);
 
+
+var planeMaterial = new THREE.MeshBasicMaterial({ color: 0xffaaff, transparent: true, opacity: 0 });
+var plane = new THREE.Mesh(new THREE.PlaneGeometry(1080, 1080), planeMaterial);
+// plane.doubleSided = ;
+plane.position.z = 0;
+plane.rotation.z = 0;  // Not sure what this number represents.
+var hitGroup = new THREE.Group();
+hitGroup.add(plane);
+scene.add(hitGroup);
+
 var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, canvas: document.querySelector('#canvasMap') });
 renderer.setClearColor(0x000000, 0);
 renderer.setSize(1080, 1080);
 
 global.test_state = 0;
+
+
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
 
 export function render() {
     if (data.ready) {
@@ -254,6 +270,28 @@ export function render() {
         camera.position.y = (-input.mouse.ey + 1080 / 2) * 0.9;
         camera.position.x = (+input.mouse.ex - 1080 / 2) * 0.9;
         camera.position.z = input.mouse.ez / 1.5 + 50;
+
+        //try pos..
+        mouse.x = input.mouse.ex / 1080 * 2 - 1;
+        mouse.y = 1 - input.mouse.ey / 1080 * 2;
+        // console.log(mouse);
+        raycaster.setFromCamera(mouse, camera);
+
+        var intersects = raycaster.intersectObject(plane);
+        if(intersects.length > 0) {
+            var point = intersects[0].point;
+            var x = point.x + 1080 / 2;
+            var y = 1080 / 2 - point.y;
+            // console.log(x, y);
+            var elems = document.elementsFromPoint(x, y);
+            for(var i = 0; i < elems.length; i++) {
+                if(elems[i].tagName.toUpperCase() == "PATH") {
+                    console.log("hit", elems[i].__data__.properties.id);
+                    break;
+                }
+            }
+            
+        }
         // var points = data.map_postfab.points_uh[global.test_state] ? data.map_postfab.points_uh[global.test_state] : data.map.points_l;
         // for (var i = 0; i < cloud.vertices.length; i++) {
         //     if (i < points.length) {
