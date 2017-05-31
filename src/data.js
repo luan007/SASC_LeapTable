@@ -15,7 +15,7 @@ export var data = {
 
 function loadAll(data, cb) {
     var l = [];
-    function load_recur(i) {
+    (function load_recur(i) {
         (i >= data.length) ?
             cb(l)
             :
@@ -23,40 +23,15 @@ function loadAll(data, cb) {
                 l[i] = c;
                 load_recur(i + 1);
             });
-    }
+    })(0);
 }
 
-d3.json("mapdata/china.json", function (error, data) {
-    d3.json("mapdata/combined.json", function (err, d) {
-        var cities = d.cities;
-        var counties = d.counties;
-        d.cities = cities.map((c) => {
-            c.proj = projector(c.pos);
-            c.projLowRes = [
-                Math.round(c.proj[0] / s) * s,
-                Math.round(c.proj[1] / s) * s
-            ];
-            return c;
-        });
-        d.counties = counties.map((c) => {
-            c.proj = projector(c.pos);
-            c.projLowRes = [
-                Math.round(c.proj[0] / s) * s,
-                Math.round(c.proj[1] / s) * s
-            ];
-            return c;
-        });
-        svg.append("g")
-            .attr("class", "map states")
-            .selectAll("path")
-            .data(data.features)
-            .enter().append("path")
-            .attr("d", path)
-            .each((t) => {
-                t.counter = counter++;
-            });
-
-        loadPoints();
-        // calculateBorders();
-    });
+loadAll([
+    "mapdata/china.json",
+    "mapdata/combined.json",
+    "mapdata/map-highres.json",
+    "mapdata/map-lowres.json",
+    "mapdata/map-uhighres.json",
+], (d) => {
+    console.log(d);
 });
