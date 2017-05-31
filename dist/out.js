@@ -22559,6 +22559,27 @@ var Zepto = module.exports = function () {
 
 
 
+function shuffleArr(array) {
+    var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+}
+
 //lets do a psys here
 
 
@@ -22590,7 +22611,11 @@ for (var i = 0; i < MAX_PARTICLES; i++) {
         ty: 0,
         tz: 0,
         targetChase: false,
-        bag: {}
+        bag: {
+            tx: 0,
+            ty: 0,
+            tz: 0
+        }
     });
 }
 
@@ -22617,18 +22642,25 @@ function emitParticleAt(x, y, z) {
     p.b = 1;
 }
 
-var particle_target = undefined;
-// global.particle_target = particle_target;
-
 var highlight = 0;
 
 var shuffle = 0;
 
 global.test_set_target = function (id) {
-    //add some force here
+    //stupid no brainer allocation
     shuffle = 50;
-    particle_target = __WEBPACK_IMPORTED_MODULE_5__data_js__["a" /* data */].map_postfab.points_l[id] ? __WEBPACK_IMPORTED_MODULE_5__data_js__["a" /* data */].map_postfab.points_l[id] : __WEBPACK_IMPORTED_MODULE_5__data_js__["a" /* data */].map.points_l;
-    console.log(particle_target.length);
+    var particle_target = __WEBPACK_IMPORTED_MODULE_5__data_js__["a" /* data */].map_postfab.points_l[id] ? __WEBPACK_IMPORTED_MODULE_5__data_js__["a" /* data */].map_postfab.points_l[id] : __WEBPACK_IMPORTED_MODULE_5__data_js__["a" /* data */].map.points_l;
+
+    particles = shuffleArr(particles); //yay
+    for (var i = 0; i < particles.length; i++) {
+        if (i < particle_target.length) {
+            particles[i].targetChase = true;
+            particles[i].tx = particles[i].bag.tx = particle_target[i].x;
+            particles[i].ty = particles[i].bag.ty = particle_target[i].y;
+            particles[i].tz = particles[i].bag.tz = particle_target[i].z;
+        }
+        particles[i].targetChase = false;
+    }
 };
 global.test_set_highlight = function (id) {
     //add some force here
