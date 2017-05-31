@@ -5,6 +5,8 @@ import * as input from "./input.js"
 import * as ring from "./ring.js"
 import "./styles/main.less"
 
+import * as map from './map.js'
+
 function render() {
     update();
     input.updateInputEase();
@@ -13,7 +15,7 @@ function render() {
     ring.render();
     
     input.render_debug();
-
+    map.render();
     requestAnimationFrame(render);
 }
 

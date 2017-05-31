@@ -7,16 +7,16 @@ img.src = '/images/map 2.png';
 
 export function render() {
     pushMatrix(ctx2d, () => {
-        ctx2d.fillStyle = "#000";
+        ctx2d.strokeStyle = "#000";
         ctx2d.translate(1080 / 2, 1080 / 2);
         ctx2d.beginPath();
         ctx2d.arc(0, 0, 1080 / 2, 0, Math.PI * 2);
-        ctx2d.fill();
+        ctx2d.stroke();
 
         pushMatrix(ctx2d, () => {
             ctx2d.translate(-1080 / 2 + 50, -1080 / 2 + 150);
             ctx2d.scale(0.9, 0.9);
-            ctx2d.drawImage(img, 55, 55);
+            // ctx2d.drawImage(img, 55, 55);
         })
 
         // ctx2d.rotate(t * 2);
@@ -52,6 +52,7 @@ export function render() {
                 ctx2d.stroke();
             });
         }
+        holder_time_l.render();
         holder_left.render();
         holder_right.render();
     })
@@ -86,7 +87,6 @@ var holder_left = new stickHolder(
     ]);
 
 
-holder_left.setup();
 
 
 var holder_right = new stickHolder([
@@ -113,6 +113,17 @@ var holder_right = new stickHolder([
     "开展农产品质量安全宣传|次"
 ], 180, 0.3);
 
+
+var holder_time_l = new stickHolder([
+    "全览| ",
+    "创县| ",
+    "创城 - 第三批| ",
+    "创城 - 第二批| ",
+    "创城 - 第一批| ",
+], 70, 0);
+
+
+holder_left.setup();
+holder_time_l.setup();
 holder_right.setup();
 
-window.holder_left = holder_left;

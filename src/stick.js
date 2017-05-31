@@ -201,7 +201,7 @@ export class stickHolder {
         }
         for (var i = 0; i < this.children.length; i++) {
             let stick = this.children[i];
-            stick.visibility_e = Math.min(1, Math.max(0, (this.visibility_e * ((this.children.length * 1.2) * 0.2) - i * 0.2)));
+            stick.visibility_e = this.visibility_e;
             stick.selected = this.selection == i ? 1 : 0;
             deg -= (stick.selected || ((i - 1) == this.selection && this.selection >= 0)) ? (deg_span * 2) : deg_span;
             stick.angle = deg;

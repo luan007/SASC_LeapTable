@@ -18693,14 +18693,14 @@ var Zepto = module.exports = function () {
 "use strict";
 /* unused harmony export WebGLRenderTargetCube */
 /* unused harmony export WebGLRenderTarget */
-/* unused harmony export WebGLRenderer */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return WebGLRenderer; });
 /* unused harmony export ShaderLib */
 /* unused harmony export UniformsLib */
 /* unused harmony export UniformsUtils */
 /* unused harmony export ShaderChunk */
 /* unused harmony export FogExp2 */
 /* unused harmony export Fog */
-/* unused harmony export Scene */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Scene; });
 /* unused harmony export LensFlare */
 /* unused harmony export Sprite */
 /* unused harmony export LOD */
@@ -18747,7 +18747,7 @@ var Zepto = module.exports = function () {
 /* unused harmony export LightShadow */
 /* unused harmony export Light */
 /* unused harmony export StereoCamera */
-/* unused harmony export PerspectiveCamera */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return PerspectiveCamera; });
 /* unused harmony export OrthographicCamera */
 /* unused harmony export CubeCamera */
 /* unused harmony export ArrayCamera */
@@ -18774,7 +18774,7 @@ var Zepto = module.exports = function () {
 /* unused harmony export InstancedBufferGeometry */
 /* unused harmony export BufferGeometry */
 /* unused harmony export GeometryIdCount */
-/* unused harmony export Geometry */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return Geometry; });
 /* unused harmony export InterleavedBufferAttribute */
 /* unused harmony export InstancedInterleavedBuffer */
 /* unused harmony export InterleavedBuffer */
@@ -18805,10 +18805,10 @@ var Zepto = module.exports = function () {
 /* unused harmony export Line3 */
 /* unused harmony export Euler */
 /* unused harmony export Vector4 */
-/* unused harmony export Vector3 */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return Vector3; });
 /* unused harmony export Vector2 */
 /* unused harmony export Quaternion */
-/* unused harmony export Color */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return Color; });
 /* unused harmony export MorphBlendMesh */
 /* unused harmony export ImmediateRenderObject */
 /* unused harmony export VertexNormalsHelper */
@@ -18929,7 +18929,7 @@ var Zepto = module.exports = function () {
 /* unused harmony export SmoothShading */
 /* unused harmony export NoColors */
 /* unused harmony export FaceColors */
-/* unused harmony export VertexColors */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return VertexColors; });
 /* unused harmony export NoBlending */
 /* unused harmony export NormalBlending */
 /* unused harmony export AdditiveBlending */
@@ -19042,10 +19042,10 @@ var Zepto = module.exports = function () {
 /* unused harmony export LinePieces */
 /* unused harmony export MeshFaceMaterial */
 /* unused harmony export MultiMaterial */
-/* unused harmony export PointCloud */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return PointCloud; });
 /* unused harmony export Particle */
 /* unused harmony export ParticleSystem */
-/* unused harmony export PointCloudMaterial */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return PointCloudMaterial; });
 /* unused harmony export ParticleBasicMaterial */
 /* unused harmony export ParticleSystemMaterial */
 /* unused harmony export Vertex */
@@ -22119,16 +22119,16 @@ img.src = '/images/map 2.png';
 
 function render() {
     pushMatrix(__WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */], () => {
-        __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].fillStyle = "#000";
+        __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].strokeStyle = "#000";
         __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].translate(1080 / 2, 1080 / 2);
         __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].beginPath();
         __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].arc(0, 0, 1080 / 2, 0, Math.PI * 2);
-        __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].fill();
+        __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].stroke();
 
         pushMatrix(__WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */], () => {
             __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].translate(-1080 / 2 + 50, -1080 / 2 + 150);
             __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].scale(0.9, 0.9);
-            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].drawImage(img, 55, 55);
+            // ctx2d.drawImage(img, 55, 55);
         });
 
         // ctx2d.rotate(t * 2);
@@ -22164,6 +22164,7 @@ function render() {
                 __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].stroke();
             });
         }
+        holder_time_l.render();
         holder_left.render();
         holder_right.render();
     });
@@ -22171,13 +22172,13 @@ function render() {
 
 var holder_left = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["城市常住人口|万人", "公共财政预算收入|亿元", "食品工业产值|亿元", "食品生产经营单位数|家", "食品工业产值年增幅|%", "食品工业产值占地区生产总值比重|%", "食品安全经费决算金额|万元", "食品执法车辆总数|辆", "执法装备价值|万元", "食品安全工作考核占比|%", "检查食品生产经营主体次数|家次", "抽检数量|批次", "办案数量|件", "涉案货值|万元", "罚没款金额|万元", "刑事立案数量|件", "追究刑责人数|人", "抽检合格率|%", "创建工作知晓度|%", "当地食品安全总体满意度|%", "受理投诉举报数量|件", "办结投诉举报数量|件"]);
 
-holder_left.setup();
-
 var holder_right = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["农产品质量安全监管工作在县级人民政府绩效考核体系中的比重|%", "关于农产品质量安全纳入财政预算的资金规摸|万元", "县级监管/协管人员|名", "乡镇级监管/协管人员|名", "村级监管/协管人员|名", "群众满意度|%", "质量安全水平|%", "全县设有监管机构的乡镇数|个", "定性检测检测产品数量|个", "定量检测检测产品数量|个", "检测产品数量|个", "“三品一标”产品数量|个", "“三品一标”产地面积占耕地面积比|%", "“三园两场”数量|个", "标准化生产基地面积 总面积占比|%", "标准化生产园（场）占比|%", "纳入追溯平台管理的农产品生产经营主体|个", "纳入监管信息平台管理的农业投入品生产经营主体|个", "组织开展农产品质量安全培训|人次", "开展农产品质量安全执法|次", "开展农产品质量安全宣传|次"], 180, 0.3);
 
-holder_right.setup();
+var holder_time_l = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["全览| ", "创县| ", "创城 - 第三批| ", "创城 - 第二批| ", "创城 - 第一批| "], 70, 0);
 
-window.holder_left = holder_left;
+holder_left.setup();
+holder_time_l.setup();
+holder_right.setup();
 
 /***/ }),
 /* 7 */
@@ -22396,6 +22397,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ring_js__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__styles_main_less__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__styles_main_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__styles_main_less__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__map_js__ = __webpack_require__(16);
+
+
 
 
 
@@ -22411,7 +22415,7 @@ function render() {
     __WEBPACK_IMPORTED_MODULE_4__ring_js__["a" /* render */]();
 
     __WEBPACK_IMPORTED_MODULE_3__input_js__["b" /* render_debug */]();
-
+    __WEBPACK_IMPORTED_MODULE_6__map_js__["a" /* render */]();
     requestAnimationFrame(render);
 }
 
@@ -22624,7 +22628,7 @@ class stickHolder {
         }
         for (var i = 0; i < this.children.length; i++) {
             let stick = this.children[i];
-            stick.visibility_e = Math.min(1, Math.max(0, this.visibility_e * (this.children.length * 1.2 * 0.2) - i * 0.2));
+            stick.visibility_e = this.visibility_e;
             stick.selected = this.selection == i ? 1 : 0;
             deg -= stick.selected || i - 1 == this.selection && this.selection >= 0 ? deg_span * 2 : deg_span;
             stick.angle = deg;
@@ -22646,7 +22650,7 @@ exports = module.exports = __webpack_require__(8)(undefined);
 
 
 // module
-exports.push([module.i, "body,\nhtml {\n  margin: 0;\n  padding: 0;\n  background: #333;\n  font-family: \"PingFang SC\";\n}\ncanvas,\nsvg {\n  height: 1080px;\n  width: 1080px;\n  position: absolute;\n}\n", ""]);
+exports.push([module.i, "body,\nhtml {\n  margin: 0;\n  padding: 0;\n  background: #333;\n  font-family: \"PingFang SC\";\n}\ncanvas,\nsvg {\n  height: 1080px;\n  width: 1080px;\n  position: absolute;\n}\n.bg {\n  display: block;\n  position: absolute;\n  height: 1080px;\n  width: 1080px;\n  border-radius: 9999em;\n  background: black;\n}\n", ""]);
 
 // exports
 
@@ -23047,6 +23051,204 @@ if(false) {
 	if(!content.locals) {
 		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/dist/index.js!./stick.less", function() {
 			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/dist/index.js!./stick.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 16 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (immutable) */ __webpack_exports__["a"] = render;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_d3__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_three__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__styles_map_less__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__styles_map_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__styles_map_less__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(2);
+
+
+
+
+var projector = __WEBPACK_IMPORTED_MODULE_0_d3__["geoMercator"]().center([105.5, 38.7]).scale(800).translate([1080 / 2, 1080 / 2]);
+
+var svg = __WEBPACK_IMPORTED_MODULE_0_d3__["select"]("svg");
+var path = __WEBPACK_IMPORTED_MODULE_0_d3__["geoPath"]().projection(projector);
+
+var scene = new __WEBPACK_IMPORTED_MODULE_1_three__["a" /* Scene */]();
+
+var pointCloudMat = new __WEBPACK_IMPORTED_MODULE_1_three__["b" /* PointCloudMaterial */]({
+    size: 2, sizeAttenuation: false,
+    color: 0xffffff, vertexColors: __WEBPACK_IMPORTED_MODULE_1_three__["c" /* VertexColors */]
+});
+
+var cloud = new __WEBPACK_IMPORTED_MODULE_1_three__["d" /* Geometry */]();
+for (var i = 0; i < 50000; i++) {
+    cloud.vertices.push(new __WEBPACK_IMPORTED_MODULE_1_three__["e" /* Vector3 */](0, 0, 0));
+    cloud.colors.push(new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Color */](0, 0, 0));
+}
+
+var pointCloud = new __WEBPACK_IMPORTED_MODULE_1_three__["g" /* PointCloud */](cloud, pointCloudMat);
+scene.add(pointCloud);
+
+var camera = new __WEBPACK_IMPORTED_MODULE_1_three__["h" /* PerspectiveCamera */](50, 1, 0.1, 30000);
+camera.position.set(0, 0, 1080 + 80);
+scene.add(camera);
+
+var renderer = new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* WebGLRenderer */]({ antialias: true, alpha: true, canvas: document.querySelector('#canvasMap') });
+renderer.setClearColor(0x000000, 0);
+// renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(1080, 1080);
+
+function render() {
+
+    // console.log(input.mouse.ex - 1080 / 2);
+    // pointCloud.position.set(0, 0, 0);
+    // camera.position.x = input.mouse.ex;
+    camera.position.z = __WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].ey + 1080;
+    for (var i = 0; i < cloud.vertices.length; i++) {
+        // var j = noise.perlin3(points[i].data.counter / 15 + t / 50, points[i].data.counter / 15 - t / 50, t / 5);
+        // j = Math.round(j * 3) / 3;
+        // var q = noise.perlin3(points[i].x / 155 + t / 50, points[i].y / 155 - t / 50, t / 5 + points[i].data.counter / 15);
+        // j += Math.round(q * 5) / 5;
+        // j = Math.max(j, 0);
+        // j += 0.5;
+        if (i < points.length) {
+            cloud.vertices[i].x = points[i].x - 1080 / 2 + Math.sin(t * 30 + points[i].y) * 30;
+            cloud.vertices[i].y = -points[i].y + 1080 / 2 + Math.cos(t * 10 + points[i].x) * 30;
+        }
+    }
+    cloud.verticesNeedUpdate = true;
+    cloud.colorsNeedUpdate = true;
+    renderer.render(scene, camera);
+}
+
+var s = 6;
+var counter = 0;
+__WEBPACK_IMPORTED_MODULE_0_d3__["json"]("mapdata/china.json", function (error, data) {
+    __WEBPACK_IMPORTED_MODULE_0_d3__["json"]("mapdata/combined.json", function (err, d) {
+        var cities = d.cities;
+        var counties = d.counties;
+        d.cities = cities.map(c => {
+            c.proj = projector(c.pos);
+            c.projLowRes = [Math.round(c.proj[0] / s) * s, Math.round(c.proj[1] / s) * s];
+            return c;
+        });
+        d.counties = counties.map(c => {
+            c.proj = projector(c.pos);
+            c.projLowRes = [Math.round(c.proj[0] / s) * s, Math.round(c.proj[1] / s) * s];
+            return c;
+        });
+        svg.append("g").attr("class", "map states").selectAll("path").data(data.features).enter().append("path").attr("d", path).each(t => {
+            t.counter = counter++;
+        });
+
+        // loadPoints();
+        calculateBorders();
+    });
+});
+
+var points = [];
+function calculateBorders() {
+    if (true) {
+        var svg = document.querySelector("svg");
+        for (var x = 0; x < 1080; x += s) {
+            console.log("Progress", Math.round(x / 1080 * 1000) / 10 + "%");
+            // console.log(x);
+            for (var y = 0; y < 1080; y += s) {
+                var color = undefined;
+                var data;
+                document.elementsFromPoint(x * 1, y * 1).forEach(j => {
+                    if (j.tagName.toUpperCase() == 'PATH') {
+                        color = hsl(1, 0, j.__data__.counter / 60 + 0.5);
+                        color = "#fff";
+                        data = j.__data__;
+                    }
+                });
+                if (color) {
+                    var p = {
+                        x: x,
+                        y: y,
+                        id: data.properties.id
+                    };
+                    points.push(p);
+                    // console.log(points.length);
+                    // _comb.cities.forEach((d) => {
+                    //     if (d.projLowRes[0] == x && d.projLowRes[1] == y) {
+                    //         p.color = "#f00";
+                    //     }
+                    // });
+                    // _comb.counties.forEach((d) => {
+                    //     if (d.projLowRes[0] == x && d.projLowRes[1] == y) {
+                    //         p.color = "#0f0";
+                    //     }
+                    // });
+                }
+            }
+        }
+    }
+
+    global.points = points;
+
+    for (var i = 0; i < points.length; i++) {
+        cloud.vertices[i] = new __WEBPACK_IMPORTED_MODULE_1_three__["e" /* Vector3 */](points[i].x - 1080 / 2, 1080 / 2 - points[i].y, 0);
+        cloud.colors[i] = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Color */](1, 1, 1);
+    }
+}
+
+function loadPoints() {
+    __WEBPACK_IMPORTED_MODULE_0_d3__["json"]("mapdata/points_2.json", function (error, points) {
+
+        for (var i = 0; i < points.length; i += 10) {
+            cloud.vertices[i] = new __WEBPACK_IMPORTED_MODULE_1_three__["e" /* Vector3 */](points[i].x, 1080 - points[i].y, 0);
+            cloud.colors[i] = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Color */](1, 1, 1);
+        }
+    });
+}
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(8)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "svg {\n  display: block;\n  position: absolute;\n}\nsvg * {\n  stroke: transparent;\n  fill: transparent;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(17);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(13)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/dist/index.js!./map.less", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/dist/index.js!./map.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
