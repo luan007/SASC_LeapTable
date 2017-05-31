@@ -22550,7 +22550,9 @@ var Zepto = module.exports = function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__styles_map_less__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__styles_map_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__styles_map_less__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__data_js__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__global_js__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__data_js__ = __webpack_require__(19);
+
 
 
 
@@ -22579,8 +22581,15 @@ for (var i = 0; i < MAX_PARTICLES; i++) {
         r: 1,
         g: 1,
         b: 1,
-        life: 0,
+        tr: 1,
+        tg: 1,
+        tb: 1,
+        life: 1,
         lifeV: 0.01,
+        tx: 0,
+        ty: 0,
+        tz: 0,
+        targetChase: false,
         bag: {}
     });
 }
@@ -22608,18 +22617,79 @@ function emitParticleAt(x, y, z) {
     p.b = 1;
 }
 
-var target = undefined;
+var particle_target = undefined;
+// global.particle_target = particle_target;
 
-function targetParticles() {}
+var highlight = 0;
+
+var shuffle = 0;
+
+global.test_set_target = function (id) {
+    //add some force here
+    shuffle = 50;
+    particle_target = __WEBPACK_IMPORTED_MODULE_5__data_js__["a" /* data */].map_postfab.points_l[id] ? __WEBPACK_IMPORTED_MODULE_5__data_js__["a" /* data */].map_postfab.points_l[id] : __WEBPACK_IMPORTED_MODULE_5__data_js__["a" /* data */].map.points_l;
+    console.log(particle_target.length);
+};
+global.test_set_highlight = function (id) {
+    //add some force here
+    shuffle = 20;
+    highlight = "" + id;
+};
+
+function particle_set_highlight(p, i) {
+    if (i >= __WEBPACK_IMPORTED_MODULE_5__data_js__["a" /* data */].map.points_l.length) return;
+    if (__WEBPACK_IMPORTED_MODULE_5__data_js__["a" /* data */].map.points_l[i].id !== highlight) {
+        p.tr = p.tg = p.tb = Math.abs(Math.sin(t * 10) * 0.4);
+    } else {
+        p.tr = p.tg = p.tb = 1;
+    }
+}
+
+function particle_rushTo(p, index) {
+    if (!particle_target || index >= particle_target.length) return;
+    //force allocation here -< bad
+    p.life = 1; //always alive
+    //calculate acc
+    var target = particle_target[index];
+    p.ax += (target.x - p.x - 1080 / 2) * 0.005;
+    p.ay += (1080 / 2 - target.y - p.y) * 0.005;
+    p.vx *= 0.93;
+    p.vy *= 0.93;
+}
+
+function particle_shuffle(p) {
+    p.ax += (Math.random() - 0.5) * .2;
+    p.ay += (Math.random() - 0.5) * .2;
+}
 
 function updateParticles() {
     var cur;
     _particleFree_swap = [];
+    shuffle = shuffle > 0 ? shuffle - 1 : 0;
     for (var i = 0; i < particles.length; i++) {
         cur = particles[i];
+        cur.ax = 0;
+        cur.ay = 0;
+
+        if (particle_target) {
+            particle_rushTo(cur, i);
+        }
         if (cur.life <= 0) {
+            cur.x = 0;
+            cur.y = 0;
+            cur.z = 0;
             _particleFree_swap.push(i);
             continue;
+        }
+
+        particle_set_highlight(cur, i);
+
+        ease(cur, 'tr', 'r');
+        ease(cur, 'tg', 'g');
+        ease(cur, 'tb', 'b');
+
+        if (shuffle > 0) {
+            particle_shuffle(cur);
         }
         //cpu-heavy
         cur.life -= cur.lifeV;
@@ -22648,9 +22718,9 @@ function renderParticles() {
             cloud.vertices[i].x = cur.x;
             cloud.vertices[i].y = cur.y;
             cloud.vertices[i].z = cur.z;
-            cloud.colors[i].r = cur.r * 1 - cur.life;
-            cloud.colors[i].g = cur.g * 1 - cur.life;
-            cloud.colors[i].b = cur.b * 1 - cur.life;
+            cloud.colors[i].r = cur.r;
+            cloud.colors[i].g = cur.g;
+            cloud.colors[i].b = cur.b;
         }
     }
     cloud.verticesNeedUpdate = true;
@@ -22665,7 +22735,7 @@ var path = __WEBPACK_IMPORTED_MODULE_0_d3__["geoPath"]().projection(projector);
 var scene = new __WEBPACK_IMPORTED_MODULE_1_three__["a" /* Scene */]();
 
 var pointCloudMat = new __WEBPACK_IMPORTED_MODULE_1_three__["b" /* PointCloudMaterial */]({
-    size: 4, sizeAttenuation: true,
+    size: 7, sizeAttenuation: true,
     vertexColors: __WEBPACK_IMPORTED_MODULE_1_three__["c" /* VertexColors */],
     blending: __WEBPACK_IMPORTED_MODULE_1_three__["d" /* AdditiveBlending */],
     depthTest: false,
@@ -22692,12 +22762,12 @@ renderer.setSize(1080, 1080);
 global.test_state = 0;
 
 function render() {
-    if (__WEBPACK_IMPORTED_MODULE_4__data_js__["a" /* data */].ready) {
+    if (__WEBPACK_IMPORTED_MODULE_5__data_js__["a" /* data */].ready) {
         updateParticles();
 
-        for (var i = 0; i < 10; i++) {
-            emitParticleAt(0, 0, 0);
-        }
+        // for (var i = 0; i < 10; i++) {
+        //     emitParticleAt(0, 0, 0);
+        // }
         renderParticles();
         // camera.position.z = input.mouse.ey + 1080;
         // var points = data.map_postfab.points_uh[global.test_state] ? data.map_postfab.points_uh[global.test_state] : data.map.points_l;
@@ -22740,12 +22810,12 @@ function init() {
     //     return c;
     // });
 
-    svg.append("g").attr("class", "map states").selectAll("path").data(__WEBPACK_IMPORTED_MODULE_4__data_js__["a" /* data */].map.geojson.features).enter().append("path").attr("d", path);
+    svg.append("g").attr("class", "map states").selectAll("path").data(__WEBPACK_IMPORTED_MODULE_5__data_js__["a" /* data */].map.geojson.features).enter().append("path").attr("d", path);
 
     // loadPoints();
 }
 
-__WEBPACK_IMPORTED_MODULE_4__data_js__["b" /* event */].on("ready", init);
+__WEBPACK_IMPORTED_MODULE_5__data_js__["b" /* event */].on("ready", init);
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
 /***/ }),
