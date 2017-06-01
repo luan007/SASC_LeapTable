@@ -68,7 +68,7 @@ export class stick {
         }
         ease(this, 'selected', 'selected_e', 0.4);
 
-        this.hitBox.get(0).style.transform = `rotate(${this.angle_e}deg) translate(-${Math.round(500 - this.visibility_e * 100)}px, 0px) scale(1, ${this.scale_e})`;
+        this.hitBox.get(0).style.transform = `rotate(${this.angle_e}deg) translate3d(-${Math.round(500 - this.visibility_e * 100)}px, 0px, 0px) scale(1, ${this.scale_e})`;
 
         //do canvas stuff
         ctx2d.lineCap = "round";
@@ -98,7 +98,7 @@ export class stick {
         if (!this.dataTitle.measured) {
             this.dataTitle.measured = this.dataTitle.width();
         }
-        if (this.selected) {
+        if (this.selected && this.parent.focused && !input.mouse.flying) {
             pushMatrix(ctx2d, () => {
                 ctx2d.lineWidth = 2;
                 ctx2d.beginPath();
@@ -114,9 +114,9 @@ export class stick {
                 ctx2d.stroke();
                 this.dataBox.get(0).style.display = "block";
                 if (!mirror) {
-                    this.dataBox.get(0).style.transform = `translate(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 20}px)`;
+                    this.dataBox.get(0).style.transform = `translate3d(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 20}px, 0px)`;
                 } else {
-                    this.dataBox.get(0).style.transform = `translate(${- this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 20}px)`;
+                    this.dataBox.get(0).style.transform = `translate3d(${- this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 20}px, 0px)`;
                 }
                 if (hoveringElement && (hoveringElement.parentElement == this.dataBox.get(0)
                     || (hoveringElement.parentElement && hoveringElement.parentElement.parentElement == this.dataBox.get(0)))) {
@@ -143,13 +143,14 @@ export class stickHolder {
         this.children = [];
         this.selection = -1;
         this.visibility = 1;
+        this.focused = false;
         this.baseAngle = baseAngle;
         this.visibility_e = 0;
         this.hue = hue;
         this.container = $(`
         <div 
             id='stickHolder' 
-            style='position: absolute; display: block; transform: translate(540px, 540px)'></div>`);
+            style='z-index:9999999; position: absolute; display: block; transform: translate(540px, 540px)'></div>`);
     }
 
     setup() {
@@ -167,7 +168,9 @@ export class stickHolder {
 
     render() {
 
-        if (this.selection >= 0) {
+        if (!this.focused || input.mouse.flying) {
+            this.visibility = 0;
+        } else {
             this.visibility = 1;
         }
 
@@ -183,11 +186,11 @@ export class stickHolder {
         }
         // if (!_found) this.selection = -1;
         if (_found) {
+            this.focused = true;
             //force to deselect peers ops
             for (var i = 0; i < managedSticks.length; i++) {
                 if (managedSticks[i] != this) {
-                    managedSticks[i].selection = -1;
-                    managedSticks[i].visibility = 0;
+                    managedSticks[i].focused = false;
                 }
             }
         }

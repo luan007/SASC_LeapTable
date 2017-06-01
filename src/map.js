@@ -1,5 +1,6 @@
 import * as d3 from "d3"
 import * as THREE from "three"
+import * as $ from "webpack-zepto"
 import "./styles/map.less"
 import * as input from "./input.js"
 import "./global.js"
@@ -33,7 +34,7 @@ function shuffleArr(array) {
 var particles = [];
 var particleFree = [];
 var _particleFree_swap = [];
-const MAX_PARTICLES = 40000;
+const MAX_PARTICLES = 5000;
 
 
 for (var i = 0; i < MAX_PARTICLES; i++) {
@@ -53,6 +54,8 @@ for (var i = 0; i < MAX_PARTICLES; i++) {
         tr: 1,
         tg: 1,
         tb: 1,
+        shuffle: Math.random() * 0.8 + 0.1,
+        shuffleSq: (Math.random() * 0.8 + 0.1) * (Math.random() * 0.8 + 0.1),
         life: 1,
         lifeV: 0.01,
         tx: 0,
@@ -113,17 +116,21 @@ global.test_set_target = function (id) {
     }
 }
 global.test_set_highlight = function (id) {
-    //add some force here
-    shuffle = 20;
-    highlight = "" + id;
+    if (id !== highlight) {
+        //add some force here
+        // shuffle = 20;
+        highlight = id;
+    }
 }
 
 function particle_set_highlight(p, i) {
     if (i >= data.map.points_l.length) return;
     if (data.map.points_l[i].id !== highlight) {
-        p.tr = p.tg = p.tb = Math.abs(Math.sin(t * 10) * 0.4);
+        p.tr = p.tg = p.tb = Math.abs(noise.perlin3(p.x / 100, p.y / 100, 10)) * 0.8 + 0.3;
+        p.tz = 0;
     } else {
         p.tr = p.tg = p.tb = 1;
+        p.tz = 10;
     }
 }
 
@@ -134,10 +141,10 @@ function particle_rushTo(p) {
     //calculate acc
     p.ax = (p.tx - p.x - 1080 / 2) * 0.01;
     p.ay = (1080 / 2 - p.ty - p.y) * 0.01;
-    p.az = (-p.z) * 0.1;
+    p.az = (p.tz - p.z) * .1 * p.shuffleSq;
     p.vx *= 0.85;
     p.vy *= 0.85;
-    p.vz *= 0.85;
+    p.vz *= 0.45;
 }
 
 function particle_shuffle(p) {
@@ -164,7 +171,7 @@ function updateParticles() {
             continue;
         }
 
-        // particle_set_highlight(cur, i);
+        particle_set_highlight(cur, i);
 
         ease(cur, 'tr', 'r');
         ease(cur, 'tg', 'g');
@@ -218,7 +225,7 @@ var path = d3.geoPath()
 var scene = new THREE.Scene();
 
 var pointCloudMat = new THREE.PointCloudMaterial({
-    size: 7, sizeAttenuation: true,
+    size: 4, sizeAttenuation: true,
     vertexColors: THREE.VertexColors,
     blending: THREE.AdditiveBlending,
     depthTest: false,
@@ -237,6 +244,11 @@ scene.add(pointCloud);
 
 var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 6000);
 camera.position.set(0, 0, 1080 + 80); //and this
+
+camera.position.tx = 0;
+camera.position.ty = 0;
+camera.position.tz = 0;
+
 scene.add(camera);
 
 
@@ -263,34 +275,59 @@ export function render() {
     if (data.ready) {
         updateParticles();
 
+        ease(camera.position, 'tx', 'x');
+        ease(camera.position, 'ty', 'y');
+        ease(camera.position, 'tz', 'z');
+
         // for (var i = 0; i < 10; i++) {
         //     emitParticleAt(0, 0, 0);
         // }
         renderParticles();
-        camera.position.y = (-input.mouse.ey + 1080 / 2) * 0.9;
-        camera.position.x = (+input.mouse.ex - 1080 / 2) * 0.9;
-        camera.position.z = input.mouse.ez / 1.5 + 50;
 
+        if (input.mouse.flying) {
+            camera.position.ty = (-input.mouse.ey + 1080 / 2) * 0.9;
+            camera.position.tx = (+input.mouse.ex - 1080 / 2) * 0.9;
+            // camera.position.y += (-input.mouse.dy) / (1000 / input.mouse.ez);
+            // camera.position.x += (input.mouse.dx) / (1000 / input.mouse.ez);
+            camera.position.tz = input.mouse.ez / 1.5 + 30;
+        } else {
+            // camera.position.y = (-input.mouse.ey + 1080 / 2) * 0.9;
+            // camera.position.x = (+input.mouse.ex - 1080 / 2) * 0.9;
+        }
+        // if (input.mouse.grab > 0.6) {
+        //     // camera.position.y = (-input.mouse.ey + 1080 / 2) * 0.9;
+        //     // camera.position.x = (+input.mouse.ex - 1080 / 2) * 0.9;
+        //     // camera.position.z = input.mouse.ez / 1.5 + 30;
+        //       camera.position.y += (-input.mouse.dy) / 2;
+        //       camera.position.x += (input.mouse.dx) / 2;
+        //       camera.position.z += (input.mouse.dz) / 1;
+
+        //     //   camera.position.y = Math.max(Math.min(camera.position.y, 1080), -1080);
+        //     //   camera.position.x = Math.max(Math.min(camera.position.x, 1080), -1080);
+        //       camera.position.z = Math.max(Math.min(camera.position.z, 2000), 100);
+        // }
         //try pos..
+
         mouse.x = input.mouse.ex / 1080 * 2 - 1;
         mouse.y = 1 - input.mouse.ey / 1080 * 2;
         // console.log(mouse);
         raycaster.setFromCamera(mouse, camera);
 
         var intersects = raycaster.intersectObject(plane);
-        if(intersects.length > 0) {
+        if (intersects.length > 0) {
             var point = intersects[0].point;
             var x = point.x + 1080 / 2;
             var y = 1080 / 2 - point.y;
             // console.log(x, y);
             var elems = document.elementsFromPoint(x, y);
-            for(var i = 0; i < elems.length; i++) {
-                if(elems[i].tagName.toUpperCase() == "PATH") {
-                    console.log("hit", elems[i].__data__.properties.id);
+            for (var i = 0; i < elems.length; i++) {
+                if (elems[i].tagName.toUpperCase() == "PATH") {
+                    // console.log("hit", elems[i].__data__.properties.id);
+                    test_set_highlight(parseInt(elems[i].__data__.properties.id))
                     break;
                 }
             }
-            
+
         }
         // var points = data.map_postfab.points_uh[global.test_state] ? data.map_postfab.points_uh[global.test_state] : data.map.points_l;
         // for (var i = 0; i < cloud.vertices.length; i++) {
@@ -307,9 +344,140 @@ export function render() {
         //     }
         // }
         renderer.render(scene, camera);
+        updateLabels();
     }
 }
 
+
+
+var labels = [];
+var label_cities = [];
+var label_counties = [];
+var selectedArea = "";
+function updateLabels() {
+    for (var i = 0; i < labels.length; i++) {
+        var c = labels[i].data;
+        var p = new THREE.Vector3(c.vector.x, c.vector.y, c.vector.z);
+        var v = p.project(camera);
+        if (c.properties.id == highlight) {
+            labels[i].t_zoom = 1;
+            selectedArea = c.properties.name;
+        } else {
+            labels[i].t_zoom = 0;
+        }
+        ease(labels[i], "t_zoom", "zoom");
+        if (input.mouse.ez >= 700) {
+            labels[i].style.opacity = labels[i].zoom * 0.5 + 0.5;
+        } else {
+            labels[i].style.opacity = 0; //1 - input.mouse.ez / 2080;
+        }
+        var scale = labels[i].zoom * 0.2 + 1;
+        labels[i].style.transform = `translate3d(${(v.x + 1) / 2 * 1080}px, ${(1 - v.y) / 2 * 1080}px, -1px) scale(${scale}, ${scale})`;
+    }
+
+    for (var i = 0; i < label_cities.length; i++) {
+        var c = label_cities[i].data;
+        var p = new THREE.Vector3(c.vector.x, c.vector.y, c.vector.z);
+        var v = p.project(camera);
+        if (input.mouse.ez < 700 && c.area == selectedArea) {
+            label_cities[i].style.display = 'block';
+            label_cities[i].style.transform = `translate3d(${(v.x + 1) / 2 * 1080}px, ${(1 - v.y) / 2 * 1080}px, -1px)`;
+        } else {
+            label_cities[i].style.display = 'none';
+        }
+    }
+
+
+    for (var i = 0; i < label_counties.length; i++) {
+        var c = label_counties[i].data;
+        var p = new THREE.Vector3(c.vector.x, c.vector.y, c.vector.z);
+        var v = p.project(camera);
+        if (input.mouse.ez < 700 && c.area == selectedArea) {
+            label_cities[i].style.display = 'block';
+            label_cities[i].style.transform = `translate3d(${(v.x + 1) / 2 * 1080}px, ${(1 - v.y) / 2 * 1080}px, -1px)`;
+        } else {
+            label_cities[i].style.display = 'none';
+        }
+    }
+}
+
+function createLabels() {
+
+    var container = $(`<div class='labelContainer'></div>`);
+    container.appendTo($("body"));
+
+    for (var i = 0; i < data.map.geojson.features.length; i++) {
+        var c = data.map.geojson.features[i];
+        var name = c.properties.name;
+        var vec = projector(c.properties.cp);
+        c.vector = new THREE.Vector3(
+            vec[0] - 1080 / 2, 1080 / 2 - vec[1], 0
+        );
+        var p = $(`<div class='label'>${name}</div>`);
+        p.css({
+            'transform-origin': "50% 50%",
+            transform: "translate3d(540px, 540px, 0px)",
+            position: "absolute"
+        });
+        if (/香港|澳门|台湾/.test(name)) {
+            continue;
+        }
+        labels.push(p.get(0));
+        p.get(0).data = c;
+        p.get(0).zoom = 0;
+        p.get(0).t_zoom = 0;
+
+        p.appendTo(container);
+    }
+
+
+
+    for (var i = 0; i < data.map.markers.cities.length; i++) {
+        var c = data.map.markers.cities[i];
+        var vec = projector(c.pos);
+
+        c.vector = new THREE.Vector3(
+            vec[0] - 1080 / 2, 1080 / 2 - vec[1], 0
+        );
+        var p = $(`<div class='label'>${c.name}</div>`);
+        p.css({
+            'transform-origin': "50% 50%",
+            transform: "translate3d(540px, 540px, 0px)",
+            position: "absolute",
+            color: "#2fafff"
+        });
+        label_cities.push(p.get(0));
+
+        p.get(0).data = c;
+        p.get(0).zoom = 0;
+        p.get(0).t_zoom = 0;
+        p.appendTo(container);
+    }
+
+
+
+    for (var i = 0; i < data.map.markers.counties.length; i++) {
+        var c = data.map.markers.counties[i];
+        var vec = projector(c.pos);
+
+        c.vector = new THREE.Vector3(
+            vec[0] - 1080 / 2, 1080 / 2 - vec[1], 0
+        );
+        var p = $(`<div class='label'>${c.name}</div>`);
+        p.css({
+            'transform-origin': "50% 50%",
+            transform: "translate3d(540px, 540px, 0px)",
+            position: "absolute",
+            color: "#2fffaf"
+        });
+        label_cities.push(p.get(0));
+
+        p.get(0).data = c;
+        p.get(0).zoom = 0;
+        p.get(0).t_zoom = 0;
+        p.appendTo(container);
+    }
+}
 
 
 //when data arrives
@@ -342,9 +510,12 @@ function init() {
         .attr("d", path);
 
     // loadPoints();
-}
 
-pointCloud.frustumCulled = false;
+    pointCloud.frustumCulled = false;
+    test_set_target(0);
+
+    createLabels();
+}
 
 data_event.on("ready", init);
 

@@ -12,7 +12,16 @@ export var mouse = {
     z: 0,
     ex: 0,
     ey: 0,
-    ez: 0
+    ez: 0,
+    px: 0,
+    py: 0,
+    pz: 0,
+    dx: 0,
+    dy: 0,
+    dz: 0,
+    grab: 0,
+    pick: false,
+    flying: false
 };
 
 function map(val, a, b, c, d) {
@@ -22,37 +31,67 @@ function map(val, a, b, c, d) {
 Leap.loop(function (frame) {
     if (frame.hands.length > 0) {
         var h = frame.hands[0].palmPosition;
-        //   console.log(h);
+        //   console.log(frame.hands[0]);
         mouse.x = map(h[0], -150, 150, 0, 1080);
         mouse.y = map(h[2], -150, 150, 0, 1080);
-        mouse.z = map(h[1], 0, 500, 50, 2080);
+        mouse.z = map(h[1], 120, 500, 50, 2080);
+        mouse.grab = frame.hands[0].grabStrength;
+        mouse.pick = frame.hands[0].indexFinger.extended && mouse.grab > 0.8;
+        mouse.flying = (mouse.grab < 0.4 && frame.hands[0].middleFinger.extended
+            && frame.hands[0].indexFinger.extended);
         //   console.log(h[1]);
+    } else {
+        mouse.grab = 0;
     }
 });
 
 document.addEventListener("mousemove", function (e) {
-    //mouse.x = e.pageX;
-    //mouse.y = e.pageY;
-    // mouse.z = 0;
+    mouse.x = e.pageX;
+    mouse.y = e.pageY;
+    mouse.z = 1500;
 });
 
 export function updateInputEase() {
     ease(mouse, 'x', 'ex', EASE_RATIO, EASE_THRESHOLD);
     ease(mouse, 'y', 'ey', EASE_RATIO, EASE_THRESHOLD);
     ease(mouse, 'z', 'ez', EASE_RATIO, EASE_THRESHOLD);
+
+    mouse.dx = mouse.ex - mouse.px;
+    mouse.dy = mouse.ey - mouse.py;
+    mouse.dz = mouse.ez - mouse.pz;
+    mouse.px = mouse.ex;
+    mouse.py = mouse.ey;
+    mouse.pz = mouse.ez;
     global.hoveringElement = document.elementFromPoint(mouse.ex, mouse.ey);
 
 }
 
 export function render_debug() {
-    pushMatrix(ctx2d, () => {
-        ctx2d.translate(mouse.ex, mouse.ey);
-        ctx2d.scale(mouse.ez / 1080 * 3 + 1, mouse.ez / 1080 * 3 + 1);
-        ctx2d.fillStyle = ("#fff");
-        ctx2d.beginPath();
-        ctx2d.arc(0, 0, 5, 0, Math.PI * 2);
-        ctx2d.fill();
-    });
+    if (mouse.flying) {
+        pushMatrix(ctx2d, () => {
+            ctx2d.translate(mouse.ex, mouse.ey);
+            ctx2d.scale(mouse.ez / 1080 * 3 + 1, mouse.ez / 1080 * 3 + 1);
+            ctx2d.fillStyle = ("#fff");
+            ctx2d.beginPath();
+            ctx2d.arc(0, 0, 5, 0, Math.PI * 2);
+            ctx2d.fill();
+        });
+    } else {
+        pushMatrix(ctx2d, () => {
+            ctx2d.translate(mouse.ex, mouse.ey);
+            ctx2d.scale(mouse.ez / 1080 * 3 + 1, mouse.ez / 1080 * 3 + 1);
+            ctx2d.strokeStyle = ("#fff");
+            ctx2d.lineCap = "round";
+            ctx2d.lineJoin = "round";
+            ctx2d.lineWidth = 2;
+            ctx2d.beginPath();
+            ctx2d.moveTo(-5, 0);
+            ctx2d.lineTo(5, 0);
+            ctx2d.moveTo(0, -5);
+            ctx2d.lineTo(0, 5);
+            ctx2d.stroke();
+        });
+    }
 }
 
 
