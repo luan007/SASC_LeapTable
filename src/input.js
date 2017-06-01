@@ -9,7 +9,7 @@ global.hoveringElement = undefined;
 export var mouse = {
     x: 0,
     y: 0,
-    z: 0,
+    z: 2080,
     ex: 0,
     ey: 0,
     ez: 0,
@@ -28,27 +28,44 @@ function map(val, a, b, c, d) {
     return ((val - a) / (b - a)) * (d - c) + c;
 }
 
+global.NOLEAP = false;
+
 Leap.loop(function (frame) {
-    if (frame.hands.length > 0) {
-        var h = frame.hands[0].palmPosition;
-        //   console.log(frame.hands[0]);
-        mouse.x = map(h[0], -150, 150, 0, 1080);
-        mouse.y = map(h[2], -150, 150, 0, 1080);
-        mouse.z = map(h[1], 120, 500, 50, 2080);
-        mouse.grab = frame.hands[0].grabStrength;
-        mouse.pick = frame.hands[0].indexFinger.extended && mouse.grab > 0.8;
-        mouse.flying = (mouse.grab < 0.4 && frame.hands[0].middleFinger.extended
-            && frame.hands[0].indexFinger.extended);
-        //   console.log(h[1]);
-    } else {
-        mouse.grab = 0;
+    if (!global.NOLEAP) {
+        if (frame.hands.length > 0) {
+
+            var h = frame.hands[0].palmPosition;
+            //   console.log(frame.hands[0]);
+            mouse.x = map(h[0], -150, 150, 0, 1080);
+            mouse.y = map(h[2], -150, 150, 0, 1080);
+            mouse.z = map(h[1], 120, 500, 50, 2080);
+
+            mouse.grab = frame.hands[0].grabStrength;
+            mouse.pick = frame.hands[0].indexFinger.extended && mouse.grab > 0.8;
+            mouse.flying = (mouse.grab < 0.4 && frame.hands[0].middleFinger.extended
+                && frame.hands[0].indexFinger.extended);
+            //   console.log(h[1]);
+        } else {
+            mouse.flying = false;
+        }
     }
+});
+
+document.addEventListener("mousedown", function (e) {
+    mouse.flying = true;
+});
+
+document.addEventListener("mouseup", function (e) {
+    mouse.flying = false;
 });
 
 document.addEventListener("mousemove", function (e) {
     mouse.x = e.pageX;
     mouse.y = e.pageY;
-    mouse.z = 1500;
+    mouse.z = 2080;
+    if(mouse.flying) {
+        mouse.z = 1000;
+    }
 });
 
 export function updateInputEase() {
@@ -62,6 +79,8 @@ export function updateInputEase() {
     mouse.px = mouse.ex;
     mouse.py = mouse.ey;
     mouse.pz = mouse.ez;
+    console.log(mouse.z);
+
     global.hoveringElement = document.elementFromPoint(mouse.ex, mouse.ey);
 
 }
