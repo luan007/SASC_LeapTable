@@ -438,7 +438,6 @@ function createLabels() {
     }
 
 
-
     for (var i = 0; i < data.map.markers.cities.length; i++) {
         var c = data.map.markers.cities[i];
         var vec = projector(c.pos);

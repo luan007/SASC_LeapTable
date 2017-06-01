@@ -8,6 +8,9 @@ import { data, event as data_event } from "./data.js"
 import * as PSYS from "./math-particlesys.js"
 
 
+var container = $(`<div class='labelContainer'></div>`);
+container.appendTo($("body"));
+
 var svg = d3.select("svg");
 var projector = d3.geoMercator().center([105.5, 38.7]).scale(800).translate([1080 / 2, 1080 / 2]);
 
@@ -70,7 +73,6 @@ export function render() {
     ease(camera.position, 'tz', 'z');
 
 
-
     //raycast
     mouse.x = input.mouse.ex / 1080 * 2 - 1;
     mouse.y = 1 - input.mouse.ey / 1080 * 2;
@@ -121,13 +123,18 @@ function renderProvinces() {
 }
 
 class Province {
-
     //point cloud
     //0.05 + Math.random() * 0.1
     constructor(data, points) {
         this.data = data;
+        this.name = this.data.name;
         this.points = points;
         this.id = data.id;
+        this.cp_vector = projector(data.cp);
+        this.label_vector3 = new THREE.Vector3(
+            this.cp_vector[0] - 1080 / 2, 1080 / 2 - this.cp_vector[1], 0
+        );
+
         this.color = {
             o: 1, to: 1, h: 0.55, s: 1, l: 0.5, tl: 1, ol: 1
         };
@@ -151,29 +158,48 @@ class Province {
             this.three_geometry.vertices.push(new THREE.Vector3(0, 0, 0));
         }
         this.three_pointCloud = new THREE.Points(this.three_geometry, this.three_material);
+
+
+        if (!/香港|澳门|台湾/.test(this.name)) {
+            this.label = $(`<div class='label'>${this.name}</div>`).css({
+                'transform-origin': "50% 50%",
+                transform: "translate3d(540px, 540px, 0px)",
+                position: "absolute"
+            }).appendTo(container).get(0);
+        }
+        this.selection = 0;
+        this.tselection = 0;
     }
 
     render() {
-
-
+        if (this.label) {
+            var p = new THREE.Vector3(this.label_vector3.x, this.label_vector3.y, this.label_vector3.z);
+            var v = p.project(camera);
+            var scale = this.selection * 0.3 + 1;
+            this.label.style.opacity = 0.5 + this.selection / 3;
+            this.label.style.transform = `translate3d(${(v.x + 1) / 2 * 1080}px, ${(1 - v.y) / 2 * 1080}px, -1px) scale(${scale}, ${scale})`;
+            this.label.style.backgroundColor = `rgba(0, 0, 0, ${this.selection})`;
+        }
+        this.tselection = 0;
         if (this.id == Map_State.SelectedProvince) {
             //selected!
             this.three_material.tsize = 5 + 2 * Math.abs(Math.sin(t * 20));
             this.color.to = 1;
             this.color.tl = 2;
+            this.tselection = 1;
         }
         else if (!input.mouse.flying) {
             this.three_material.tsize = 4;
-            this.color.tl = 1;
+            this.color.tl = 0.4;
             this.color.to = 0;
         }
         else {
-            this.color.tl = 1;
+            this.color.tl = 0.4;
             this.color.to = 1;
             this.three_material.tsize = 4 + Math.abs(Math.sin(this.data.cp[0] / 2) * 3);
         }
 
-
+        ease(this, 'tselection', 'selection', 0.1, 0.01);
         ease(this.color, 'to', 'o', 0.1, 0.001);
         ease(this.color, 'tl', 'ol', 0.1, 0.001);
         var hsl = hsl_raw(this.color.h, this.color.s * this.color.o, this.color.l * this.color.ol);
