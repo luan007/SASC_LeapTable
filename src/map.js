@@ -272,7 +272,6 @@ renderer.setSize(1080, 1080);
 
 global.test_state = 0;
 
-
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 
