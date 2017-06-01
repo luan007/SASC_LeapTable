@@ -79,7 +79,7 @@ export function updateInputEase() {
     mouse.px = mouse.ex;
     mouse.py = mouse.ey;
     mouse.pz = mouse.ez;
-    console.log(mouse.z);
+    // console.log(mouse.z);
 
     global.hoveringElement = document.elementFromPoint(mouse.ex, mouse.ey);
 

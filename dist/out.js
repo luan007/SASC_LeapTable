@@ -6472,7 +6472,7 @@ function updateInputEase() {
     mouse.px = mouse.ex;
     mouse.py = mouse.ey;
     mouse.pz = mouse.ez;
-    console.log(mouse.z);
+    // console.log(mouse.z);
 
     global.hoveringElement = document.elementFromPoint(mouse.ex, mouse.ey);
 }
@@ -33591,7 +33591,7 @@ exports = module.exports = __webpack_require__(10)(undefined);
 
 
 // module
-exports.push([module.i, "body,\nhtml {\n  margin: 0;\n  padding: 0;\n  background: #333;\n  font-family: \"PingFang SC\";\n  overflow: hidden;\n}\n.labelContainer {\n  height: 1080px;\n  width: 1080px;\n  border-radius: 888888em;\n  overflow: hidden;\n}\ncanvas,\nsvg {\n  height: 1080px;\n  width: 1080px;\n  position: absolute;\n}\n.bg {\n  display: block;\n  position: absolute;\n  height: 1080px;\n  width: 1080px;\n  border-radius: 9999em;\n  background: black;\n}\n", ""]);
+exports.push([module.i, "body,\nhtml {\n  margin: 0;\n  padding: 0;\n  background: #333;\n  font-family: \"PingFang SC\";\n  overflow: hidden;\n}\n* {\n  user-select: none;\n}\n.labelContainer {\n  height: 1080px;\n  width: 1080px;\n  border-radius: 888888em;\n  overflow: hidden;\n}\ncanvas,\nsvg {\n  height: 1080px;\n  width: 1080px;\n  position: absolute;\n}\n.bg {\n  display: block;\n  position: absolute;\n  height: 1080px;\n  width: 1080px;\n  border-radius: 9999em;\n  background: black;\n}\n", ""]);
 
 // exports
 
