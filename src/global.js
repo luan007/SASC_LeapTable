@@ -25,7 +25,6 @@ canvas2d.height = 1080;
 canvas2d.width = 1080;
 canvas2d.id = "canvas2d";
 
-document.body.appendChild(canvas2d);
 
 
 global.hsl = function (h, s, l) {
@@ -94,3 +93,7 @@ global.ease = function(obj, a, b, ratio = 0.1, threshold = 0.01) {
         obj[b] = obj[a];
     }
 }
+
+
+canvas2d.style.zIndex = 998988;
+document.body.appendChild(canvas2d);

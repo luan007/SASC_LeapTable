@@ -21,7 +21,8 @@ export var mouse = {
     dz: 0,
     grab: 0,
     pick: false,
-    flying: false
+    flying: false,
+    highlock: false
 };
 
 function map(val, a, b, c, d) {
@@ -37,12 +38,13 @@ Leap.loop(function (frame) {
             //   console.log(frame.hands[0]);
             mouse.x = map(h[0], -150, 150, 0, 1080);
             mouse.y = map(h[2], -150, 150, 0, 1080);
-            mouse.z = map(h[1], 120, 500, 50, 2080);
+            mouse.z = Math.max(Math.min(2000, map(h[1], 120, 500, 50, 2080)), 150);
 
             mouse.grab = frame.hands[0].grabStrength;
             mouse.pick = frame.hands[0].indexFinger.extended && mouse.grab > 0.8;
             mouse.flying = (mouse.grab < 0.4 && frame.hands[0].middleFinger.extended
                 && frame.hands[0].indexFinger.extended && frame.hands[0].pinchStrength < 0.2);
+            mouse.highlock = mouse.ez > 1000;
         } else {
             mouse.flying = false;
         }

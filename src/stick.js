@@ -98,7 +98,7 @@ export class stick {
         if (!this.dataTitle.measured) {
             this.dataTitle.measured = this.dataTitle.width();
         }
-        if (this.selected && this.parent.focused && !input.mouse.flying) {
+        if (this.selected && this.parent.focused && (!input.mouse.flying || input.mouse.highlock)) {
             pushMatrix(ctx2d, () => {
                 ctx2d.lineWidth = 2;
                 ctx2d.beginPath();
@@ -168,7 +168,7 @@ export class stickHolder {
 
     render() {
 
-        if (!this.focused || input.mouse.flying) {
+        if (!this.focused || (input.mouse.flying && !input.mouse.highlock)) {
             this.visibility = 0;
         } else {
             this.visibility = 1;
