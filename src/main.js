@@ -7,7 +7,7 @@ import "./styles/main.less"
 
 import "./data.js"
 
-import * as map from './map.js'
+import * as map from './map-refac.js'
 
 function render() {
     update();

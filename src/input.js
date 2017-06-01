@@ -33,7 +33,6 @@ global.NOLEAP = false;
 Leap.loop(function (frame) {
     if (!global.NOLEAP) {
         if (frame.hands.length > 0) {
-
             var h = frame.hands[0].palmPosition;
             //   console.log(frame.hands[0]);
             mouse.x = map(h[0], -150, 150, 0, 1080);

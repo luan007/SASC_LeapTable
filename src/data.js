@@ -8,7 +8,8 @@ export var data = {
         points_h: undefined, //high
         points_l: undefined, //low
         points_uh: undefined,//ultra high,
-        markers: undefined   //positions / cities + counties
+        markers: undefined,  //positions / cities + counties
+        provinces: undefined
     },
     map_postfab: {
         points_h: undefined,
@@ -91,6 +92,13 @@ loadAll([
     console.log("p.uh\nlength=", data.map.points_uh.length, " [CAP] ");
     console.log("p.h\nlength=", data.map.points_h.length);
     console.log("p.l\nlength=", data.map.points_l.length);
+
+    data.map.provinces = {};
+    for (var i = 0; i < data.map.geojson.features.length; i++) {
+        var prop = data.map.geojson.features[i].properties;
+        prop.id = parseInt(prop.id);
+        data.map.provinces[prop.id] = prop;
+    }
 
     data.ready = true;
     event.emit("ready");
