@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 38);
+/******/ 	return __webpack_require__(__webpack_require__.s = 121);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1305,7 +1305,8 @@
 }).call(this);
 
 /***/ }),
-/* 1 */
+/* 1 */,
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -5789,7 +5790,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 })(this);
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -6059,10 +6060,10 @@ function isUndefined(arg) {
 }
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var glMatrix = __webpack_require__(1),
+var glMatrix = __webpack_require__(2),
     vec3 = glMatrix.vec3;
 
 /**
@@ -6279,14 +6280,15 @@ Pointable.prototype.hand = function () {
 Pointable.Invalid = { valid: false };
 
 /***/ }),
-/* 4 */
+/* 5 */,
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/* unused harmony export canvas2d */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ctx2d; });
 /* harmony export (immutable) */ __webpack_exports__["a"] = update;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__input_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__input_js__ = __webpack_require__(8);
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_0__input_js__["c"]; });
 
 
@@ -6379,43 +6381,19 @@ global.ease = function (obj, a, b, ratio = 0.1, threshold = 0.01) {
 
 canvas2d.style.zIndex = 998988;
 document.body.appendChild(canvas2d);
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = function () {
-	return this;
-}();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1, eval)("this");
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-/***/ }),
-/* 6 */
+/* 7 */,
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return mouse; });
 /* harmony export (immutable) */ __webpack_exports__["a"] = updateInputEase;
 /* harmony export (immutable) */ __webpack_exports__["b"] = render_debug;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__global_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_leapjs__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__global_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_leapjs__ = __webpack_require__(113);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_leapjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_leapjs__);
 
 
@@ -6531,15 +6509,16 @@ function render_debug() {
 }
 
 global.mouse = mouse;
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
-/* 7 */
+/* 9 */,
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Pointable = __webpack_require__(3),
-    Bone = __webpack_require__(17),
-    Dialog = __webpack_require__(20),
+var Pointable = __webpack_require__(4),
+    Bone = __webpack_require__(50),
+    Dialog = __webpack_require__(53),
     _ = __webpack_require__(0);
 
 /**
@@ -6726,12 +6705,12 @@ Finger.prototype.toString = function () {
 Finger.Invalid = { valid: false };
 
 /***/ }),
-/* 8 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Pointable = __webpack_require__(3),
-    Bone = __webpack_require__(17),
-    glMatrix = __webpack_require__(1),
+var Pointable = __webpack_require__(4),
+    Bone = __webpack_require__(50),
+    glMatrix = __webpack_require__(2),
     mat3 = glMatrix.mat3,
     vec3 = glMatrix.vec3,
     _ = __webpack_require__(0);
@@ -7193,7 +7172,32 @@ Hand.Invalid = {
 };
 
 /***/ }),
-/* 9 */
+/* 12 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = function () {
+	return this;
+}();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1, eval)("this");
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+/***/ }),
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://d3js.org Version 4.9.1. Copyright 2017 Mike Bostock.
@@ -24103,7 +24107,7 @@ Hand.Invalid = {
 });
 
 /***/ }),
-/* 10 */
+/* 14 */
 /***/ (function(module, exports) {
 
 /*
@@ -24182,17 +24186,26 @@ function toComment(sourceMap) {
 }
 
 /***/ }),
-/* 11 */
+/* 15 */,
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Hand = __webpack_require__(8),
-    Pointable = __webpack_require__(3),
-    createGesture = __webpack_require__(12).createGesture,
-    glMatrix = __webpack_require__(1),
+var Hand = __webpack_require__(11),
+    Pointable = __webpack_require__(4),
+    createGesture = __webpack_require__(25).createGesture,
+    glMatrix = __webpack_require__(2),
     mat3 = glMatrix.mat3,
     vec3 = glMatrix.vec3,
-    InteractionBox = __webpack_require__(21),
-    Finger = __webpack_require__(7),
+    InteractionBox = __webpack_require__(54),
+    Finger = __webpack_require__(10),
     _ = __webpack_require__(0);
 
 /**
@@ -24708,12 +24721,12 @@ Frame.Invalid = {
 };
 
 /***/ }),
-/* 12 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var glMatrix = __webpack_require__(1),
+var glMatrix = __webpack_require__(2),
     vec3 = glMatrix.vec3,
-    EventEmitter = __webpack_require__(2).EventEmitter,
+    EventEmitter = __webpack_require__(3).EventEmitter,
     _ = __webpack_require__(0);
 
 /**
@@ -25196,7 +25209,7 @@ KeyTapGesture.prototype.toString = function () {
 };
 
 /***/ }),
-/* 13 */
+/* 26 */
 /***/ (function(module, exports) {
 
 /* Zepto v1.1.6 - zepto event ajax form ie - zeptojs.com/license */
@@ -26752,7 +26765,7 @@ var Zepto = module.exports = function () {
 })(Zepto);
 
 /***/ }),
-/* 14 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -26798,7 +26811,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(36);
+var	fixUrls = __webpack_require__(119);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -27111,7 +27124,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 15 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30525,15 +30538,15 @@ function Projector(){console.error('THREE.Projector has been moved to /examples/
 function CanvasRenderer(){console.error('THREE.CanvasRenderer has been moved to /examples/js/renderers/CanvasRenderer.js');this.domElement=document.createElementNS('http://www.w3.org/1999/xhtml','canvas');this.clear=function(){};this.render=function(){};this.setClearColor=function(){};this.setSize=function(){};}
 
 /***/ }),
-/* 16 */
+/* 29 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return event; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return data; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_d3__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_events__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_events__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_events___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_events__);
 
 
@@ -30627,11 +30640,31 @@ loadAll(["mapdata/china.json", "mapdata/combined.json", "mapdata/particles/map-h
 });
 
 /***/ }),
-/* 17 */
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */,
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Pointable = __webpack_require__(3),
-    glMatrix = __webpack_require__(1),
+var Pointable = __webpack_require__(4),
+    glMatrix = __webpack_require__(2),
     vec3 = glMatrix.vec3,
     mat3 = glMatrix.mat3,
     mat4 = glMatrix.mat4,
@@ -30784,7 +30817,7 @@ Bone.prototype.direction = function () {
 };
 
 /***/ }),
-/* 18 */
+/* 51 */
 /***/ (function(module, exports) {
 
 var CircularBuffer = module.exports = function (size) {
@@ -30806,11 +30839,11 @@ CircularBuffer.prototype.push = function (o) {
 };
 
 /***/ }),
-/* 19 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var chooseProtocol = __webpack_require__(22).chooseProtocol,
-    EventEmitter = __webpack_require__(2).EventEmitter,
+var chooseProtocol = __webpack_require__(55).chooseProtocol,
+    EventEmitter = __webpack_require__(3).EventEmitter,
     _ = __webpack_require__(0);
 
 var BaseConnection = module.exports = function (opts) {
@@ -30977,7 +31010,7 @@ BaseConnection.prototype.reportFocus = function (state) {
 _.extend(BaseConnection.prototype, EventEmitter.prototype);
 
 /***/ }),
-/* 20 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {var Dialog = module.exports = function (message, options) {
@@ -31113,13 +31146,13 @@ Dialog.warnBones = function () {
     this.warnOutOfDate({ reason: 'bones' });
   }
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(56)))
 
 /***/ }),
-/* 21 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var glMatrix = __webpack_require__(1),
+var glMatrix = __webpack_require__(2),
     vec3 = glMatrix.vec3;
 
 /**
@@ -31253,15 +31286,15 @@ InteractionBox.prototype.toString = function () {
 InteractionBox.Invalid = { valid: false };
 
 /***/ }),
-/* 22 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Frame = __webpack_require__(11),
-    Hand = __webpack_require__(8),
-    Pointable = __webpack_require__(3),
-    Finger = __webpack_require__(7),
+var Frame = __webpack_require__(24),
+    Hand = __webpack_require__(11),
+    Pointable = __webpack_require__(4),
+    Finger = __webpack_require__(10),
     _ = __webpack_require__(0),
-    EventEmitter = __webpack_require__(2).EventEmitter;
+    EventEmitter = __webpack_require__(3).EventEmitter;
 
 var Event = function (data) {
   this.type = data.type;
@@ -31327,7 +31360,7 @@ var JSONProtocol = exports.JSONProtocol = function (header) {
 };
 
 /***/ }),
-/* 23 */
+/* 56 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -31517,15 +31550,478 @@ process.umask = function () {
 };
 
 /***/ }),
-/* 24 */,
-/* 25 */
+/* 57 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = render;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__global_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__stick_js__ = __webpack_require__(39);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_d3__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_three__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__styles_map_less__ = __webpack_require__(127);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__styles_map_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__styles_map_less__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__input_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__global_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__data_js__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__math_particlesys_js__ = __webpack_require__(122);
+
+
+
+
+
+
+
+
+
+var selection_title = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__("<div class='selection_title'>国家</div>");
+selection_title.appendTo(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__("body"));
+
+var container = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__(`<div class='labelContainer'></div>`);
+container.appendTo(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__("body"));
+
+var svg = __WEBPACK_IMPORTED_MODULE_0_d3__["select"]("svg");
+var projector = __WEBPACK_IMPORTED_MODULE_0_d3__["geoMercator"]().center([105.5, 38.7]).scale(800).translate([1080 / 2, 1080 / 2]);
+
+var scene = new __WEBPACK_IMPORTED_MODULE_1_three__["a" /* Scene */]();
+var camera = new __WEBPACK_IMPORTED_MODULE_1_three__["b" /* PerspectiveCamera */](50, 1, 0.1, 6000);
+var renderer = new __WEBPACK_IMPORTED_MODULE_1_three__["c" /* WebGLRenderer */]({ antialias: true, alpha: true, canvas: document.querySelector('#canvasMap') });
+var raycaster = new __WEBPACK_IMPORTED_MODULE_1_three__["d" /* Raycaster */]();
+var mouse = new __WEBPACK_IMPORTED_MODULE_1_three__["e" /* Vector2 */]();
+
+var plane = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Mesh */](new __WEBPACK_IMPORTED_MODULE_1_three__["g" /* PlaneGeometry */](1080, 1080), new __WEBPACK_IMPORTED_MODULE_1_three__["h" /* MeshBasicMaterial */]({ color: 0xffaaff, transparent: true, opacity: 0.0 }));
+
+function setup() {
+
+    var geoPathGenerator = __WEBPACK_IMPORTED_MODULE_0_d3__["geoPath"]().projection(projector);
+    svg.append("g").attr("class", "map states").selectAll("path").data(__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.geojson.features).enter().append("path").attr("d", geoPathGenerator);
+
+    camera.position.set(0, 0, 1080 + 80);
+    camera.position.tx = 0;
+    camera.position.ty = 0;
+    camera.position.tz = 0;
+
+    plane.position.z = 0;
+    scene.add(camera);
+    scene.add(plane);
+
+    renderer.setClearColor(0x000000, 0);
+    renderer.setSize(1080, 1080);
+
+    setupProvinces();
+}
+
+__WEBPACK_IMPORTED_MODULE_6__data_js__["b" /* event */].on("ready", setup);
+
+function render() {
+
+    if (!__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].ready) return;
+
+    if (__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying) {
+        Map_State.Selection_Spot = undefined;
+        if (__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].highlock) {
+            Map_State.Mode = -1;
+            Map_State.Selection = -1;
+            camera.position.ty = 0;
+            camera.position.tx = 0;
+            camera.position.tz = 1080;
+        } else {
+            Map_State.Mode = 0; //Province Selection
+            camera.position.ty = (-__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ey + 1080 / 2) * 0.9;
+            camera.position.tx = (+__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ex - 1080 / 2) * 0.9;
+            camera.position.tz = __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ez / 1.5 + 30;
+        }
+    } else if (!__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].highlock && Map_State.Mode >= 0) {
+        //good pos
+        Map_State.Mode = 1;
+    }
+
+    ease(camera.position, 'tx', 'x');
+    ease(camera.position, 'ty', 'y');
+    ease(camera.position, 'tz', 'z');
+
+    if (Map_State.Mode >= 0 && __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying) {
+
+        //raycast
+        mouse.x = __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ex / 1080 * 2 - 1;
+        mouse.y = 1 - __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ey / 1080 * 2;
+        raycaster.setFromCamera(mouse, camera);
+
+        var intersects = raycaster.intersectObject(plane);
+        if (intersects.length) {
+            var point = intersects[0].point;
+            var x = point.x + 1080 / 2;
+            var y = 1080 / 2 - point.y;
+            var elems = document.elementsFromPoint(x, y);
+            for (var i = 0; i < elems.length; i++) {
+                if (elems[i].tagName.toUpperCase() == "PATH") {
+                    // console.log("hit", elems[i].__data__.properties.id);
+                    // test_set_highlight(parseInt())
+                    var hit = parseInt(elems[i].__data__.properties.id);
+                    Map_State.Selection = hit;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (Map_State.Mode == 1 && Map_State.Selection_Spot) {
+        selection_title.text(Map_State.Selection_Spot.name);
+    } else if (Map_State.Mode >= 0) {
+        if (__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.provinces[Map_State.Selection]) {
+            selection_title.text(__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.provinces[Map_State.Selection].name);
+        }
+    } else if (Map_State.Mode == -1) {
+        selection_title.text("全国数据");
+    }
+
+    renderProvinces();
+    renderer.render(scene, camera);
+}
+
+var Map_State = {
+    Mode: -1,
+    Selection: -1,
+    Selection_Spot: undefined
+};
+
+var Provinces = {};
+
+function setupProvinces() {
+    for (var i in __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map_postfab.points_l) {
+        var pv = new Province(__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.provinces[i], __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map_postfab.points_l[i]);
+        Provinces[i] = pv;
+    }
+}
+
+function renderProvinces() {
+    for (var i in Provinces) {
+        Provinces[i].render();
+    }
+}
+
+class position_2d {
+    constructor(pos) {
+        this.cp_vector = projector(pos);
+        this.vec3 = new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* Vector3 */](this.cp_vector[0] - 1080 / 2, 1080 / 2 - this.cp_vector[1], 0);
+        this.vec2 = undefined;
+    }
+
+    update2d() {
+        this.vec2 = new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* Vector3 */](this.vec3.x, this.vec3.y, this.vec3.z).project(camera);
+    }
+}
+
+class Province extends position_2d {
+    //point cloud
+    //0.05 + Math.random() * 0.1
+    constructor(d, points) {
+        super(d.cp);
+
+        this.data = d;
+        this.name = this.data.name;
+        this.points = points;
+        this.id = d.id;
+
+        this.spotsArr = [];
+        this.spots = {};
+        this.spotCount = 0;
+        for (var i = 0; i < __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.markers.cities.length; i++) {
+            var cur = __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.markers.cities[i];
+            if (cur.area == this.name) {
+                this.spots[cur.name] = new Spot(cur, 'city');
+                this.spotsArr.push(this.spots[cur.name]);
+                this.spotCount++;
+            }
+        }
+
+        for (var i = 0; i < __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.markers.counties.length; i++) {
+            var cur = __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.markers.counties[i];
+            if (cur.area == this.name) {
+                this.spots[cur.name] = new Spot(cur, 'county');
+                this.spotsArr.push(this.spots[cur.name]);
+                this.spotCount++;
+            }
+        }
+
+        this.collisionRemoval = new Array(this.spotCount);
+
+        this.color = {
+            o: 1, to: 1, h: 0.55, s: 1, l: 0.5, tl: 1, ol: 1
+        };
+        this.psys = new __WEBPACK_IMPORTED_MODULE_7__math_particlesys_js__["a" /* ParticleSys */](points.length);
+        this.three_material = new __WEBPACK_IMPORTED_MODULE_1_three__["j" /* PointsMaterial */]({
+            size: 3, sizeAttenuation: true,
+            // vertexColors: THREE.VertexColors,
+            color: new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](0.2, 0.2, 0.2),
+            blending: __WEBPACK_IMPORTED_MODULE_1_three__["l" /* AdditiveBlending */],
+            depthTest: false,
+            transparent: false
+        });
+        this.three_geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["m" /* Geometry */]();
+        for (var i = 0; i < points.length; i++) {
+            var pt = points[i];
+            this.psys.Points[i].x = pt.x - 1080 / 2;
+            this.psys.Points[i].y = 1080 / 2 - pt.y;
+            this.psys.Points[i].z = 0;
+
+            this.three_geometry.colors.push(new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](1, 1, 1));
+            this.three_geometry.vertices.push(new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* Vector3 */](this.psys.Points[i].x, this.psys.Points[i].y, this.psys.Points[i].z));
+        }
+        this.three_pointCloud = new __WEBPACK_IMPORTED_MODULE_1_three__["n" /* Points */](this.three_geometry, this.three_material);
+        scene.add(this.three_pointCloud);
+
+        if (!/香港|澳门|台湾/.test(this.name)) {
+            this.label = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__(`<div class='label'>${this.name}</div>`).css({
+                'transform-origin': "50% 50%",
+                transform: "translate3d(540px, 540px, 0px)",
+                position: "absolute"
+            }).appendTo(container).get(0);
+        }
+        this.selection = 0;
+        this.tselection = 0;
+    }
+
+    render() {
+        super.update2d();
+        if (this.label) {
+            var scale = this.selection * 0.3 + 1;
+            this.label.style.opacity = (0.5 - this.selection / 2) * (Map_State.Mode >= 0 ? 1 : 0);
+            this.label.style.transform = `translate3d(${(this.vec2.x + 1) / 2 * 1080}px, ${(1 - this.vec2.y) / 2 * 1080}px, -1px) scale(${scale}, ${scale})`;
+            this.label.style.backgroundColor = `rgba(0, 0, 0, ${this.selection})`;
+        }
+        this.tselection = 0;
+        if (this.id == Map_State.Selection) {
+            //selected!
+            this.three_material.tsize = Math.min(1, Math.max(Math.sqrt(camera.position.z / 150 - 0.7), 0.01)) * (5 + 2 * Math.abs(Math.sin(t * 20)));
+            this.color.to = 1; // - camera.position.z / 1000;
+            this.color.tl = 2; //camera.position.z / 100;
+            this.tselection = 1;
+        } else if (!__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying && Map_State.Mode >= 0) {
+            this.three_material.tsize = 4;
+            this.color.tl = 0.2;
+            this.color.to = 0;
+        } else {
+            this.color.tl = 0.4;
+            this.color.to = 1;
+            this.three_material.tsize = 4 + Math.abs(Math.sin(this.data.cp[0] / 2) * 3);
+        }
+
+        ease(this, 'tselection', 'selection', 0.1, 0.01);
+        ease(this.color, 'to', 'o', 0.1, 0.001);
+        ease(this.color, 'tl', 'ol', 0.1, 0.001);
+        var hsl = hsl_raw(this.color.h, this.color.s * this.color.o, this.color.l * this.color.ol);
+        this.three_material.color.setRGB(hsl[0], hsl[1], hsl[2]);
+        ease(this.three_material, "tsize", "size", 0.08, 0.01);
+        // this.psys.update();
+        // for (var i = 0; i < this.psys.Points.length; i++) {
+        //     var p = this.psys.Points[i];
+        //     this.three_geometry.vertices[i].x = p.x;
+        //     this.three_geometry.vertices[i].y = p.y;
+        //     this.three_geometry.vertices[i].z = p.z;
+        //     // this.three_geometry.colors[i].r = p.r;
+        //     // this.three_geometry.colors[i].g = p.g;
+        //     // this.three_geometry.colors[i].b = p.b;
+        // }
+
+        // var dt = [];
+        if (this.tselection && Map_State.Mode == 1) {
+            var minsq = 99999;
+            var minid = undefined;
+            for (var i in this.spots) {
+                if (this.spots.hasOwnProperty(i)) {
+                    this.spots[i].update2d();
+                    var dx = (this.spots[i].vec2.x + 1) / 2 * 1080 - __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ex;
+                    var dy = (1 - this.spots[i].vec2.y) / 2 * 1080 - __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ey;
+                    var val = dx * dx + dy * dy;
+                    // console.log(val);
+                    if (val < 100 * 100 && val < minsq) {
+                        minsq = val;
+                        minid = i;
+                    }
+                }
+            }
+            if (minid) {
+                this.spots[minid].selecting = true;
+            }
+        }
+
+        // var strategy = layoutTool.layoutAnnealing();
+        // var result = strategy(dt);
+        // var count = 0;
+
+        for (var i in this.spots) {
+            this.spots[i].update2d();
+            this.spots[i].show = this.tselection;
+            if (this.spots.hasOwnProperty(i)) {
+                // this.spots[i].vec2.x = result[count].x;
+                // this.spots[i].vec2.y = result[count].y;
+                this.spots[i].render();
+                // count++;
+                this.spots[i].selecting = false; //restore
+            }
+        }
+    }
+
+}
+
+//city, county
+class Spot extends position_2d {
+
+    constructor(data, type) {
+        super(data.pos);
+        this.data = data;
+        this.type = type;
+
+        this.selecting = false;
+        this.selectionHold = 0;
+
+        this.show = false;
+        this.name = this.data.name;
+        this.province = this.data.area;
+
+        this.three_material = new __WEBPACK_IMPORTED_MODULE_1_three__["h" /* MeshBasicMaterial */]({
+            opacity: 1,
+            // blending: THREE.AdditiveBlending,
+            // depthTest: false,
+            color: new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](1, 1, 1),
+            transparent: true
+        });
+        this.three_geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["o" /* CircleGeometry */](1, 90);
+        this.three_mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Mesh */](this.three_geometry, this.three_material);
+
+        this.three_mesh.position.x = this.vec3.x;
+        this.three_mesh.position.y = this.vec3.y;
+        this.three_mesh.position.z = 2;
+
+        scene.add(this.three_mesh);
+
+        this.three_selection_material = new __WEBPACK_IMPORTED_MODULE_1_three__["h" /* MeshBasicMaterial */]({
+            opacity: 1,
+            // blending: THREE.AdditiveBlending,
+            // depthTest: false,
+            color: new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](1, 1, 1),
+            transparent: true
+        });
+
+        this.three_selection_geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["o" /* CircleGeometry */](9, 90);
+        this.three_selection_mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Mesh */](this.three_selection_geometry, this.three_selection_material);
+
+        this.three_selection_mesh.position.x = this.vec3.x;
+        this.three_selection_mesh.position.y = this.vec3.y;
+        this.three_selection_mesh.position.z = 1;
+        this.three_selection_mesh.scale.setLength(0.1);
+
+        scene.add(this.three_selection_mesh);
+
+        this.label = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__(`<div class='label-tiny'>${this.name}</div>`).css({
+            'transform-origin': "50% 50%",
+            transform: "translate3d(540px, 540px, 0px)",
+            position: "absolute"
+        }).appendTo(container).get(0);
+        this.selection = 0;
+        this.tselection = 0;
+
+        this.meshScale = 0;
+        this.tmeshScale = 0;
+        if (this.type == 'city') {
+            this.color = {
+                th: 0.55, ts: 1, tl: 0.5,
+                h: 0.55, s: 1, l: 0.5
+            };
+            this.colorScheme = {
+                th: 0.55, ts: 1, tl: 0.5,
+                h: 0.55, s: 1, l: 0.5
+            };
+            this.scale = 3;
+        } else {
+            this.color = {
+                th: 0.4, ts: 1, tl: 0.5,
+                h: 0.4, s: 1, l: 0.5
+            };
+            this.colorScheme = {
+                th: 0.4, ts: 1, tl: 0.5,
+                h: 0.4, s: 1, l: 0.5
+            };
+            this.scale = 2;
+        }
+    }
+
+    render() {
+        ease(this, 'tselection', 'selection', 0.1, 0.01);
+
+        var ox = Math.sin(t * 50 + this.vec2.x * 4);
+        var offset = 1 + 0.3 * ox;
+
+        if (this.show) {
+            this.color.th = this.colorScheme.th;
+            this.color.ts = this.colorScheme.ts;
+            this.color.tl = this.colorScheme.tl;
+
+            this.tmeshScale = this.scale * (offset * (0.5 + this.selection * 0.7)) * 1.5;
+            this.label.style.display = 'block';
+            var scale = this.selection * 0.3 + 1;
+            this.label.style.opacity = 1;
+            this.label.style.transform = `translate3d(${(this.vec2.x + 1) / 2 * 1080}px, ${(1 - this.vec2.y) / 2 * 1080 + 30}px, -1px) scale(${scale}, ${scale})`;
+            this.label.style.backgroundColor = `rgba(0, 0, 0, 1)`;
+            if (this.tselection) {
+                this.label.style.zIndex = 888888;
+            } else {
+                this.label.style.zIndex = 10;
+            }
+        } else if (__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying || Map_State.Mode < 0) {
+            this.tmeshScale = offset * offset;
+            this.color.ts = 1;
+            this.color.tl = 2;
+            this.label.style.display = 'none';
+        } else {
+            this.tmeshScale = 1;
+            this.color.ts = 0.8;
+            this.color.tl = .1;
+            this.three_material.color.setRGB(0.3, 0.3, 0.3);
+            this.label.style.display = 'none';
+        }
+
+        ease(this.color, 'th', 'h');
+        ease(this.color, 'ts', 's');
+        ease(this.color, 'tl', 'l');
+        ease(this, 'tmeshScale', 'meshScale');
+
+        var rgb = hsl_raw(this.color.h, this.color.s, this.color.l);
+        this.three_material.color.setRGB(rgb[0], rgb[1], rgb[2]);
+        this.three_mesh.scale.set(this.meshScale, this.meshScale, this.meshScale);
+
+        if (this.selecting && !this.tselection) {
+            this.selectionHold += (2 - this.selectionHold) * 0.03;
+            if (this.selectionHold > 1.8) {
+                Map_State.Selection_Spot = this.data;
+            }
+        } else {
+            this.selectionHold += (0.1 - this.selectionHold) * 0.1;
+        }
+
+        if (this.data == Map_State.Selection_Spot) {
+            this.tselection = 1;
+        } else {
+            this.tselection = 0;
+        }
+
+        ease(this, 'tselection', 'selection');
+        this.three_selection_mesh.scale.setLength(this.selectionHold + this.selection);
+    }
+
+}
+
+/***/ }),
+/* 58 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = render;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__global_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__stick_js__ = __webpack_require__(123);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__);
 
 
@@ -31598,13 +32094,13 @@ holder_time_l.setup();
 holder_right.setup();
 
 /***/ }),
-/* 26 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(40);
+var content = __webpack_require__(124);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -31612,7 +32108,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(14)(content, options);
+var update = __webpack_require__(27)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -31629,10 +32125,60 @@ if(false) {
 }
 
 /***/ }),
-/* 27 */
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */,
+/* 88 */,
+/* 89 */,
+/* 90 */,
+/* 91 */,
+/* 92 */,
+/* 93 */,
+/* 94 */,
+/* 95 */,
+/* 96 */,
+/* 97 */,
+/* 98 */,
+/* 99 */,
+/* 100 */,
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var BaseConnection = module.exports = __webpack_require__(19),
+var BaseConnection = module.exports = __webpack_require__(52),
     _ = __webpack_require__(0);
 
 var BrowserConnection = module.exports = function (opts) {
@@ -31740,11 +32286,11 @@ BrowserConnection.prototype.stopFocusLoop = function () {
 };
 
 /***/ }),
-/* 28 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var WebSocket = __webpack_require__(37),
-    BaseConnection = __webpack_require__(19),
+var WebSocket = __webpack_require__(120),
+    BaseConnection = __webpack_require__(52),
     _ = __webpack_require__(0);
 
 var NodeConnection = module.exports = function (opts) {
@@ -31778,18 +32324,18 @@ NodeConnection.prototype.setupSocket = function () {
 };
 
 /***/ }),
-/* 29 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(process) {var Frame = __webpack_require__(11),
-    Hand = __webpack_require__(8),
-    Pointable = __webpack_require__(3),
-    Finger = __webpack_require__(7),
-    CircularBuffer = __webpack_require__(18),
-    Pipeline = __webpack_require__(31),
-    EventEmitter = __webpack_require__(2).EventEmitter,
-    gestureListener = __webpack_require__(12).gestureListener,
-    Dialog = __webpack_require__(20),
+/* WEBPACK VAR INJECTION */(function(process) {var Frame = __webpack_require__(24),
+    Hand = __webpack_require__(11),
+    Pointable = __webpack_require__(4),
+    Finger = __webpack_require__(10),
+    CircularBuffer = __webpack_require__(51),
+    Pipeline = __webpack_require__(114),
+    EventEmitter = __webpack_require__(3).EventEmitter,
+    gestureListener = __webpack_require__(25).gestureListener,
+    Dialog = __webpack_require__(53),
     _ = __webpack_require__(0);
 
 /**
@@ -31871,7 +32417,7 @@ var Controller = module.exports = function (opts) {
   this.accumulatedGestures = [];
   this.checkVersion = opts.checkVersion;
   if (opts.connectionType === undefined) {
-    this.connectionType = this.inBrowser() ? __webpack_require__(27) : __webpack_require__(28);
+    this.connectionType = this.inBrowser() ? __webpack_require__(110) : __webpack_require__(111);
   } else {
     this.connectionType = opts.connectionType;
   }
@@ -32489,10 +33035,10 @@ Controller.prototype.useRegisteredPlugins = function () {
 };
 
 _.extend(Controller.prototype, EventEmitter.prototype);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(56)))
 
 /***/ }),
-/* 30 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -32500,21 +33046,21 @@ _.extend(Controller.prototype, EventEmitter.prototype);
  * @namespace Leap
  */
 module.exports = {
-  Controller: __webpack_require__(29),
-  Frame: __webpack_require__(11),
-  Gesture: __webpack_require__(12),
-  Hand: __webpack_require__(8),
-  Pointable: __webpack_require__(3),
-  Finger: __webpack_require__(7),
-  InteractionBox: __webpack_require__(21),
-  CircularBuffer: __webpack_require__(18),
-  UI: __webpack_require__(32),
-  JSONProtocol: __webpack_require__(22).JSONProtocol,
-  glMatrix: __webpack_require__(1),
-  mat3: __webpack_require__(1).mat3,
-  vec3: __webpack_require__(1).vec3,
+  Controller: __webpack_require__(112),
+  Frame: __webpack_require__(24),
+  Gesture: __webpack_require__(25),
+  Hand: __webpack_require__(11),
+  Pointable: __webpack_require__(4),
+  Finger: __webpack_require__(10),
+  InteractionBox: __webpack_require__(54),
+  CircularBuffer: __webpack_require__(51),
+  UI: __webpack_require__(115),
+  JSONProtocol: __webpack_require__(55).JSONProtocol,
+  glMatrix: __webpack_require__(2),
+  mat3: __webpack_require__(2).mat3,
+  vec3: __webpack_require__(2).vec3,
   loopController: undefined,
-  version: __webpack_require__(35),
+  version: __webpack_require__(118),
 
   /**
    * Expose utility libraries for convenience
@@ -32522,7 +33068,7 @@ module.exports = {
    *
    */
   _: __webpack_require__(0),
-  EventEmitter: __webpack_require__(2).EventEmitter,
+  EventEmitter: __webpack_require__(3).EventEmitter,
 
   /**
    * The Leap.loop() function passes a frame of Leap data to your
@@ -32582,7 +33128,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 31 */
+/* 114 */
 /***/ (function(module, exports) {
 
 var Pipeline = module.exports = function (controller) {
@@ -32640,16 +33186,16 @@ Pipeline.prototype.addWrappedStep = function (type, callback) {
 };
 
 /***/ }),
-/* 32 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports.UI = {
-  Region: __webpack_require__(34),
-  Cursor: __webpack_require__(33)
+  Region: __webpack_require__(117),
+  Cursor: __webpack_require__(116)
 };
 
 /***/ }),
-/* 33 */
+/* 116 */
 /***/ (function(module, exports) {
 
 var Cursor = module.exports = function () {
@@ -32665,10 +33211,10 @@ var Cursor = module.exports = function () {
 };
 
 /***/ }),
-/* 34 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var EventEmitter = __webpack_require__(2).EventEmitter,
+var EventEmitter = __webpack_require__(3).EventEmitter,
     _ = __webpack_require__(0);
 
 var Region = module.exports = function (start, end) {
@@ -32745,7 +33291,7 @@ Region.prototype.mapToXY = function (position, width, height) {
 _.extend(Region.prototype, EventEmitter.prototype);
 
 /***/ }),
-/* 35 */
+/* 118 */
 /***/ (function(module, exports) {
 
 // This file is automatically updated from package.json by grunt.
@@ -32757,7 +33303,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 36 */
+/* 119 */
 /***/ (function(module, exports) {
 
 
@@ -32850,7 +33396,7 @@ module.exports = function (css) {
 };
 
 /***/ }),
-/* 37 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/// shim for browser packaging
@@ -32858,24 +33404,24 @@ module.exports = function (css) {
 module.exports = function () {
   return global.WebSocket || global.MozWebSocket;
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
 /***/ }),
-/* 38 */
+/* 121 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_three__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_three__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_d3__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__global_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ring_js__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__styles_main_less__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__global_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ring_js__ = __webpack_require__(58);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__styles_main_less__ = __webpack_require__(59);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__styles_main_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__styles_main_less__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__data_js__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__map_refac_js__ = __webpack_require__(46);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__data_js__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__map_refac_js__ = __webpack_require__(57);
 
 
 
@@ -32902,16 +33448,134 @@ function render() {
 render();
 
 /***/ }),
-/* 39 */
+/* 122 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_webpack_zepto__ = __webpack_require__(13);
+/* unused harmony export Behaviors */
+
+/**generic particle system */
+class ParticleSys {
+    constructor(len, modifiers = []) {
+        this.Points = [];
+        this.Modifers = modifiers;
+        for (var i = 0; i < len; i++) {
+            this.Points.push({
+                x: 0,
+                y: 0,
+                z: 0,
+                vx: 0,
+                vy: 0,
+                vz: 0,
+                ax: 0,
+                ay: 0,
+                az: 0,
+                r: 1,
+                g: 1,
+                b: 1,
+                tr: 1,
+                tg: 1,
+                tb: 1,
+                shuffle: Math.random() * 0.8 + 0.1,
+                shuffleSq: (Math.random() * 0.8 + 0.1) * (Math.random() * 0.8 + 0.1),
+                life: 1,
+                lifeV: 0,
+                bag: {}
+            });
+        }
+    }
+
+    update() {
+
+        for (var j = 0; j < this.Modifers.length; j++) {
+            if (!this.Modifers[j].disabled) {
+                this.Modifers[j][0](this);
+            }
+            //mod(particle, index, particleArr, particleSys)
+        }
+
+        for (var i = 0; i < this.Points.length; i++) {
+            var cur = this.Points[i];
+            if (cur.life <= 0) {
+                continue;
+            }
+            cur.ax = 0;
+            cur.ay = 0;
+            cur.az = 0;
+
+            for (var j = 0; j < this.Modifers.length; j++) {
+                if (!this.Modifers[j].disabled) {
+                    this.Modifers[j][1](cur, i, this.Points, this);
+                }
+                //mod(particle, index, particleArr, particleSys)
+            }
+
+            //built in
+            ease(cur, 'tr', 'r');
+            ease(cur, 'tg', 'g');
+            ease(cur, 'tb', 'b');
+
+            cur.life -= cur.lifeV;
+            cur.vx += cur.ax;
+            cur.vy += cur.ay;
+            cur.vz += cur.az;
+            cur.x += cur.vx;
+            cur.y += cur.vy;
+            cur.z += cur.vz;
+        }
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = ParticleSys;
+
+
+var Behaviors = {
+    Targeting: {
+        modifier: () => [null, function (p, index, particleArr, particleSys) {
+            p.life = 1; //always alive
+            //calculate acc
+            p.ax = (p.bag.tx - p.x) * 0.01;
+            p.ay = (p.bag.ty - p.y) * 0.01;
+            p.az = (p.bag.tz - p.z) * .1 * p.shuffleSq;
+            p.vx *= 0.85;
+            p.vy *= 0.85;
+            p.vz *= 0.45;
+        }],
+        set: function (psys, arr) {
+            for (var i = 0; i < arr.length; i++) {
+                psys.Points[i].bag.tx = arr[i].x;
+                psys.Points[i].bag.ty = arr[i].y;
+                psys.Points[i].bag.tz = arr[i].z;
+            }
+        }
+    },
+    Shuffle: {
+        set: function (psys, t) {
+            psys.shuffleCounter = t;
+        },
+        modifier: () => [function (psys) {
+            if (psys.shuffleCounter > 0) {
+                psys.shuffleCounter--;
+            }
+        },, function (p, index, particleArr, particleSys) {
+            if (particleSys.shuffleCounter < 0) return;
+            p.ax += (Math.random() - 0.5) * .52;
+            p.ay += (Math.random() - 0.5) * .52;
+            p.az += (Math.random() - 0.5) * .52;
+        }]
+    }
+};
+
+/***/ }),
+/* 123 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_webpack_zepto__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_webpack_zepto___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_webpack_zepto__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__styles_stick_less__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__styles_stick_less__ = __webpack_require__(128);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__styles_stick_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__styles_stick_less__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__global_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__global_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(8);
 
 
 
@@ -33121,13 +33785,13 @@ class stickHolder {
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = stickHolder;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
-/* 40 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(10)(undefined);
+exports = module.exports = __webpack_require__(14)(undefined);
 // imports
 
 
@@ -33138,10 +33802,10 @@ exports.push([module.i, "body,\nhtml {\n  margin: 0;\n  padding: 0;\n  backgroun
 
 
 /***/ }),
-/* 41 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(10)(undefined);
+exports = module.exports = __webpack_require__(14)(undefined);
 // imports
 
 
@@ -33152,27 +33816,27 @@ exports.push([module.i, "svg {\n  display: block;\n  position: absolute;\n}\nsvg
 
 
 /***/ }),
-/* 42 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(10)(undefined);
+exports = module.exports = __webpack_require__(14)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".dataViz {\n  opacity: 1;\n  position: absolute;\n  transform-origin: 50% 50%;\n  z-index: 999999;\n  font-size: 20px;\n}\n.dataViz .title {\n  white-space: nowrap;\n  color: white;\n  padding: 8px 15px;\n  position: absolute;\n}\n.dataViz .number {\n  height: 0;\n  position: absolute;\n  bottom: -40px;\n  font-size: 80px;\n  left: 2px;\n  white-space: nowrap;\n  color: white;\n  vertical-align: text-top;\n  font-family: 'Not So Stout Deco';\n}\n.dataViz .number span:nth-child(2) {\n  font-family: 'PingFang SC';\n  font-size: 20px;\n  position: absolute;\n  top: 20px;\n  opacity: 0.8;\n}\n", ""]);
+exports.push([module.i, ".dataViz {\n  opacity: 1;\n  position: absolute;\n  transform-origin: 50% 50%;\n  z-index: 999999;\n  font-size: 20px;\n}\n.dataViz .title {\n  white-space: nowrap;\n  color: white;\n  padding: 8px 15px;\n  position: absolute;\n}\n.dataViz .number {\n  height: 0;\n  position: absolute;\n  bottom: -40px;\n  font-size: 80px;\n  left: 2px;\n  white-space: nowrap;\n  color: white;\n  vertical-align: text-top;\n  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;\n  font-family: 'Not So Stout Deco';\n}\n.dataViz .number span:nth-child(2) {\n  font-family: 'PingFang SC';\n  font-size: 20px;\n  position: absolute;\n  top: 20px;\n  opacity: 0.8;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 43 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(41);
+var content = __webpack_require__(125);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -33180,7 +33844,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(14)(content, options);
+var update = __webpack_require__(27)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -33197,13 +33861,13 @@ if(false) {
 }
 
 /***/ }),
-/* 44 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(42);
+var content = __webpack_require__(126);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -33211,7 +33875,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(14)(content, options);
+var update = __webpack_require__(27)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -33226,471 +33890,6 @@ if(false) {
 	// When the module is disposed, remove the <style> tags
 	module.hot.dispose(function() { update(); });
 }
-
-/***/ }),
-/* 45 */,
-/* 46 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = render;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_d3__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_three__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__styles_map_less__ = __webpack_require__(43);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__styles_map_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__styles_map_less__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__input_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__global_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__data_js__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__math_particlesys_js__ = __webpack_require__(47);
-
-
-
-
-
-
-
-
-
-var selection_title = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__("<div class='selection_title'>国家</div>");
-selection_title.appendTo(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__("body"));
-
-var container = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__(`<div class='labelContainer'></div>`);
-container.appendTo(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__("body"));
-
-var svg = __WEBPACK_IMPORTED_MODULE_0_d3__["select"]("svg");
-var projector = __WEBPACK_IMPORTED_MODULE_0_d3__["geoMercator"]().center([105.5, 38.7]).scale(800).translate([1080 / 2, 1080 / 2]);
-
-var scene = new __WEBPACK_IMPORTED_MODULE_1_three__["a" /* Scene */]();
-var camera = new __WEBPACK_IMPORTED_MODULE_1_three__["b" /* PerspectiveCamera */](50, 1, 0.1, 6000);
-var renderer = new __WEBPACK_IMPORTED_MODULE_1_three__["c" /* WebGLRenderer */]({ antialias: true, alpha: true, canvas: document.querySelector('#canvasMap') });
-var raycaster = new __WEBPACK_IMPORTED_MODULE_1_three__["d" /* Raycaster */]();
-var mouse = new __WEBPACK_IMPORTED_MODULE_1_three__["e" /* Vector2 */]();
-
-var plane = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Mesh */](new __WEBPACK_IMPORTED_MODULE_1_three__["g" /* PlaneGeometry */](1080, 1080), new __WEBPACK_IMPORTED_MODULE_1_three__["h" /* MeshBasicMaterial */]({ color: 0xffaaff, transparent: true, opacity: 0.0 }));
-
-function setup() {
-
-    var geoPathGenerator = __WEBPACK_IMPORTED_MODULE_0_d3__["geoPath"]().projection(projector);
-    svg.append("g").attr("class", "map states").selectAll("path").data(__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.geojson.features).enter().append("path").attr("d", geoPathGenerator);
-
-    camera.position.set(0, 0, 1080 + 80);
-    camera.position.tx = 0;
-    camera.position.ty = 0;
-    camera.position.tz = 0;
-
-    plane.position.z = 0;
-    scene.add(camera);
-    scene.add(plane);
-
-    renderer.setClearColor(0x000000, 0);
-    renderer.setSize(1080, 1080);
-
-    setupProvinces();
-}
-
-__WEBPACK_IMPORTED_MODULE_6__data_js__["b" /* event */].on("ready", setup);
-
-function render() {
-
-    if (!__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].ready) return;
-
-    if (__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying) {
-        if (__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].highlock) {
-            Map_State.SelectionStatus = -1;
-            Map_State.SelectedProvince = -1;
-            camera.position.ty = 0;
-            camera.position.tx = 0;
-            camera.position.tz = 1080;
-        } else {
-            Map_State.SelectionStatus = 0;
-            camera.position.ty = (-__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ey + 1080 / 2) * 0.9;
-            camera.position.tx = (+__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ex - 1080 / 2) * 0.9;
-            camera.position.tz = __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ez / 1.5 + 30;
-        }
-    }
-
-    ease(camera.position, 'tx', 'x');
-    ease(camera.position, 'ty', 'y');
-    ease(camera.position, 'tz', 'z');
-
-    if (Map_State.SelectionStatus >= 0 && __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying) {
-
-        //raycast
-        mouse.x = __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ex / 1080 * 2 - 1;
-        mouse.y = 1 - __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ey / 1080 * 2;
-        raycaster.setFromCamera(mouse, camera);
-
-        var intersects = raycaster.intersectObject(plane);
-        if (intersects.length) {
-            var point = intersects[0].point;
-            var x = point.x + 1080 / 2;
-            var y = 1080 / 2 - point.y;
-            var elems = document.elementsFromPoint(x, y);
-            for (var i = 0; i < elems.length; i++) {
-                if (elems[i].tagName.toUpperCase() == "PATH") {
-                    // console.log("hit", elems[i].__data__.properties.id);
-                    // test_set_highlight(parseInt())
-                    var hit = parseInt(elems[i].__data__.properties.id);
-                    Map_State.SelectedProvince = hit;
-                    break;
-                }
-            }
-        }
-    }
-
-    if (Map_State.SelectionStatus == 0) {
-        if (Map_State.SelectedProvince > 0) {
-            selection_title.text(__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.provinces[Map_State.SelectedProvince].name);
-        }
-    } else if (Map_State.SelectionStatus == -1) {
-        selection_title.text("全国数据");
-    }
-
-    renderProvinces();
-    renderer.render(scene, camera);
-}
-
-var Map_State = {
-    SelectedProvince: -1,
-    SelectionStatus: -1
-};
-
-var Provinces = {};
-
-function setupProvinces() {
-    for (var i in __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map_postfab.points_l) {
-        var pv = new Province(__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.provinces[i], __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map_postfab.points_l[i]);
-        Provinces[i] = pv;
-    }
-}
-
-function renderProvinces() {
-    for (var i in Provinces) {
-        Provinces[i].render();
-    }
-}
-
-class position_2d {
-    constructor(pos) {
-        this.cp_vector = projector(pos);
-        this.vec3 = new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* Vector3 */](this.cp_vector[0] - 1080 / 2, 1080 / 2 - this.cp_vector[1], 0);
-        this.vec2 = undefined;
-    }
-
-    update2d() {
-        this.vec2 = new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* Vector3 */](this.vec3.x, this.vec3.y, this.vec3.z).project(camera);
-    }
-}
-
-class Province extends position_2d {
-    //point cloud
-    //0.05 + Math.random() * 0.1
-    constructor(d, points) {
-        super(d.cp);
-
-        this.data = d;
-        this.name = this.data.name;
-        this.points = points;
-        this.id = d.id;
-
-        this.spots = {};
-        for (var i = 0; i < __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.markers.cities.length; i++) {
-            var cur = __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.markers.cities[i];
-            if (cur.area == this.name) {
-                this.spots[cur.name] = new Spot(cur, 'city');
-            }
-        }
-
-        for (var i = 0; i < __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.markers.counties.length; i++) {
-            var cur = __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.markers.counties[i];
-            if (cur.area == this.name) {
-                this.spots[cur.name] = new Spot(cur, 'county');
-            }
-        }
-
-        this.color = {
-            o: 1, to: 1, h: 0.55, s: 1, l: 0.5, tl: 1, ol: 1
-        };
-        this.psys = new __WEBPACK_IMPORTED_MODULE_7__math_particlesys_js__["a" /* ParticleSys */](points.length);
-        this.three_material = new __WEBPACK_IMPORTED_MODULE_1_three__["j" /* PointsMaterial */]({
-            size: 3, sizeAttenuation: true,
-            // vertexColors: THREE.VertexColors,
-            color: new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](0.2, 0.2, 0.2),
-            blending: __WEBPACK_IMPORTED_MODULE_1_three__["l" /* AdditiveBlending */],
-            depthTest: false,
-            transparent: false
-        });
-        this.three_geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["m" /* Geometry */]();
-        for (var i = 0; i < points.length; i++) {
-            var pt = points[i];
-            this.psys.Points[i].x = pt.x - 1080 / 2;
-            this.psys.Points[i].y = 1080 / 2 - pt.y;
-            this.psys.Points[i].z = 0;
-
-            this.three_geometry.colors.push(new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](1, 1, 1));
-            this.three_geometry.vertices.push(new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* Vector3 */](this.psys.Points[i].x, this.psys.Points[i].y, this.psys.Points[i].z));
-        }
-        this.three_pointCloud = new __WEBPACK_IMPORTED_MODULE_1_three__["n" /* Points */](this.three_geometry, this.three_material);
-        scene.add(this.three_pointCloud);
-
-        if (!/香港|澳门|台湾/.test(this.name)) {
-            this.label = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__(`<div class='label'>${this.name}</div>`).css({
-                'transform-origin': "50% 50%",
-                transform: "translate3d(540px, 540px, 0px)",
-                position: "absolute"
-            }).appendTo(container).get(0);
-        }
-        this.selection = 0;
-        this.tselection = 0;
-    }
-
-    render() {
-        super.update2d();
-        if (this.label) {
-            var scale = this.selection * 0.3 + 1;
-            this.label.style.opacity = (0.5 + this.selection / 3) * (Map_State.SelectionStatus >= 0 ? 1 : 0);
-            this.label.style.transform = `translate3d(${(this.vec2.x + 1) / 2 * 1080}px, ${(1 - this.vec2.y) / 2 * 1080}px, -1px) scale(${scale}, ${scale})`;
-            this.label.style.backgroundColor = `rgba(0, 0, 0, ${this.selection})`;
-        }
-        this.tselection = 0;
-        if (this.id == Map_State.SelectedProvince) {
-            //selected!
-            this.three_material.tsize = Math.min(1, Math.max(Math.sqrt(camera.position.z / 150 - 0.7), 0.01)) * (5 + 2 * Math.abs(Math.sin(t * 20)));
-            this.color.to = 1; // - camera.position.z / 1000;
-            this.color.tl = 2; //camera.position.z / 100;
-            this.tselection = 1;
-        } else if (!__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying && Map_State.SelectionStatus >= 0) {
-            this.three_material.tsize = 4;
-            this.color.tl = 0.2;
-            this.color.to = 0;
-        } else {
-            this.color.tl = 0.4;
-            this.color.to = 1;
-            this.three_material.tsize = 4 + Math.abs(Math.sin(this.data.cp[0] / 2) * 3);
-        }
-
-        ease(this, 'tselection', 'selection', 0.1, 0.01);
-        ease(this.color, 'to', 'o', 0.1, 0.001);
-        ease(this.color, 'tl', 'ol', 0.1, 0.001);
-        var hsl = hsl_raw(this.color.h, this.color.s * this.color.o, this.color.l * this.color.ol);
-        this.three_material.color.setRGB(hsl[0], hsl[1], hsl[2]);
-        ease(this.three_material, "tsize", "size", 0.08, 0.01);
-        // this.psys.update();
-        // for (var i = 0; i < this.psys.Points.length; i++) {
-        //     var p = this.psys.Points[i];
-        //     this.three_geometry.vertices[i].x = p.x;
-        //     this.three_geometry.vertices[i].y = p.y;
-        //     this.three_geometry.vertices[i].z = p.z;
-        //     // this.three_geometry.colors[i].r = p.r;
-        //     // this.three_geometry.colors[i].g = p.g;
-        //     // this.three_geometry.colors[i].b = p.b;
-        // }
-
-        for (var i in this.spots) {
-            if (this.spots.hasOwnProperty(i)) {
-                this.spots[i].show = this.tselection;
-                this.spots[i].render();
-            }
-        }
-    }
-
-}
-
-//city, county
-class Spot extends position_2d {
-
-    constructor(data, type) {
-        super(data.pos);
-        this.data = data;
-        this.type = type;
-        this.show = false;
-        this.name = this.data.name;
-        this.province = this.data.area;
-
-        this.three_material = new __WEBPACK_IMPORTED_MODULE_1_three__["h" /* MeshBasicMaterial */]({
-            opacity: 1,
-            // blending: THREE.AdditiveBlending,
-            // depthTest: false,
-            color: new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](1, 1, 1),
-            transparent: true
-        });
-        this.three_geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["o" /* CircleGeometry */](1, 90);
-        this.three_mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Mesh */](this.three_geometry, this.three_material);
-
-        this.three_mesh.position.x = this.vec3.x;
-        this.three_mesh.position.y = this.vec3.y;
-        this.three_mesh.position.z = 2;
-
-        scene.add(this.three_mesh);
-        this.label = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__(`<div class='label-tiny'>${this.name}</div>`).css({
-            'transform-origin': "50% 50%",
-            transform: "translate3d(540px, 540px, 0px)",
-            position: "absolute"
-        }).appendTo(container).get(0);
-        this.selection = 0;
-        this.tselection = 0;
-
-        if (this.type == 'city') {
-            this.color = {
-                h: 0.55, s: 1, l: 0.5
-            };
-            this.scale = 3;
-        } else {
-            this.color = {
-                h: 0.4, s: 1, l: 0.5
-            };
-            this.scale = 2;
-        }
-    }
-
-    render() {
-        super.update2d();
-        ease(this, 'tselection', 'selection', 0.1, 0.01);
-
-        var offset = 1 + 0.5 * Math.sin(t * 50 + this.vec2.x * 4);
-
-        if (this.show) {
-
-            var meshScale = this.scale * offset;
-            this.three_mesh.scale.set(meshScale, meshScale, meshScale);
-
-            var rgb = hsl_raw(this.color.h, this.color.s, this.color.l);
-            this.three_material.color.setRGB(rgb[0], rgb[1], rgb[2]);
-            this.label.style.display = 'block';
-            var scale = this.selection * 0.3 + 1;
-            this.label.style.opacity = 1;
-            this.label.style.transform = `translate3d(${(this.vec2.x + 1) / 2 * 1080}px, ${(1 - this.vec2.y) / 2 * 1080 + 30}px, -1px) scale(${scale}, ${scale})`;
-            this.label.style.backgroundColor = `rgba(0, 0, 0, 1)`;
-        } else {
-            var meshScale = offset * offset * 1;
-            this.three_mesh.scale.set(meshScale, meshScale, meshScale);
-            this.three_material.color.setRGB(0.9, 0.9, 0.9);
-            this.label.style.display = 'none';
-        }
-    }
-
-}
-
-/***/ }),
-/* 47 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export Behaviors */
-
-/**generic particle system */
-class ParticleSys {
-    constructor(len, modifiers = []) {
-        this.Points = [];
-        this.Modifers = modifiers;
-        for (var i = 0; i < len; i++) {
-            this.Points.push({
-                x: 0,
-                y: 0,
-                z: 0,
-                vx: 0,
-                vy: 0,
-                vz: 0,
-                ax: 0,
-                ay: 0,
-                az: 0,
-                r: 1,
-                g: 1,
-                b: 1,
-                tr: 1,
-                tg: 1,
-                tb: 1,
-                shuffle: Math.random() * 0.8 + 0.1,
-                shuffleSq: (Math.random() * 0.8 + 0.1) * (Math.random() * 0.8 + 0.1),
-                life: 1,
-                lifeV: 0,
-                bag: {}
-            });
-        }
-    }
-
-    update() {
-
-        for (var j = 0; j < this.Modifers.length; j++) {
-            if (!this.Modifers[j].disabled) {
-                this.Modifers[j][0](this);
-            }
-            //mod(particle, index, particleArr, particleSys)
-        }
-
-        for (var i = 0; i < this.Points.length; i++) {
-            var cur = this.Points[i];
-            if (cur.life <= 0) {
-                continue;
-            }
-            cur.ax = 0;
-            cur.ay = 0;
-            cur.az = 0;
-
-            for (var j = 0; j < this.Modifers.length; j++) {
-                if (!this.Modifers[j].disabled) {
-                    this.Modifers[j][1](cur, i, this.Points, this);
-                }
-                //mod(particle, index, particleArr, particleSys)
-            }
-
-            //built in
-            ease(cur, 'tr', 'r');
-            ease(cur, 'tg', 'g');
-            ease(cur, 'tb', 'b');
-
-            cur.life -= cur.lifeV;
-            cur.vx += cur.ax;
-            cur.vy += cur.ay;
-            cur.vz += cur.az;
-            cur.x += cur.vx;
-            cur.y += cur.vy;
-            cur.z += cur.vz;
-        }
-    }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = ParticleSys;
-
-
-var Behaviors = {
-    Targeting: {
-        modifier: () => [null, function (p, index, particleArr, particleSys) {
-            p.life = 1; //always alive
-            //calculate acc
-            p.ax = (p.bag.tx - p.x) * 0.01;
-            p.ay = (p.bag.ty - p.y) * 0.01;
-            p.az = (p.bag.tz - p.z) * .1 * p.shuffleSq;
-            p.vx *= 0.85;
-            p.vy *= 0.85;
-            p.vz *= 0.45;
-        }],
-        set: function (psys, arr) {
-            for (var i = 0; i < arr.length; i++) {
-                psys.Points[i].bag.tx = arr[i].x;
-                psys.Points[i].bag.ty = arr[i].y;
-                psys.Points[i].bag.tz = arr[i].z;
-            }
-        }
-    },
-    Shuffle: {
-        set: function (psys, t) {
-            psys.shuffleCounter = t;
-        },
-        modifier: () => [function (psys) {
-            if (psys.shuffleCounter > 0) {
-                psys.shuffleCounter--;
-            }
-        },, function (p, index, particleArr, particleSys) {
-            if (particleSys.shuffleCounter < 0) return;
-            p.ax += (Math.random() - 0.5) * .52;
-            p.ay += (Math.random() - 0.5) * .52;
-            p.az += (Math.random() - 0.5) * .52;
-        }]
-    }
-};
 
 /***/ })
 /******/ ]);
