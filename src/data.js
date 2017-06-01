@@ -20,14 +20,41 @@ export var data = {
 //grab json
 
 //split points into datastructures for further biz
-function postfab_points(name) {
+function postfab_points(name, unit) {
     var pts = data.map[name];
     data.map_postfab[name] = {};
-    for(var i = 0; i < pts.length; i++) {
-        if(!data.map_postfab[name][pts[i].id]) {
+    for (var i = 0; i < pts.length; i++) {
+        if (!data.map_postfab[name][pts[i].id]) {
             data.map_postfab[name][pts[i].id] = [];
         }
+        var cur = pts[i];
         data.map_postfab[name][pts[i].id].push(pts[i]);
+        if (unit) {
+            if (i % 100 == 0) {
+                console.log(i / pts.length);
+            }
+            var count = 0;
+            for (var j = 0; j < pts.length; j++) {
+                //find four n
+                //stupid code
+                var n = pts[j];
+                if (n !== cur &&
+                    n.id == cur.id
+                    &&
+                    ((n.x + unit == cur.x || n.x - unit == cur.x)
+                        &&
+                        (n.y + unit == cur.y || n.y - unit == cur.y))
+                ) {
+                    count++;
+                }
+                if (count >= 4) {
+                    break;
+                }
+            }
+            if (count < 4) {
+                cur.border = true;
+            }
+        }
     }
 }
 
@@ -48,7 +75,7 @@ loadAll([
     "mapdata/china.json",
     "mapdata/combined.json",
     "mapdata/particles/map-highres.json",
-    "mapdata/particles/map-lowres.json",
+    "mapdata/particles/map-mres.json",
     "mapdata/particles/map-uhighres.json",
 ], (d) => {
     data.map.geojson = d[0];
@@ -58,13 +85,13 @@ loadAll([
     data.map.points_uh = d[4];
 
     postfab_points("points_h");
-    postfab_points("points_l");
-    postfab_points("points_uh");  
+    postfab_points("points_l", 5);
+    postfab_points("points_uh");
 
     console.log("p.uh\nlength=", data.map.points_uh.length, " [CAP] ");
     console.log("p.h\nlength=", data.map.points_h.length);
     console.log("p.l\nlength=", data.map.points_l.length);
-    
+
     data.ready = true;
     event.emit("ready");
 });

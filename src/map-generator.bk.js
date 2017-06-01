@@ -53,8 +53,8 @@ export function render() {
         // j = Math.max(j, 0);
         // j += 0.5;
         if (i < points.length) {
-            cloud.vertices[i].x = points[i].x - 1080 / 2 + Math.sin(t * 30 + points[i].y) * 30;
-            cloud.vertices[i].y = -points[i].y + 1080 / 2 + Math.cos(t * 10 + points[i].x) * 30;
+            cloud.vertices[i].x = points[i].x - 1080 / 2
+            cloud.vertices[i].y = -points[i].y + 1080 / 2
         }
     }
     cloud.verticesNeedUpdate = true;
@@ -62,7 +62,7 @@ export function render() {
     renderer.render(scene, camera);
 }
 
-var s = 6;
+var s = 5;
 var counter = 0;
 d3.json("mapdata/china.json", function (error, data) {
     d3.json("mapdata/combined.json", function (err, d) {
@@ -94,8 +94,8 @@ d3.json("mapdata/china.json", function (error, data) {
                 t.counter = counter++;
             });
 
-        loadPoints();
-        // calculateBorders();
+        // loadPoints();
+        calculateBorders();
     });
 });
 
@@ -136,7 +136,7 @@ function calculateBorders() {
                     var p = {
                         x: x,
                         y: y,
-                        id: data.properties.id
+                        id: parseInt(data.properties.id)
                     };
                     points.push(p);
                     // console.log(points.length);

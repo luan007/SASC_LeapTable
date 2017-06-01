@@ -6436,8 +6436,7 @@ __WEBPACK_IMPORTED_MODULE_1_leapjs__["loop"](function (frame) {
 
             mouse.grab = frame.hands[0].grabStrength;
             mouse.pick = frame.hands[0].indexFinger.extended && mouse.grab > 0.8;
-            mouse.flying = mouse.grab < 0.4 && frame.hands[0].middleFinger.extended && frame.hands[0].indexFinger.extended;
-            //   console.log(h[1]);
+            mouse.flying = mouse.grab < 0.4 && frame.hands[0].middleFinger.extended && frame.hands[0].indexFinger.extended && frame.hands[0].pinchStrength < 0.2;
         } else {
             mouse.flying = false;
         }
@@ -6490,11 +6489,11 @@ function render_debug() {
     } else {
         pushMatrix(__WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */], () => {
             __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].translate(mouse.ex, mouse.ey);
-            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].scale(mouse.ez / 1080 * 3 + 1, mouse.ez / 1080 * 3 + 1);
+            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].scale(mouse.ez / 1080 * 2 + 1, mouse.ez / 1080 * 2 + 1);
             __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].strokeStyle = "#fff";
             __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].lineCap = "round";
             __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].lineJoin = "round";
-            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].lineWidth = 2;
+            __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].lineWidth = 1;
             __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].beginPath();
             __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].moveTo(-5, 0);
             __WEBPACK_IMPORTED_MODULE_0__global_js__["b" /* ctx2d */].lineTo(5, 0);
@@ -30532,14 +30531,35 @@ var data = {
 //grab json
 
 //split points into datastructures for further biz
-function postfab_points(name) {
+function postfab_points(name, unit) {
     var pts = data.map[name];
     data.map_postfab[name] = {};
     for (var i = 0; i < pts.length; i++) {
         if (!data.map_postfab[name][pts[i].id]) {
             data.map_postfab[name][pts[i].id] = [];
         }
+        var cur = pts[i];
         data.map_postfab[name][pts[i].id].push(pts[i]);
+        if (unit) {
+            if (i % 100 == 0) {
+                console.log(i / pts.length);
+            }
+            var count = 0;
+            for (var j = 0; j < pts.length; j++) {
+                //find four n
+                //stupid code
+                var n = pts[j];
+                if (n !== cur && n.id == cur.id && (n.x + unit == cur.x || n.x - unit == cur.x) && (n.y + unit == cur.y || n.y - unit == cur.y)) {
+                    count++;
+                }
+                if (count >= 4) {
+                    break;
+                }
+            }
+            if (count < 4) {
+                cur.border = true;
+            }
+        }
     }
 }
 
@@ -30553,7 +30573,7 @@ function loadAll(data, cb) {
     })(0);
 }
 
-loadAll(["mapdata/china.json", "mapdata/combined.json", "mapdata/particles/map-highres.json", "mapdata/particles/map-lowres.json", "mapdata/particles/map-uhighres.json"], d => {
+loadAll(["mapdata/china.json", "mapdata/combined.json", "mapdata/particles/map-highres.json", "mapdata/particles/map-mres.json", "mapdata/particles/map-uhighres.json"], d => {
     data.map.geojson = d[0];
     data.map.markers = d[1];
     data.map.points_h = d[2];
@@ -30561,7 +30581,7 @@ loadAll(["mapdata/china.json", "mapdata/combined.json", "mapdata/particles/map-h
     data.map.points_uh = d[4];
 
     postfab_points("points_h");
-    postfab_points("points_l");
+    postfab_points("points_l", 5);
     postfab_points("points_uh");
 
     console.log("p.uh\nlength=", data.map.points_uh.length, " [CAP] ");
@@ -31515,7 +31535,7 @@ function shuffleArr(array) {
 var particles = [];
 var particleFree = [];
 var _particleFree_swap = [];
-const MAX_PARTICLES = 5000;
+const MAX_PARTICLES = 10000;
 
 for (var i = 0; i < MAX_PARTICLES; i++) {
     particles.push({
@@ -31598,7 +31618,7 @@ global.test_set_target = function (id) {
 global.test_set_highlight = function (id) {
     if (id !== highlight) {
         //add some force here
-        // shuffle = 20;
+        // shuffle = 10;
         highlight = id;
     }
 };
@@ -31606,11 +31626,15 @@ global.test_set_highlight = function (id) {
 function particle_set_highlight(p, i) {
     if (i >= __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.points_l.length) return;
     if (__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.points_l[i].id !== highlight) {
-        p.tr = p.tg = p.tb = Math.abs(noise.perlin3(p.x / 100, p.y / 100, 10)) * 0.8 + 0.3;
+        p.tr = p.tg = p.tb = __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ez / 2600;
+        // p.tz = -Math.abs(noise.perlin3(p.x / 60, p.y / 60, 10)) * 20;
+        if (__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.points_l[i].border) {
+            // p.tr = p.tg = p.tb = 0.5;
+        }
         p.tz = 0;
     } else {
-        p.tr = p.tg = p.tb = 1;
-        p.tz = 10;
+        p.tr = p.tg = p.tb = __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ez / 500 * (Math.abs(Math.sin(t * 30 + p.x / 100)) * 2 + 0.5);
+        p.tz = 40;
     }
 }
 
@@ -31704,7 +31728,7 @@ var path = __WEBPACK_IMPORTED_MODULE_0_d3__["geoPath"]().projection(projector);
 var scene = new __WEBPACK_IMPORTED_MODULE_1_three__["a" /* Scene */]();
 
 var pointCloudMat = new __WEBPACK_IMPORTED_MODULE_1_three__["b" /* PointCloudMaterial */]({
-    size: 4, sizeAttenuation: true,
+    size: 3, sizeAttenuation: true,
     vertexColors: __WEBPACK_IMPORTED_MODULE_1_three__["c" /* VertexColors */],
     blending: __WEBPACK_IMPORTED_MODULE_1_three__["d" /* AdditiveBlending */],
     depthTest: false,
@@ -31726,6 +31750,7 @@ camera.position.set(0, 0, 1080 + 80); //and this
 camera.position.tx = 0;
 camera.position.ty = 0;
 camera.position.tz = 0;
+pointCloudMat.tsize = 3;
 
 scene.add(camera);
 
@@ -31750,10 +31775,10 @@ var mouse = new __WEBPACK_IMPORTED_MODULE_1_three__["p" /* Vector2 */]();
 function render() {
     if (__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].ready) {
         updateParticles();
-
         ease(camera.position, 'tx', 'x');
         ease(camera.position, 'ty', 'y');
         ease(camera.position, 'tz', 'z');
+        ease(pointCloudMat, 'tsize', 'size');
 
         // for (var i = 0; i < 10; i++) {
         //     emitParticleAt(0, 0, 0);
@@ -31761,15 +31786,17 @@ function render() {
         renderParticles();
 
         if (__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying) {
+            pointCloudMat.tsize = 7 * (camera.position.z / 2000);
             camera.position.ty = (-__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ey + 1080 / 2) * 0.9;
             camera.position.tx = (+__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ex - 1080 / 2) * 0.9;
             // camera.position.y += (-input.mouse.dy) / (1000 / input.mouse.ez);
             // camera.position.x += (input.mouse.dx) / (1000 / input.mouse.ez);
             camera.position.tz = __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ez / 1.5 + 30;
-        } else {}
-        // camera.position.y = (-input.mouse.ey + 1080 / 2) * 0.9;
-        // camera.position.x = (+input.mouse.ex - 1080 / 2) * 0.9;
-
+        } else {
+            // camera.position.y = (-input.mouse.ey + 1080 / 2) * 0.9;
+            // camera.position.x = (+input.mouse.ex - 1080 / 2) * 0.9;
+            pointCloudMat.tsize = 4;
+        }
         // if (input.mouse.grab > 0.6) {
         //     // camera.position.y = (-input.mouse.ey + 1080 / 2) * 0.9;
         //     // camera.position.x = (+input.mouse.ex - 1080 / 2) * 0.9;
@@ -31799,6 +31826,7 @@ function render() {
             for (var i = 0; i < elems.length; i++) {
                 if (elems[i].tagName.toUpperCase() == "PATH") {
                     // console.log("hit", elems[i].__data__.properties.id);
+                    // test_set_target(parseInt(elems[i].__data__.properties.id))
                     test_set_highlight(parseInt(elems[i].__data__.properties.id));
                     break;
                 }
@@ -31839,10 +31867,10 @@ function updateLabels() {
             labels[i].t_zoom = 0;
         }
         ease(labels[i], "t_zoom", "zoom");
-        if (__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ez >= 700) {
-            labels[i].style.opacity = labels[i].zoom * 0.5 + 0.5;
-        } else {
+        if (__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ez < 700 && c.properties.name == selectedArea) {
             labels[i].style.opacity = 0; //1 - input.mouse.ez / 2080;
+        } else {
+            labels[i].style.opacity = labels[i].zoom * 0.5 + 0.5;
         }
         var scale = labels[i].zoom * 0.2 + 1;
         labels[i].style.transform = `translate3d(${(v.x + 1) / 2 * 1080}px, ${(1 - v.y) / 2 * 1080}px, -1px) scale(${scale}, ${scale})`;

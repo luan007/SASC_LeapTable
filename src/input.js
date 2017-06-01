@@ -43,8 +43,7 @@ Leap.loop(function (frame) {
             mouse.grab = frame.hands[0].grabStrength;
             mouse.pick = frame.hands[0].indexFinger.extended && mouse.grab > 0.8;
             mouse.flying = (mouse.grab < 0.4 && frame.hands[0].middleFinger.extended
-                && frame.hands[0].indexFinger.extended);
-            //   console.log(h[1]);
+                && frame.hands[0].indexFinger.extended && frame.hands[0].pinchStrength < 0.2);
         } else {
             mouse.flying = false;
         }
@@ -98,11 +97,11 @@ export function render_debug() {
     } else {
         pushMatrix(ctx2d, () => {
             ctx2d.translate(mouse.ex, mouse.ey);
-            ctx2d.scale(mouse.ez / 1080 * 3 + 1, mouse.ez / 1080 * 3 + 1);
+            ctx2d.scale(mouse.ez / 1080 * 2 + 1, mouse.ez / 1080 * 2 + 1);
             ctx2d.strokeStyle = ("#fff");
             ctx2d.lineCap = "round";
             ctx2d.lineJoin = "round";
-            ctx2d.lineWidth = 2;
+            ctx2d.lineWidth = 1;
             ctx2d.beginPath();
             ctx2d.moveTo(-5, 0);
             ctx2d.lineTo(5, 0);

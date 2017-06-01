@@ -34,7 +34,7 @@ function shuffleArr(array) {
 var particles = [];
 var particleFree = [];
 var _particleFree_swap = [];
-const MAX_PARTICLES = 5000;
+const MAX_PARTICLES = 10000;
 
 
 for (var i = 0; i < MAX_PARTICLES; i++) {
@@ -118,7 +118,7 @@ global.test_set_target = function (id) {
 global.test_set_highlight = function (id) {
     if (id !== highlight) {
         //add some force here
-        // shuffle = 20;
+        // shuffle = 10;
         highlight = id;
     }
 }
@@ -126,11 +126,15 @@ global.test_set_highlight = function (id) {
 function particle_set_highlight(p, i) {
     if (i >= data.map.points_l.length) return;
     if (data.map.points_l[i].id !== highlight) {
-        p.tr = p.tg = p.tb = Math.abs(noise.perlin3(p.x / 100, p.y / 100, 10)) * 0.8 + 0.3;
+        p.tr = p.tg = p.tb = (input.mouse.ez / 2600);
+        // p.tz = -Math.abs(noise.perlin3(p.x / 60, p.y / 60, 10)) * 20;
+        if (data.map.points_l[i].border) {
+            // p.tr = p.tg = p.tb = 0.5;
+        }
         p.tz = 0;
     } else {
-        p.tr = p.tg = p.tb = 1;
-        p.tz = 10;
+        p.tr = p.tg = p.tb = (input.mouse.ez / 500) * (Math.abs(Math.sin(t * 30 + p.x / 100)) * 2 + 0.5);
+        p.tz = 40;
     }
 }
 
@@ -225,7 +229,7 @@ var path = d3.geoPath()
 var scene = new THREE.Scene();
 
 var pointCloudMat = new THREE.PointCloudMaterial({
-    size: 4, sizeAttenuation: true,
+    size: 3, sizeAttenuation: true,
     vertexColors: THREE.VertexColors,
     blending: THREE.AdditiveBlending,
     depthTest: false,
@@ -248,6 +252,7 @@ camera.position.set(0, 0, 1080 + 80); //and this
 camera.position.tx = 0;
 camera.position.ty = 0;
 camera.position.tz = 0;
+pointCloudMat.tsize = 3;
 
 scene.add(camera);
 
@@ -274,10 +279,10 @@ var mouse = new THREE.Vector2();
 export function render() {
     if (data.ready) {
         updateParticles();
-
         ease(camera.position, 'tx', 'x');
         ease(camera.position, 'ty', 'y');
         ease(camera.position, 'tz', 'z');
+        ease(pointCloudMat, 'tsize', 'size');
 
         // for (var i = 0; i < 10; i++) {
         //     emitParticleAt(0, 0, 0);
@@ -285,6 +290,7 @@ export function render() {
         renderParticles();
 
         if (input.mouse.flying) {
+            pointCloudMat.tsize = 7 * ((camera.position.z / 2000));
             camera.position.ty = (-input.mouse.ey + 1080 / 2) * 0.9;
             camera.position.tx = (+input.mouse.ex - 1080 / 2) * 0.9;
             // camera.position.y += (-input.mouse.dy) / (1000 / input.mouse.ez);
@@ -293,6 +299,7 @@ export function render() {
         } else {
             // camera.position.y = (-input.mouse.ey + 1080 / 2) * 0.9;
             // camera.position.x = (+input.mouse.ex - 1080 / 2) * 0.9;
+            pointCloudMat.tsize = 4;
         }
         // if (input.mouse.grab > 0.6) {
         //     // camera.position.y = (-input.mouse.ey + 1080 / 2) * 0.9;
@@ -323,6 +330,7 @@ export function render() {
             for (var i = 0; i < elems.length; i++) {
                 if (elems[i].tagName.toUpperCase() == "PATH") {
                     // console.log("hit", elems[i].__data__.properties.id);
+                    // test_set_target(parseInt(elems[i].__data__.properties.id))
                     test_set_highlight(parseInt(elems[i].__data__.properties.id))
                     break;
                 }
@@ -366,10 +374,10 @@ function updateLabels() {
             labels[i].t_zoom = 0;
         }
         ease(labels[i], "t_zoom", "zoom");
-        if (input.mouse.ez >= 700) {
-            labels[i].style.opacity = labels[i].zoom * 0.5 + 0.5;
-        } else {
+        if (input.mouse.ez < 700 && c.properties.name == selectedArea) {
             labels[i].style.opacity = 0; //1 - input.mouse.ez / 2080;
+        } else {
+            labels[i].style.opacity = labels[i].zoom * 0.5 + 0.5;
         }
         var scale = labels[i].zoom * 0.2 + 1;
         labels[i].style.transform = `translate3d(${(v.x + 1) / 2 * 1080}px, ${(1 - v.y) / 2 * 1080}px, -1px) scale(${scale}, ${scale})`;
