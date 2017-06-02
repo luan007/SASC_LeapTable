@@ -31733,7 +31733,9 @@ process.umask = function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = render;
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["render"] = render;
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Map_State", function() { return Map_State; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_d3__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_three__ = __webpack_require__(28);
@@ -31849,12 +31851,15 @@ function render() {
 
     if (Map_State.Mode == 1 && Map_State.Selection_Spot) {
         selection_title.text(Map_State.Selection_Spot.name);
+        Map_State.SelectedEntity = Map_State.Selection_Spot;
     } else if (Map_State.Mode >= 0) {
         if (__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.provinces[Map_State.Selection]) {
             selection_title.text(__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.provinces[Map_State.Selection].name);
+            Map_State.SelectedEntity = __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.provinces[Map_State.Selection];
         }
     } else if (Map_State.Mode == -1) {
         selection_title.text("全国数据");
+        Map_State.SelectedEntity = __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map;
     }
 
     renderProvinces();
@@ -31864,7 +31869,8 @@ function render() {
 var Map_State = {
     Mode: -1,
     Selection: -1,
-    Selection_Spot: undefined
+    Selection_Spot: undefined,
+    SelectedEntity: undefined
 };
 
 var Provinces = {};
@@ -32264,11 +32270,11 @@ function render() {
     });
 }
 
-var holder_left = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["城市常住人口|万人", "公共财政预算收入|亿元", "食品工业产值|亿元", "食品生产经营单位数|家", "食品工业产值年增幅|%", "食品工业产值占地区生产总值比重|%", "食品安全经费决算金额|万元", "食品执法车辆总数|辆", "执法装备价值|万元", "食品安全工作考核占比|%", "检查食品生产经营主体次数|家次", "抽检数量|批次", "办案数量|件", "涉案货值|万元", "罚没款金额|万元", "刑事立案数量|件", "追究刑责人数|人", "抽检合格率|%", "创建工作知晓度|%", "当地食品安全总体满意度|%", "受理投诉举报数量|件", "办结投诉举报数量|件"], 0, 0.56, "city");
+var holder_left = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["城市常住人口|万人", "公共财政预算收入|亿元", "食品工业产值|亿元", "食品生产经营单位数|家", "食品工业产值年增幅|%", "食品工业产值占地区生产总值比重|%", "食品安全经费决算金额|万元", "食品执法车辆总数|辆", "执法装备价值|万元", "食品安全工作考核占比|%", "检查食品生产经营主体次数|家次", "抽检数量|批次", "办案数量|件", "涉案货值|万元", "罚没款金额|万元", "刑事立案数量|件", "追究刑责人数|人", "抽检合格率|%", "创建工作知晓度|%", "当地食品安全总体满意度|%", "受理投诉举报数量|件", "办结投诉举报数量|件"], 0, 0.56, "cities");
 
-var holder_right = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["农产品质量安全监管工作在县级人民政府绩效考核体系中的比重|%", "关于农产品质量安全纳入财政预算的资金规摸|万元", "县级监管/协管人员|名", "乡镇级监管/协管人员|名", "村级监管/协管人员|名", "群众满意度|%", "质量安全水平|%", "全县设有监管机构的乡镇数|个", "定性检测检测产品数量|个", "定量检测检测产品数量|个", "检测产品数量|个", "“三品一标”产品数量|个", "“三品一标”产地面积占耕地面积比|%", "“三园两场”数量|个", "标准化生产基地面积 总面积占比|%", "标准化生产园（场）占比|%", "纳入追溯平台管理的农产品生产经营主体|个", "纳入监管信息平台管理的农业投入品生产经营主体|个", "组织开展农产品质量安全培训|人次", "开展农产品质量安全执法|次", "开展农产品质量安全宣传|次"], 180, 0.3, 'county');
+var holder_right = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["农产品质量安全监管工作在县级人民政府绩效考核体系中的比重|%", "关于农产品质量安全纳入财政预算的资金规摸|万元", "县级监管/协管人员|名", "乡镇级监管/协管人员|名", "村级监管/协管人员|名", "群众满意度|%", "质量安全水平|%", "全县设有监管机构的乡镇数|个", "定性检测检测产品数量|个", "定量检测检测产品数量|个", "检测产品数量|个", "“三品一标”产品数量|个", "“三品一标”产地面积占耕地面积比|%", "“三园两场”数量|个", "标准化生产基地面积 总面积占比|%", "标准化生产园（场）占比|%", "纳入追溯平台管理的农产品生产经营主体|个", "纳入监管信息平台管理的农业投入品生产经营主体|个", "组织开展农产品质量安全培训|人次", "开展农产品质量安全执法|次", "开展农产品质量安全宣传|次"], 180, 0.3, 'counties');
 
-var holder_time_l = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["全览| ", "创县| ", "创城 - 第三批| ", "创城 - 第二批| ", "创城 - 第一批| "], 70, 0, "generic");
+var holder_time_l = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["全览| ", "创县| ", "创城 - 第三批| ", "创城 - 第二批| ", "创城 - 第一批| "], 70, 0, undefined);
 
 holder_left.setup();
 holder_time_l.setup();
@@ -33622,7 +33628,7 @@ function render() {
     __WEBPACK_IMPORTED_MODULE_4__ring_js__["a" /* render */]();
 
     __WEBPACK_IMPORTED_MODULE_3__input_js__["b" /* render_debug */]();
-    __WEBPACK_IMPORTED_MODULE_7__map_refac_js__["a" /* render */]();
+    __WEBPACK_IMPORTED_MODULE_7__map_refac_js__["render"]();
     requestAnimationFrame(render);
 }
 
@@ -33758,6 +33764,8 @@ var Behaviors = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__styles_stick_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__styles_stick_less__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__global_js__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__map_refac_js__ = __webpack_require__(57);
+
 
 
 
@@ -33785,9 +33793,11 @@ class stick {
         this.baseAngle = baseAngle;
         this.scale = 1;
         this.title = title;
-        this.data = 13392;
+        this.data = 0;
         this.data_e = 0;
+        this.enabled = true;
         this.visibility_e = 0;
+        this.enabled_e = 0;
         this.roundTo = roundTo;
         this.scale_e = 1;
         this.hitBox = __WEBPACK_IMPORTED_MODULE_0_webpack_zepto___default()(`<div></div>`);
@@ -33817,13 +33827,16 @@ class stick {
     }
 
     setData(d) {
-        this.data = d;
+        if (d != undefined) {
+            this.data = d;
+        }
+        this.enabled = d != undefined;
     }
 
     render() {
 
         var mirror = this.baseAngle >= 180;
-
+        ease(this, 'enabled', 'enabled_e');
         ease(this, 'angle', 'angle_e');
         ease(this, 'scale', 'scale_e');
         if (!this.selected) {
@@ -33839,7 +33852,7 @@ class stick {
         __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineCap = "round";
         __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineJoin = "round";
         var deg = this.angle_e / 180 * Math.PI;
-
+        var visibility = this.enabled_e * this.visibility_e;
         pushMatrix(__WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */], () => {
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineWidth = 3;
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].rotate(deg);
@@ -33847,14 +33860,14 @@ class stick {
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].beginPath();
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(this.hue, 1, this.selected_e + 0.1);
             var arclen = 4 / 180 * Math.PI * this.scale_e;
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].arc(0, 0, 600 - this.visibility_e * 100, -Math.PI - arclen, -Math.PI + arclen);
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].arc(0, 0, 600 - visibility * 100, -Math.PI - arclen, -Math.PI + arclen);
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].stroke();
 
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].beginPath();
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(this.hue, 0.8 * (this.visibility_e + 0.2), this.selected_e + 0.4);
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].translate(-500 + this.visibility_e * 100, 0);
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(this.hue, 0.8 * (visibility + 0.2), this.selected_e + 0.4);
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].translate(-500 + visibility * 100, 0);
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].moveTo(0, 0);
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineTo(-50 * (0.1 + 0.9 * this.visibility_e) - this.selected_e * 40, 0);
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineTo(-50 * (0.1 + 0.9 * visibility) - this.selected_e * 40, 0);
             __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].stroke();
         });
 
@@ -33914,7 +33927,7 @@ class stickHolder {
         this.container = __WEBPACK_IMPORTED_MODULE_0_webpack_zepto___default()(`
         <div 
             id='stickHolder' 
-            style='z-index:9999999; position: absolute; display: block; transform: translate(540px, 540px)'></div>`);
+            style='top:0; left:0; z-index:9999999; position: absolute; display: block; transform: translate(540px, 540px)'></div>`);
     }
 
     setup() {
@@ -33927,18 +33940,41 @@ class stickHolder {
     }
 
     render() {
+        global.map = __WEBPACK_IMPORTED_MODULE_4__map_refac_js__;
+        var related = true;
+        if (this.type) {
+            //well..
+            if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity) {
+                if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity[this.type + "_data"]) {
+                    related = true;
+                } else if (this.type == 'cities' && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity.batch > 0) {
+                    related = true;
+                } else if (this.type == 'counties' && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity.pos) {
+                    related = true;
+                } else {
+                    related = false;
+                }
+            }
+        }
 
-        if (!this.focused || !__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].dataRingVisible) {
+        if (!this.focused || !__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].dataRingVisible || !related) {
             this.visibility = 0;
         } else {
             this.visibility = 1;
         }
 
+        if (!related) {
+            this.focused = false;
+        }
+
+        // console.log(global.hoveringElement)
+
+
         ease(this, 'visibility', 'visibility_e', 0.06, 0.00001);
-        if (__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].dataRingVisible) {
+        if (__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].dataRingVisible && related) {
             var _found = false;
             for (var i = 0; i < this.children.length; i++) {
-                if (global.hoveringElement == this.children[i].hitBox.get(0)) {
+                if (this.children[i].enabled && global.hoveringElement == this.children[i].hitBox.get(0)) {
                     _found = true;
                     if (this.selection !== i) {
                         this.selection = i;
@@ -33951,7 +33987,9 @@ class stickHolder {
                 //force to deselect peers ops
                 StickState.Selection = this.selection;
                 StickState.SelectionType = this.type;
-                console.log(StickState);
+                // console.log(StickState);
+
+
                 for (var i = 0; i < managedSticks.length; i++) {
                     if (managedSticks[i] != this) {
                         managedSticks[i].focused = false;
@@ -33973,6 +34011,25 @@ class stickHolder {
             deg -= stick.selected || i - 1 == this.selection && this.selection >= 0 ? deg_span * 2 : deg_span;
             stick.angle = deg;
             stick.scale = stick.selected ? 1 : 0.5;
+
+            if (this.type) {
+                //well..
+                if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity[this.type + "_data"]) {
+                    this.children[i].setData(__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity[this.type + "_data"][i]);
+                } else if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity && this.type == 'cities' && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity.batch > 0) {
+                    try {
+                        this.children[i].setData(__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity["data"][i]);
+                    } catch (e) {
+                        this.children[i].setData();
+                    }
+                } else if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity && this.type == 'counties' && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity.pos) {
+                    try {
+                        this.children[i].setData(__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity["data"][i]);
+                    } catch (e) {
+                        this.children[i].setData();
+                    }
+                }
+            }
             this.children[i].render();
         }
     }

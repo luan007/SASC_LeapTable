@@ -2,6 +2,7 @@ import $ from 'webpack-zepto'
 import "./styles/stick.less"
 import { ctx2d, mouse } from "./global.js"
 import * as input from "./input.js"
+import * as map from "./map-refac.js"
 const lineDashSegs = [3, 3];
 
 export var StickState = {
@@ -25,9 +26,11 @@ export class stick {
         this.baseAngle = baseAngle;
         this.scale = 1;
         this.title = title;
-        this.data = 13392;
+        this.data = 0;
         this.data_e = 0;
+        this.enabled = true;
         this.visibility_e = 0;
+        this.enabled_e = 0;
         this.roundTo = roundTo;
         this.scale_e = 1;
         this.hitBox = $(`<div></div>`);
@@ -57,13 +60,16 @@ export class stick {
     }
 
     setData(d) {
-        this.data = d;
+        if (d != undefined) {
+            this.data = d;
+        }
+        this.enabled = d != undefined;
     }
 
     render() {
 
         var mirror = this.baseAngle >= 180;
-
+        ease(this, 'enabled', 'enabled_e');
         ease(this, 'angle', 'angle_e');
         ease(this, 'scale', 'scale_e');
         if (!this.selected) {
@@ -79,7 +85,7 @@ export class stick {
         ctx2d.lineCap = "round";
         ctx2d.lineJoin = "round";
         var deg = this.angle_e / 180 * Math.PI;
-
+        var visibility = this.enabled_e * this.visibility_e;
         pushMatrix(ctx2d, () => {
             ctx2d.lineWidth = 3;
             ctx2d.rotate(deg);
@@ -87,14 +93,14 @@ export class stick {
             ctx2d.beginPath();
             ctx2d.strokeStyle = hsl(this.hue, 1, this.selected_e + 0.1);
             var arclen = 4 / 180 * Math.PI * this.scale_e;
-            ctx2d.arc(0, 0, 600 - this.visibility_e * 100, -Math.PI - arclen, -Math.PI + arclen);
+            ctx2d.arc(0, 0, 600 - visibility * 100, -Math.PI - arclen, -Math.PI + arclen);
             ctx2d.stroke();
 
             ctx2d.beginPath();
-            ctx2d.strokeStyle = hsl(this.hue, 0.8 * (this.visibility_e + 0.2), this.selected_e + 0.4);
-            ctx2d.translate(-500 + this.visibility_e * 100, 0);
+            ctx2d.strokeStyle = hsl(this.hue, 0.8 * (visibility + 0.2), this.selected_e + 0.4);
+            ctx2d.translate(-500 + visibility * 100, 0);
             ctx2d.moveTo(0, 0);
-            ctx2d.lineTo(-50 * (0.1 + 0.9 * this.visibility_e) - this.selected_e * 40, 0);
+            ctx2d.lineTo(-50 * (0.1 + 0.9 * visibility) - this.selected_e * 40, 0);
             ctx2d.stroke();
 
         });
@@ -155,7 +161,7 @@ export class stickHolder {
         this.container = $(`
         <div 
             id='stickHolder' 
-            style='z-index:9999999; position: absolute; display: block; transform: translate(540px, 540px)'></div>`);
+            style='top:0; left:0; z-index:9999999; position: absolute; display: block; transform: translate(540px, 540px)'></div>`);
     }
 
     setup() {
@@ -173,18 +179,43 @@ export class stickHolder {
     }
 
     render() {
+        global.map = map;
+        var related = true;
+        if (this.type) {
+            //well..
+            if (map.Map_State.SelectedEntity) {
+                if (map.Map_State.SelectedEntity[this.type + "_data"]) {
+                    related = true;
+                }
+                else if (this.type == 'cities' && map.Map_State.SelectedEntity.batch > 0) {
+                    related = true;
+                } else if (this.type == 'counties' && map.Map_State.SelectedEntity.pos) {
+                    related = true;
+                } else {
+                    related = false;
+                }
+            }
+        }
 
-        if (!this.focused || !input.mouse.dataRingVisible) {
+        if (!this.focused || !input.mouse.dataRingVisible || !related) {
             this.visibility = 0;
         } else {
             this.visibility = 1;
         }
 
+
+        if (!related) {
+            this.focused = false;
+        }
+
+        // console.log(global.hoveringElement)
+
+
         ease(this, 'visibility', 'visibility_e', 0.06, 0.00001);
-        if (input.mouse.dataRingVisible) {
+        if (input.mouse.dataRingVisible && related) {
             var _found = false;
             for (var i = 0; i < this.children.length; i++) {
-                if (global.hoveringElement == this.children[i].hitBox.get(0)) {
+                if (this.children[i].enabled && global.hoveringElement == this.children[i].hitBox.get(0)) {
                     _found = true;
                     if (this.selection !== i) {
                         this.selection = i;
@@ -197,7 +228,9 @@ export class stickHolder {
                 //force to deselect peers ops
                 StickState.Selection = this.selection;
                 StickState.SelectionType = this.type;
-                console.log(StickState);
+                // console.log(StickState);
+
+
                 for (var i = 0; i < managedSticks.length; i++) {
                     if (managedSticks[i] != this) {
                         managedSticks[i].focused = false;
@@ -219,6 +252,27 @@ export class stickHolder {
             deg -= (stick.selected || ((i - 1) == this.selection && this.selection >= 0)) ? (deg_span * 2) : deg_span;
             stick.angle = deg;
             stick.scale = stick.selected ? 1 : 0.5;
+
+            if (this.type) {
+                //well..
+                if (map.Map_State.SelectedEntity
+                    && map.Map_State.SelectedEntity[this.type + "_data"]) {
+                    this.children[i].setData(map.Map_State.SelectedEntity[this.type + "_data"][i])
+                }
+                else if (map.Map_State.SelectedEntity && this.type == 'cities' && map.Map_State.SelectedEntity.batch > 0) {
+                    try {
+                        this.children[i].setData(map.Map_State.SelectedEntity["data"][i])
+                    } catch (e) {
+                        this.children[i].setData()
+                    }
+                } else if (map.Map_State.SelectedEntity && this.type == 'counties' && map.Map_State.SelectedEntity.pos) {
+                    try {
+                        this.children[i].setData(map.Map_State.SelectedEntity["data"][i])
+                    } catch (e) {
+                        this.children[i].setData()
+                    }
+                }
+            }
             this.children[i].render();
         }
     }

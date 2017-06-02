@@ -113,13 +113,16 @@ export function render() {
 
     if (Map_State.Mode == 1 && Map_State.Selection_Spot) {
         selection_title.text(Map_State.Selection_Spot.name);
+        Map_State.SelectedEntity = Map_State.Selection_Spot;
     }
     else if (Map_State.Mode >= 0) {
         if (data.map.provinces[Map_State.Selection]) {
             selection_title.text(data.map.provinces[Map_State.Selection].name);
+            Map_State.SelectedEntity = data.map.provinces[Map_State.Selection];
         }
     } else if (Map_State.Mode == -1) {
         selection_title.text("全国数据");
+        Map_State.SelectedEntity = data.map;
     }
 
     renderProvinces();
@@ -128,10 +131,11 @@ export function render() {
 }
 
 
-var Map_State = {
+export var Map_State = {
     Mode: -1,
     Selection: -1,
     Selection_Spot: undefined,
+    SelectedEntity: undefined
 };
 
 var Provinces = {};
@@ -432,7 +436,7 @@ class Spot extends position_2d {
             this.label.style.opacity = 1;
             this.label.style.transform = `translate3d(${(this.vec2.x + 1) / 2 * 1080}px, ${(1 - this.vec2.y) / 2 * 1080 + 30}px, -1px) scale(${scale}, ${scale})`;
             this.label.style.backgroundColor = `rgba(0, 0, 0, 1)`;
-            if(this.tselection) {
+            if (this.tselection) {
                 this.label.style.zIndex = 888888;
             } else {
                 this.label.style.zIndex = 10;
