@@ -4,6 +4,11 @@ import { ctx2d, mouse } from "./global.js"
 import * as input from "./input.js"
 const lineDashSegs = [3, 3];
 
+export var StickState = {
+    Selection: -1,
+    SelectionType: undefined
+};
+
 function unitRound(unit) {
     return /万|亿/.test(unit) ? 100 :
         (/\%/.test(unit) ? 10 : 1);
@@ -132,14 +137,14 @@ export class stick {
     }
 }
 
-
 var managedSticks = []
 
 export class stickHolder {
 
-    constructor(dataSet, baseAngle = 0, hue = 0.56) {
+    constructor(dataSet, baseAngle = 0, hue = 0.56, type = "") {
         managedSticks.push(this);
         this.dataSet = dataSet;
+        this.type = type;
         this.children = [];
         this.selection = -1;
         this.visibility = 1;
@@ -154,6 +159,7 @@ export class stickHolder {
     }
 
     setup() {
+
         this.container.appendTo(document.querySelector("body"));
         this.dataSet.forEach((dt) => {
             var s = new stick(this,
@@ -168,29 +174,34 @@ export class stickHolder {
 
     render() {
 
-        if (!this.focused || (input.mouse.flying && !input.mouse.highlock)) {
+        if (!this.focused || !input.mouse.dataRingVisible) {
             this.visibility = 0;
         } else {
             this.visibility = 1;
         }
 
         ease(this, 'visibility', 'visibility_e', 0.06, 0.00001);
-        var _found = false;
-        for (var i = 0; i < this.children.length; i++) {
-            if (global.hoveringElement == this.children[i].hitBox.get(0)) {
-                _found = true;
-                if (this.selection !== i) {
-                    this.selection = i;
+        if (input.mouse.dataRingVisible) {
+            var _found = false;
+            for (var i = 0; i < this.children.length; i++) {
+                if (global.hoveringElement == this.children[i].hitBox.get(0)) {
+                    _found = true;
+                    if (this.selection !== i) {
+                        this.selection = i;
+                    }
                 }
             }
-        }
-        // if (!_found) this.selection = -1;
-        if (_found) {
-            this.focused = true;
-            //force to deselect peers ops
-            for (var i = 0; i < managedSticks.length; i++) {
-                if (managedSticks[i] != this) {
-                    managedSticks[i].focused = false;
+            // if (!_found) this.selection = -1;
+            if (_found) {
+                this.focused = true;
+                //force to deselect peers ops
+                StickState.Selection = this.selection;
+                StickState.SelectionType = this.type;
+                console.log(StickState);
+                for (var i = 0; i < managedSticks.length; i++) {
+                    if (managedSticks[i] != this) {
+                        managedSticks[i].focused = false;
+                    }
                 }
             }
         }

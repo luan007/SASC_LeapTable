@@ -6419,7 +6419,8 @@ var mouse = {
     grab: 0,
     pick: false,
     flying: false,
-    highlock: false
+    highlock: false,
+    dataRingVisible: false
 };
 
 function map(val, a, b, c, d) {
@@ -6431,6 +6432,7 @@ global.NOLEAP = false;
 __WEBPACK_IMPORTED_MODULE_1_leapjs__["loop"](function (frame) {
     if (!global.NOLEAP) {
         if (frame.hands.length > 0) {
+
             var h = frame.hands[0].palmPosition;
             //   console.log(frame.hands[0]);
             mouse.x = map(h[0], -150, 150, 0, 1080);
@@ -6441,6 +6443,7 @@ __WEBPACK_IMPORTED_MODULE_1_leapjs__["loop"](function (frame) {
             mouse.pick = frame.hands[0].indexFinger.extended && mouse.grab > 0.8;
             mouse.flying = mouse.grab < 0.4 && frame.hands[0].middleFinger.extended && frame.hands[0].indexFinger.extended && frame.hands[0].pinchStrength < 0.2;
             mouse.highlock = mouse.ez > 1000;
+            mouse.dataRingVisible = !(mouse.flying && !mouse.highlock);
         } else {
             mouse.flying = false;
         }
@@ -30613,7 +30616,43 @@ function loadAll(data, cb) {
     })(0);
 }
 
-loadAll(["mapdata/china.json", "mapdata/combined.json", "mapdata/particles/map-highres.json", "mapdata/particles/map-mres.json", "mapdata/particles/map-uhighres.json"], d => {
+function normalize_val(val, max, min) {
+    return (val - min) / (max - min);
+}
+
+function normalize_arr(arr) {
+    var max = 0;
+    var min = 0;
+    for (var i = 0; i < arr.length; i++) {
+        if (!isNumber(arr[i])) {
+            continue;
+        }
+        if (arr[i] > findMax) {
+            findMax = arr[i];
+        }
+        if (arr[i] < findMin) {
+            findMin = arr[i];
+        }
+    }
+    var avgCalc = 0;
+    var r = [];
+    var count = 0;
+    for (var t = 0; t < arr.length; t++) {
+        if (!isNumber(arr[i])) {
+            r[t] = undefined;
+            continue;
+        }
+        count++;
+        avgCalc += arr[t];
+        r[t] = normalize_val(arr[t], max, min);
+    }
+    r.avg = avgCalc / count;
+    r.total = avgCalc;
+    return r;
+}
+
+loadAll(["mapdata/china.json", "mapdata/combined.json", "mapdata/particles/map-highres.json", "mapdata/particles/map-mres.json", "mapdata/particles/map-uhighres.json", "mapdata/composite-data.json"], d => {
+
     data.map.geojson = d[0];
     data.map.markers = d[1];
     data.map.points_h = d[2];
@@ -30621,7 +30660,7 @@ loadAll(["mapdata/china.json", "mapdata/combined.json", "mapdata/particles/map-h
     data.map.points_uh = d[4];
 
     postfab_points("points_h");
-    postfab_points("points_l", 5);
+    postfab_points("points_l");
     postfab_points("points_uh");
 
     console.log("p.uh\nlength=", data.map.points_uh.length, " [CAP] ");
@@ -30634,6 +30673,10 @@ loadAll(["mapdata/china.json", "mapdata/combined.json", "mapdata/particles/map-h
         prop.id = parseInt(prop.id);
         data.map.provinces[prop.id] = prop;
     }
+
+    //calculate provinces
+
+    var composite = data[5];
 
     data.ready = true;
     event.emit("ready");
@@ -31566,6 +31609,8 @@ process.umask = function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__global_js__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__data_js__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__math_particlesys_js__ = __webpack_require__(122);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__stick_js__ = __webpack_require__(123);
+
 
 
 
@@ -32083,11 +32128,11 @@ function render() {
     });
 }
 
-var holder_left = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["城市常住人口|万人", "公共财政预算收入|亿元", "食品工业产值|亿元", "食品生产经营单位数|家", "食品工业产值年增幅|%", "食品工业产值占地区生产总值比重|%", "食品安全经费决算金额|万元", "食品执法车辆总数|辆", "执法装备价值|万元", "食品安全工作考核占比|%", "检查食品生产经营主体次数|家次", "抽检数量|批次", "办案数量|件", "涉案货值|万元", "罚没款金额|万元", "刑事立案数量|件", "追究刑责人数|人", "抽检合格率|%", "创建工作知晓度|%", "当地食品安全总体满意度|%", "受理投诉举报数量|件", "办结投诉举报数量|件"]);
+var holder_left = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["城市常住人口|万人", "公共财政预算收入|亿元", "食品工业产值|亿元", "食品生产经营单位数|家", "食品工业产值年增幅|%", "食品工业产值占地区生产总值比重|%", "食品安全经费决算金额|万元", "食品执法车辆总数|辆", "执法装备价值|万元", "食品安全工作考核占比|%", "检查食品生产经营主体次数|家次", "抽检数量|批次", "办案数量|件", "涉案货值|万元", "罚没款金额|万元", "刑事立案数量|件", "追究刑责人数|人", "抽检合格率|%", "创建工作知晓度|%", "当地食品安全总体满意度|%", "受理投诉举报数量|件", "办结投诉举报数量|件"], 0, 0.56, "city");
 
-var holder_right = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["农产品质量安全监管工作在县级人民政府绩效考核体系中的比重|%", "关于农产品质量安全纳入财政预算的资金规摸|万元", "县级监管/协管人员|名", "乡镇级监管/协管人员|名", "村级监管/协管人员|名", "群众满意度|%", "质量安全水平|%", "全县设有监管机构的乡镇数|个", "定性检测检测产品数量|个", "定量检测检测产品数量|个", "检测产品数量|个", "“三品一标”产品数量|个", "“三品一标”产地面积占耕地面积比|%", "“三园两场”数量|个", "标准化生产基地面积 总面积占比|%", "标准化生产园（场）占比|%", "纳入追溯平台管理的农产品生产经营主体|个", "纳入监管信息平台管理的农业投入品生产经营主体|个", "组织开展农产品质量安全培训|人次", "开展农产品质量安全执法|次", "开展农产品质量安全宣传|次"], 180, 0.3);
+var holder_right = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["农产品质量安全监管工作在县级人民政府绩效考核体系中的比重|%", "关于农产品质量安全纳入财政预算的资金规摸|万元", "县级监管/协管人员|名", "乡镇级监管/协管人员|名", "村级监管/协管人员|名", "群众满意度|%", "质量安全水平|%", "全县设有监管机构的乡镇数|个", "定性检测检测产品数量|个", "定量检测检测产品数量|个", "检测产品数量|个", "“三品一标”产品数量|个", "“三品一标”产地面积占耕地面积比|%", "“三园两场”数量|个", "标准化生产基地面积 总面积占比|%", "标准化生产园（场）占比|%", "纳入追溯平台管理的农产品生产经营主体|个", "纳入监管信息平台管理的农业投入品生产经营主体|个", "组织开展农产品质量安全培训|人次", "开展农产品质量安全执法|次", "开展农产品质量安全宣传|次"], 180, 0.3, 'county');
 
-var holder_time_l = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["全览| ", "创县| ", "创城 - 第三批| ", "创城 - 第二批| ", "创城 - 第一批| "], 70, 0);
+var holder_time_l = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["全览| ", "创县| ", "创城 - 第三批| ", "创城 - 第二批| ", "创城 - 第一批| "], 70, 0, "generic");
 
 holder_left.setup();
 holder_time_l.setup();
@@ -33570,7 +33615,8 @@ var Behaviors = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_webpack_zepto__ = __webpack_require__(26);
+/* WEBPACK VAR INJECTION */(function(global) {/* unused harmony export StickState */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_webpack_zepto__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_webpack_zepto___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_webpack_zepto__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__styles_stick_less__ = __webpack_require__(128);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__styles_stick_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__styles_stick_less__);
@@ -33581,6 +33627,11 @@ var Behaviors = {
 
 
 const lineDashSegs = [3, 3];
+
+var StickState = {
+    Selection: -1,
+    SelectionType: undefined
+};
 
 function unitRound(unit) {
     return (/万|亿/.test(unit) ? 100 : /\%/.test(unit) ? 10 : 1
@@ -33713,9 +33764,10 @@ var managedSticks = [];
 
 class stickHolder {
 
-    constructor(dataSet, baseAngle = 0, hue = 0.56) {
+    constructor(dataSet, baseAngle = 0, hue = 0.56, type = "") {
         managedSticks.push(this);
         this.dataSet = dataSet;
+        this.type = type;
         this.children = [];
         this.selection = -1;
         this.visibility = 1;
@@ -33730,6 +33782,7 @@ class stickHolder {
     }
 
     setup() {
+
         this.container.appendTo(document.querySelector("body"));
         this.dataSet.forEach(dt => {
             var s = new stick(this, dt.split("|")[0], dt.split("|")[1], unitRound(dt.split("|")[1]), this.baseAngle, this.hue);
@@ -33739,29 +33792,34 @@ class stickHolder {
 
     render() {
 
-        if (!this.focused || __WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].flying && !__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].highlock) {
+        if (!this.focused || !__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].dataRingVisible) {
             this.visibility = 0;
         } else {
             this.visibility = 1;
         }
 
         ease(this, 'visibility', 'visibility_e', 0.06, 0.00001);
-        var _found = false;
-        for (var i = 0; i < this.children.length; i++) {
-            if (global.hoveringElement == this.children[i].hitBox.get(0)) {
-                _found = true;
-                if (this.selection !== i) {
-                    this.selection = i;
+        if (__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].dataRingVisible) {
+            var _found = false;
+            for (var i = 0; i < this.children.length; i++) {
+                if (global.hoveringElement == this.children[i].hitBox.get(0)) {
+                    _found = true;
+                    if (this.selection !== i) {
+                        this.selection = i;
+                    }
                 }
             }
-        }
-        // if (!_found) this.selection = -1;
-        if (_found) {
-            this.focused = true;
-            //force to deselect peers ops
-            for (var i = 0; i < managedSticks.length; i++) {
-                if (managedSticks[i] != this) {
-                    managedSticks[i].focused = false;
+            // if (!_found) this.selection = -1;
+            if (_found) {
+                this.focused = true;
+                //force to deselect peers ops
+                StickState.Selection = this.selection;
+                StickState.SelectionType = this.type;
+                console.log(StickState);
+                for (var i = 0; i < managedSticks.length; i++) {
+                    if (managedSticks[i] != this) {
+                        managedSticks[i].focused = false;
+                    }
                 }
             }
         }

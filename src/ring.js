@@ -58,8 +58,6 @@ export function render() {
     })
 }
 
-
-
 var holder_left = new stickHolder(
     [
         "城市常住人口|万人",
@@ -84,7 +82,7 @@ var holder_left = new stickHolder(
         "当地食品安全总体满意度|%",
         "受理投诉举报数量|件",
         "办结投诉举报数量|件"
-    ]);
+    ], 0, 0.56, "city");
 
 
 
@@ -111,7 +109,7 @@ var holder_right = new stickHolder([
     "组织开展农产品质量安全培训|人次",
     "开展农产品质量安全执法|次",
     "开展农产品质量安全宣传|次"
-], 180, 0.3);
+], 180, 0.3, 'county');
 
 
 var holder_time_l = new stickHolder([
@@ -120,7 +118,7 @@ var holder_time_l = new stickHolder([
     "创城 - 第三批| ",
     "创城 - 第二批| ",
     "创城 - 第一批| ",
-], 70, 0);
+], 70, 0, "generic");
 
 
 holder_left.setup();

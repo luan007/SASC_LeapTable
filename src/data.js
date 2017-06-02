@@ -72,21 +72,60 @@ function loadAll(data, cb) {
     })(0);
 }
 
+function normalize_val(val, max, min) {
+    return (val - min) / (max - min);
+}
+
+function normalize_arr(arr) {
+    var max = 0;
+    var min = 0;
+    for (var i = 0; i < arr.length; i++) {
+        if (!isNumber(arr[i])) {
+            continue;
+        }
+        if (arr[i] > findMax) {
+            findMax = arr[i];
+        }
+        if (arr[i] < findMin) {
+            findMin = arr[i];
+        }
+    }
+    var avgCalc = 0;
+    var r = [];
+    var count = 0;
+    for (var t = 0; t < arr.length; t++) {
+        if (!isNumber(arr[i])) {
+            r[t] = undefined;
+            continue;
+        }
+        count++;
+        avgCalc += arr[t];
+        r[t] = normalize_val(arr[t], max, min);
+    }
+    r.avg = avgCalc / count;
+    r.total = avgCalc;
+    return r;
+}
+
 loadAll([
     "mapdata/china.json",
     "mapdata/combined.json",
     "mapdata/particles/map-highres.json",
     "mapdata/particles/map-mres.json",
     "mapdata/particles/map-uhighres.json",
+    "mapdata/composite-data.json",
 ], (d) => {
+
     data.map.geojson = d[0];
     data.map.markers = d[1];
     data.map.points_h = d[2];
     data.map.points_l = d[3];
     data.map.points_uh = d[4];
 
+
+
     postfab_points("points_h");
-    postfab_points("points_l", 5);
+    postfab_points("points_l");
     postfab_points("points_uh");
 
     console.log("p.uh\nlength=", data.map.points_uh.length, " [CAP] ");
@@ -99,6 +138,10 @@ loadAll([
         prop.id = parseInt(prop.id);
         data.map.provinces[prop.id] = prop;
     }
+
+    //calculate provinces
+
+    var composite = data[5];
 
     data.ready = true;
     event.emit("ready");

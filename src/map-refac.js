@@ -6,7 +6,7 @@ import * as input from "./input.js"
 import "./global.js"
 import { data, event as data_event } from "./data.js"
 import * as PSYS from "./math-particlesys.js"
-
+import * as DataRing from "./stick.js"
 
 var selection_title = $("<div class='selection_title'>国家</div>");
 selection_title.appendTo($("body"));
@@ -131,7 +131,7 @@ export function render() {
 var Map_State = {
     Mode: -1,
     Selection: -1,
-    Selection_Spot: undefined
+    Selection_Spot: undefined,
 };
 
 var Provinces = {};
