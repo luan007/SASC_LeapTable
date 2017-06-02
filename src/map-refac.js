@@ -460,7 +460,6 @@ class Spot extends position_2d {
         this.three_material.color.setRGB(rgb[0], rgb[1], rgb[2]);
         this.three_mesh.scale.set(this.meshScale, this.meshScale, this.meshScale);
 
-
         if (this.selecting && !this.tselection) {
             this.selectionHold += (2 - this.selectionHold) * 0.03;
             if (this.selectionHold > 1.8) {
