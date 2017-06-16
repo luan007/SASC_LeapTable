@@ -1,5 +1,5 @@
 import { ctx2d, mouse } from "./global.js"
-import { stick, stickHolder } from "./stick.js"
+import { stick, stickHolder, StickState } from "./stick.js"
 import $ from 'webpack-zepto'
 
 var img = document.createElement("img");
@@ -56,6 +56,8 @@ export function render() {
         holder_left.render();
         holder_right.render();
     })
+
+    
 }
 
 var holder_left = new stickHolder(
@@ -86,7 +88,6 @@ var holder_left = new stickHolder(
 
 
 
-
 var holder_right = new stickHolder([
     "农产品质量安全监管工作在县级人民政府绩效考核体系中的比重|%",
     "关于农产品质量安全纳入财政预算的资金规摸|万元",
@@ -114,14 +115,19 @@ var holder_right = new stickHolder([
 
 var holder_time_l = new stickHolder([
     "全览| ",
-    "创县| ",
-    "创城 - 第三批| ",
-    "创城 - 第二批| ",
-    "创城 - 第一批| ",
+    "创县|区县",
+    "创城 - 第三批|城",
+    "创城 - 第二批|城",
+    "创城 - 第一批|城",
 ], 70, 0, undefined);
-
 
 holder_left.setup();
 holder_time_l.setup();
 holder_right.setup();
 
+
+holder_time_l.children[0].setData(107 + 67);
+holder_time_l.children[1].setData(107);
+holder_time_l.children[2].setData(37);
+holder_time_l.children[3].setData(15);
+holder_time_l.children[4].setData(15);

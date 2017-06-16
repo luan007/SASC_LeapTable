@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 121);
+/******/ 	return __webpack_require__(__webpack_require__.s = 40);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1305,8 +1305,7 @@
 }).call(this);
 
 /***/ }),
-/* 1 */,
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -5790,7 +5789,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 })(this);
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -6060,10 +6059,10 @@ function isUndefined(arg) {
 }
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var glMatrix = __webpack_require__(2),
+var glMatrix = __webpack_require__(1),
     vec3 = glMatrix.vec3;
 
 /**
@@ -6280,15 +6279,14 @@ Pointable.prototype.hand = function () {
 Pointable.Invalid = { valid: false };
 
 /***/ }),
-/* 5 */,
-/* 6 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/* unused harmony export canvas2d */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ctx2d; });
 /* harmony export (immutable) */ __webpack_exports__["a"] = update;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__input_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__input_js__ = __webpack_require__(5);
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_0__input_js__["c"]; });
 
 
@@ -6381,19 +6379,18 @@ global.ease = function (obj, a, b, ratio = 0.1, threshold = 0.01) {
 
 canvas2d.style.zIndex = 998988;
 document.body.appendChild(canvas2d);
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(6)))
 
 /***/ }),
-/* 7 */,
-/* 8 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return mouse; });
 /* harmony export (immutable) */ __webpack_exports__["a"] = updateInputEase;
 /* harmony export (immutable) */ __webpack_exports__["b"] = render_debug;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__global_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_leapjs__ = __webpack_require__(113);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__global_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_leapjs__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_leapjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_leapjs__);
 
 
@@ -6423,11 +6420,32 @@ var mouse = {
     dataRingVisible: false
 };
 
+function updateMouseLogic() {
+    mouse.z = Math.min(1500, Math.max(mouse.z, 100));
+    var highlock = mouse.ez > 1000;
+    if (highlock != mouse.highlock) {
+        //highlock
+        mouse.highlock = highlock;
+        if (!highlock) {
+            mouse.flying = true;
+        }
+    }
+    if (mouse.highlock) {
+        mouse.flying = true;
+    } else {
+        if (mouse.clicked) {
+            mouse.flying = !mouse.flying;
+        }
+    }
+    mouse.clicked = false;
+    mouse.dataRingVisible = !mouse.flying || mouse.highlock;
+}
+
 function map(val, a, b, c, d) {
     return (val - a) / (b - a) * (d - c) + c;
 }
 
-global.NOLEAP = false;
+global.NOLEAP = true;
 
 __WEBPACK_IMPORTED_MODULE_1_leapjs__["loop"](function (frame) {
     if (!global.NOLEAP) {
@@ -6450,27 +6468,58 @@ __WEBPACK_IMPORTED_MODULE_1_leapjs__["loop"](function (frame) {
     }
 });
 
-document.addEventListener("mousedown", function (e) {
-    mouse.flying = true;
-});
+if (global.NOLEAP) {
+    window.addEventListener("wheel", function (e) {
+        // if (mouse.flying) {
+        mouse.z += e.deltaY * 10;
+        // }
+        // console.log(mouse.ez);
+        // var highlock = mouse.ez > 1000;
+        // if (highlock != mouse.highlock) {
+        //     if (highlock) {
+        //         mouse.highlock = true;
+        //     } else {
+        //         mouse.highlock = false;
+        //     }
+        //     mouse.flying = false;
+        // }
+        // mouse.dataRingVisible = !(mouse.flying && !mouse.highlock);
+    });
 
-document.addEventListener("mouseup", function (e) {
-    mouse.flying = false;
-});
+    document.addEventListener("mousedown", function (e) {
+        mouse.clicked = true;
+    });
 
-document.addEventListener("mousemove", function (e) {
-    mouse.x = e.pageX;
-    mouse.y = e.pageY;
-    mouse.z = 2080;
-    if (mouse.flying) {
-        mouse.z = 1000;
-    }
-});
+    document.addEventListener("mouseup", function (e) {
+        // mouse.flying = !mouse.flying;
+        // mouse.dataRingVisible = !(mouse.flying && !mouse.highlock);
+        // mouse.z = 1000;
+        // mouse.z = 1000;
+    });
+
+    document.addEventListener("mousemove", function (e) {
+
+        // mouse.px = mouse.px || 0;
+        // mouse.py = mouse.py || 0;
+
+        mouse.x = e.pageX;
+        mouse.y = e.pageY;
+
+        // mouse.prevx = e.x;
+        // mouse.prevy = e.y;
+
+        // mouse.z = 2080;
+        // if (mouse.flying) {
+        //     mouse.z = 1000;
+        // }
+    });
+}
 
 function updateInputEase() {
+
     ease(mouse, 'x', 'ex', EASE_RATIO, EASE_THRESHOLD);
     ease(mouse, 'y', 'ey', EASE_RATIO, EASE_THRESHOLD);
-    ease(mouse, 'z', 'ez', EASE_RATIO, EASE_THRESHOLD);
+    ease(mouse, 'z', 'ez', 0.03, EASE_THRESHOLD);
 
     mouse.dx = mouse.ex - mouse.px;
     mouse.dy = mouse.ey - mouse.py;
@@ -6478,6 +6527,8 @@ function updateInputEase() {
     mouse.px = mouse.ex;
     mouse.py = mouse.ey;
     mouse.pz = mouse.ez;
+
+    updateMouseLogic();
     // console.log(mouse.z);
 
     global.hoveringElement = document.elementFromPoint(mouse.ex, mouse.ey);
@@ -6511,671 +6562,12 @@ function render_debug() {
     }
 }
 
+mouse.z = 1000;
 global.mouse = mouse;
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(6)))
 
 /***/ }),
-/* 9 */,
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Pointable = __webpack_require__(4),
-    Bone = __webpack_require__(50),
-    Dialog = __webpack_require__(53),
-    _ = __webpack_require__(0);
-
-/**
-* Constructs a Finger object.
-*
-* An uninitialized finger is considered invalid.
-* Get valid Finger objects from a Frame or a Hand object.
-*
-* @class Finger
-* @memberof Leap
-* @classdesc
-* The Finger class reports the physical characteristics of a finger.
-*
-* Both fingers and tools are classified as Pointable objects. Use the
-* Pointable.tool property to determine whether a Pointable object represents a
-* tool or finger. The Leap classifies a detected entity as a tool when it is
-* thinner, straighter, and longer than a typical finger.
-*
-* Note that Finger objects can be invalid, which means that they do not
-* contain valid tracking data and do not correspond to a physical entity.
-* Invalid Finger objects can be the result of asking for a Finger object
-* using an ID from an earlier frame when no Finger objects with that ID
-* exist in the current frame. A Finger object created from the Finger
-* constructor is also invalid. Test for validity with the Pointable.valid
-* property.
-*/
-var Finger = module.exports = function (data) {
-  Pointable.call(this, data); // use pointable as super-constructor
-
-  /**
-  * The position of the distal interphalangeal joint of the finger.
-  * This joint is closest to the tip.
-  * 
-  * The distal interphalangeal joint is located between the most extreme segment
-  * of the finger (the distal phalanx) and the middle segment (the medial
-  * phalanx).
-  *
-  * @member dipPosition
-  * @type {number[]}
-  * @memberof Leap.Finger.prototype
-  */
-  this.dipPosition = data.dipPosition;
-
-  /**
-  * The position of the proximal interphalangeal joint of the finger. This joint is the middle
-  * joint of a finger.
-  *
-  * The proximal interphalangeal joint is located between the two finger segments
-  * closest to the hand (the proximal and the medial phalanges). On a thumb,
-  * which lacks an medial phalanx, this joint index identifies the knuckle joint
-  * between the proximal phalanx and the metacarpal bone.
-  *
-  * @member pipPosition
-  * @type {number[]}
-  * @memberof Leap.Finger.prototype
-  */
-  this.pipPosition = data.pipPosition;
-
-  /**
-  * The position of the metacarpopophalangeal joint, or knuckle, of the finger.
-  *
-  * The metacarpopophalangeal joint is located at the base of a finger between
-  * the metacarpal bone and the first phalanx. The common name for this joint is
-  * the knuckle.
-  *
-  * On a thumb, which has one less phalanx than a finger, this joint index
-  * identifies the thumb joint near the base of the hand, between the carpal
-  * and metacarpal bones.
-  *
-  * @member mcpPosition
-  * @type {number[]}
-  * @memberof Leap.Finger.prototype
-  */
-  this.mcpPosition = data.mcpPosition;
-
-  /**
-   * The position of the Carpometacarpal joint
-   *
-   * This is at the distal end of the wrist, and has no common name.
-   *
-   */
-  this.carpPosition = data.carpPosition;
-
-  /**
-  * Whether or not this finger is in an extended posture.
-  *
-  * A finger is considered extended if it is extended straight from the hand as if
-  * pointing. A finger is not extended when it is bent down and curled towards the 
-  * palm.
-  * @member extended
-  * @type {Boolean}
-  * @memberof Leap.Finger.prototype
-  */
-  this.extended = data.extended;
-
-  /**
-  * An integer code for the name of this finger.
-  * 
-  * * 0 -- thumb
-  * * 1 -- index finger
-  * * 2 -- middle finger
-  * * 3 -- ring finger
-  * * 4 -- pinky
-  *
-  * @member type
-  * @type {number}
-  * @memberof Leap.Finger.prototype
-  */
-  this.type = data.type;
-
-  this.finger = true;
-
-  /**
-  * The joint positions of this finger as an array in the order base to tip.
-  *
-  * @member positions
-  * @type {array[]}
-  * @memberof Leap.Finger.prototype
-  */
-  this.positions = [this.carpPosition, this.mcpPosition, this.pipPosition, this.dipPosition, this.tipPosition];
-
-  if (data.bases) {
-    this.addBones(data);
-  } else {
-    Dialog.warnBones();
-  }
-};
-
-_.extend(Finger.prototype, Pointable.prototype);
-
-Finger.prototype.addBones = function (data) {
-  /**
-  * Four bones per finger, from wrist outwards:
-  * metacarpal, proximal, medial, and distal.
-  *
-  * See http://en.wikipedia.org/wiki/Interphalangeal_articulations_of_hand
-  */
-  this.metacarpal = new Bone(this, {
-    type: 0,
-    width: this.width,
-    prevJoint: this.carpPosition,
-    nextJoint: this.mcpPosition,
-    basis: data.bases[0]
-  });
-
-  this.proximal = new Bone(this, {
-    type: 1,
-    width: this.width,
-    prevJoint: this.mcpPosition,
-    nextJoint: this.pipPosition,
-    basis: data.bases[1]
-  });
-
-  this.medial = new Bone(this, {
-    type: 2,
-    width: this.width,
-    prevJoint: this.pipPosition,
-    nextJoint: this.dipPosition,
-    basis: data.bases[2]
-  });
-
-  /**
-   * Note that the `distal.nextJoint` position is slightly different from the `finger.tipPosition`.
-   * The former is at the very end of the bone, where the latter is the center of a sphere positioned at
-   * the tip of the finger.  The btipPosition "bone tip position" is a few mm closer to the wrist than
-   * the tipPosition.
-   * @type {Bone}
-   */
-  this.distal = new Bone(this, {
-    type: 3,
-    width: this.width,
-    prevJoint: this.dipPosition,
-    nextJoint: data.btipPosition,
-    basis: data.bases[3]
-  });
-
-  this.bones = [this.metacarpal, this.proximal, this.medial, this.distal];
-};
-
-Finger.prototype.toString = function () {
-  return "Finger [ id:" + this.id + " " + this.length + "mmx | width:" + this.width + "mm | direction:" + this.direction + ' ]';
-};
-
-Finger.Invalid = { valid: false };
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Pointable = __webpack_require__(4),
-    Bone = __webpack_require__(50),
-    glMatrix = __webpack_require__(2),
-    mat3 = glMatrix.mat3,
-    vec3 = glMatrix.vec3,
-    _ = __webpack_require__(0);
-
-/**
- * Constructs a Hand object.
- *
- * An uninitialized hand is considered invalid.
- * Get valid Hand objects from a Frame object.
- * @class Hand
- * @memberof Leap
- * @classdesc
- * The Hand class reports the physical characteristics of a detected hand.
- *
- * Hand tracking data includes a palm position and velocity; vectors for
- * the palm normal and direction to the fingers; properties of a sphere fit
- * to the hand; and lists of the attached fingers and tools.
- *
- * Note that Hand objects can be invalid, which means that they do not contain
- * valid tracking data and do not correspond to a physical entity. Invalid Hand
- * objects can be the result of asking for a Hand object using an ID from an
- * earlier frame when no Hand objects with that ID exist in the current frame.
- * A Hand object created from the Hand constructor is also invalid.
- * Test for validity with the [Hand.valid]{@link Leap.Hand#valid} property.
- */
-var Hand = module.exports = function (data) {
-  /**
-   * A unique ID assigned to this Hand object, whose value remains the same
-   * across consecutive frames while the tracked hand remains visible. If
-   * tracking is lost (for example, when a hand is occluded by another hand
-   * or when it is withdrawn from or reaches the edge of the Leap field of view),
-   * the Leap may assign a new ID when it detects the hand in a future frame.
-   *
-   * Use the ID value with the {@link Frame.hand}() function to find this
-   * Hand object in future frames.
-   *
-   * @member id
-   * @memberof Leap.Hand.prototype
-   * @type {String}
-   */
-  this.id = data.id;
-  /**
-   * The center position of the palm in millimeters from the Leap origin.
-   * @member palmPosition
-   * @memberof Leap.Hand.prototype
-   * @type {number[]}
-   */
-  this.palmPosition = data.palmPosition;
-  /**
-   * The direction from the palm position toward the fingers.
-   *
-   * The direction is expressed as a unit vector pointing in the same
-   * direction as the directed line from the palm position to the fingers.
-   *
-   * @member direction
-   * @memberof Leap.Hand.prototype
-   * @type {number[]}
-   */
-  this.direction = data.direction;
-  /**
-   * The rate of change of the palm position in millimeters/second.
-   *
-   * @member palmVeclocity
-   * @memberof Leap.Hand.prototype
-   * @type {number[]}
-   */
-  this.palmVelocity = data.palmVelocity;
-  /**
-   * The normal vector to the palm. If your hand is flat, this vector will
-   * point downward, or "out" of the front surface of your palm.
-   *
-   * ![Palm Vectors](images/Leap_Palm_Vectors.png)
-   *
-   * The direction is expressed as a unit vector pointing in the same
-   * direction as the palm normal (that is, a vector orthogonal to the palm).
-   * @member palmNormal
-   * @memberof Leap.Hand.prototype
-   * @type {number[]}
-   */
-  this.palmNormal = data.palmNormal;
-  /**
-   * The center of a sphere fit to the curvature of this hand.
-   *
-   * This sphere is placed roughly as if the hand were holding a ball.
-   *
-   * ![Hand Ball](images/Leap_Hand_Ball.png)
-   * @member sphereCenter
-   * @memberof Leap.Hand.prototype
-   * @type {number[]}
-   */
-  this.sphereCenter = data.sphereCenter;
-  /**
-   * The radius of a sphere fit to the curvature of this hand, in millimeters.
-   *
-   * This sphere is placed roughly as if the hand were holding a ball. Thus the
-   * size of the sphere decreases as the fingers are curled into a fist.
-   *
-   * @member sphereRadius
-   * @memberof Leap.Hand.prototype
-   * @type {number}
-   */
-  this.sphereRadius = data.sphereRadius;
-  /**
-   * Reports whether this is a valid Hand object.
-   *
-   * @member valid
-   * @memberof Leap.Hand.prototype
-   * @type {boolean}
-   */
-  this.valid = true;
-  /**
-   * The list of Pointable objects (fingers and tools) detected in this frame
-   * that are associated with this hand, given in arbitrary order. The list
-   * can be empty if no fingers or tools associated with this hand are detected.
-   *
-   * Use the {@link Pointable} tool property to determine
-   * whether or not an item in the list represents a tool or finger.
-   * You can also get only the tools using the Hand.tools[] list or
-   * only the fingers using the Hand.fingers[] list.
-   *
-   * @member pointables[]
-   * @memberof Leap.Hand.prototype
-   * @type {Leap.Pointable[]}
-   */
-  this.pointables = [];
-  /**
-   * The list of fingers detected in this frame that are attached to
-   * this hand, given in arbitrary order.
-   *
-   * The list can be empty if no fingers attached to this hand are detected.
-   *
-   * @member fingers[]
-   * @memberof Leap.Hand.prototype
-   * @type {Leap.Pointable[]}
-   */
-  this.fingers = [];
-
-  if (data.armBasis) {
-    this.arm = new Bone(this, {
-      type: 4,
-      width: data.armWidth,
-      prevJoint: data.elbow,
-      nextJoint: data.wrist,
-      basis: data.armBasis
-    });
-  } else {
-    this.arm = null;
-  }
-
-  /**
-   * The list of tools detected in this frame that are held by this
-   * hand, given in arbitrary order.
-   *
-   * The list can be empty if no tools held by this hand are detected.
-   *
-   * @member tools[]
-   * @memberof Leap.Hand.prototype
-   * @type {Leap.Pointable[]}
-   */
-  this.tools = [];
-  this._translation = data.t;
-  this._rotation = _.flatten(data.r);
-  this._scaleFactor = data.s;
-
-  /**
-   * Time the hand has been visible in seconds.
-   *
-   * @member timeVisible
-   * @memberof Leap.Hand.prototype
-   * @type {number}
-   */
-  this.timeVisible = data.timeVisible;
-
-  /**
-   * The palm position with stabalization
-   * @member stabilizedPalmPosition
-   * @memberof Leap.Hand.prototype
-   * @type {number[]}
-   */
-  this.stabilizedPalmPosition = data.stabilizedPalmPosition;
-
-  /**
-  * Reports whether this is a left or a right hand.
-  *
-  * @member type
-  * @type {String}
-  * @memberof Leap.Hand.prototype
-  */
-  this.type = data.type;
-  this.grabStrength = data.grabStrength;
-  this.pinchStrength = data.pinchStrength;
-  this.confidence = data.confidence;
-};
-
-/**
- * The finger with the specified ID attached to this hand.
- *
- * Use this function to retrieve a Pointable object representing a finger
- * attached to this hand using an ID value obtained from a previous frame.
- * This function always returns a Pointable object, but if no finger
- * with the specified ID is present, an invalid Pointable object is returned.
- *
- * Note that the ID values assigned to fingers persist across frames, but only
- * until tracking of a particular finger is lost. If tracking of a finger is
- * lost and subsequently regained, the new Finger object representing that
- * finger may have a different ID than that representing the finger in an
- * earlier frame.
- *
- * @method finger
- * @memberof Leap.Hand.prototype
- * @param {String} id The ID value of a finger from a previous frame.
- * @returns {Leap.Pointable} The Finger object with
- * the matching ID if one exists for this hand in this frame; otherwise, an
- * invalid Finger object is returned.
- */
-Hand.prototype.finger = function (id) {
-  var finger = this.frame.finger(id);
-  return finger && finger.handId == this.id ? finger : Pointable.Invalid;
-};
-
-/**
- * The angle of rotation around the rotation axis derived from the change in
- * orientation of this hand, and any associated fingers and tools, between the
- * current frame and the specified frame.
- *
- * The returned angle is expressed in radians measured clockwise around the
- * rotation axis (using the right-hand rule) between the start and end frames.
- * The value is always between 0 and pi radians (0 and 180 degrees).
- *
- * If a corresponding Hand object is not found in sinceFrame, or if either
- * this frame or sinceFrame are invalid Frame objects, then the angle of rotation is zero.
- *
- * @method rotationAngle
- * @memberof Leap.Hand.prototype
- * @param {Leap.Frame} sinceFrame The starting frame for computing the relative rotation.
- * @param {numnber[]} [axis] The axis to measure rotation around.
- * @returns {number} A positive value representing the heuristically determined
- * rotational change of the hand between the current frame and that specified in
- * the sinceFrame parameter.
- */
-Hand.prototype.rotationAngle = function (sinceFrame, axis) {
-  if (!this.valid || !sinceFrame.valid) return 0.0;
-  var sinceHand = sinceFrame.hand(this.id);
-  if (!sinceHand.valid) return 0.0;
-  var rot = this.rotationMatrix(sinceFrame);
-  var cs = (rot[0] + rot[4] + rot[8] - 1.0) * 0.5;
-  var angle = Math.acos(cs);
-  angle = isNaN(angle) ? 0.0 : angle;
-  if (axis !== undefined) {
-    var rotAxis = this.rotationAxis(sinceFrame);
-    angle *= vec3.dot(rotAxis, vec3.normalize(vec3.create(), axis));
-  }
-  return angle;
-};
-
-/**
- * The axis of rotation derived from the change in orientation of this hand, and
- * any associated fingers and tools, between the current frame and the specified frame.
- *
- * The returned direction vector is normalized.
- *
- * If a corresponding Hand object is not found in sinceFrame, or if either
- * this frame or sinceFrame are invalid Frame objects, then this method returns a zero vector.
- *
- * @method rotationAxis
- * @memberof Leap.Hand.prototype
- * @param {Leap.Frame} sinceFrame The starting frame for computing the relative rotation.
- * @returns {number[]} A normalized direction Vector representing the axis of the heuristically determined
- * rotational change of the hand between the current frame and that specified in the sinceFrame parameter.
- */
-Hand.prototype.rotationAxis = function (sinceFrame) {
-  if (!this.valid || !sinceFrame.valid) return vec3.create();
-  var sinceHand = sinceFrame.hand(this.id);
-  if (!sinceHand.valid) return vec3.create();
-  return vec3.normalize(vec3.create(), [this._rotation[7] - sinceHand._rotation[5], this._rotation[2] - sinceHand._rotation[6], this._rotation[3] - sinceHand._rotation[1]]);
-};
-
-/**
- * The transform matrix expressing the rotation derived from the change in
- * orientation of this hand, and any associated fingers and tools, between
- * the current frame and the specified frame.
- *
- * If a corresponding Hand object is not found in sinceFrame, or if either
- * this frame or sinceFrame are invalid Frame objects, then this method returns
- * an identity matrix.
- *
- * @method rotationMatrix
- * @memberof Leap.Hand.prototype
- * @param {Leap.Frame} sinceFrame The starting frame for computing the relative rotation.
- * @returns {number[]} A transformation Matrix containing the heuristically determined
- * rotational change of the hand between the current frame and that specified in the sinceFrame parameter.
- */
-Hand.prototype.rotationMatrix = function (sinceFrame) {
-  if (!this.valid || !sinceFrame.valid) return mat3.create();
-  var sinceHand = sinceFrame.hand(this.id);
-  if (!sinceHand.valid) return mat3.create();
-  var transpose = mat3.transpose(mat3.create(), this._rotation);
-  var m = mat3.multiply(mat3.create(), sinceHand._rotation, transpose);
-  return m;
-};
-
-/**
- * The scale factor derived from the hand's motion between the current frame and the specified frame.
- *
- * The scale factor is always positive. A value of 1.0 indicates no scaling took place.
- * Values between 0.0 and 1.0 indicate contraction and values greater than 1.0 indicate expansion.
- *
- * The Leap derives scaling from the relative inward or outward motion of a hand
- * and its associated fingers and tools (independent of translation and rotation).
- *
- * If a corresponding Hand object is not found in sinceFrame, or if either this frame or sinceFrame
- * are invalid Frame objects, then this method returns 1.0.
- *
- * @method scaleFactor
- * @memberof Leap.Hand.prototype
- * @param {Leap.Frame} sinceFrame The starting frame for computing the relative scaling.
- * @returns {number} A positive value representing the heuristically determined
- * scaling change ratio of the hand between the current frame and that specified in the sinceFrame parameter.
- */
-Hand.prototype.scaleFactor = function (sinceFrame) {
-  if (!this.valid || !sinceFrame.valid) return 1.0;
-  var sinceHand = sinceFrame.hand(this.id);
-  if (!sinceHand.valid) return 1.0;
-
-  return Math.exp(this._scaleFactor - sinceHand._scaleFactor);
-};
-
-/**
- * The change of position of this hand between the current frame and the specified frame
- *
- * The returned translation vector provides the magnitude and direction of the
- * movement in millimeters.
- *
- * If a corresponding Hand object is not found in sinceFrame, or if either this frame or
- * sinceFrame are invalid Frame objects, then this method returns a zero vector.
- *
- * @method translation
- * @memberof Leap.Hand.prototype
- * @param {Leap.Frame} sinceFrame The starting frame for computing the relative translation.
- * @returns {number[]} A Vector representing the heuristically determined change in hand
- * position between the current frame and that specified in the sinceFrame parameter.
- */
-Hand.prototype.translation = function (sinceFrame) {
-  if (!this.valid || !sinceFrame.valid) return vec3.create();
-  var sinceHand = sinceFrame.hand(this.id);
-  if (!sinceHand.valid) return vec3.create();
-  return [this._translation[0] - sinceHand._translation[0], this._translation[1] - sinceHand._translation[1], this._translation[2] - sinceHand._translation[2]];
-};
-
-/**
- * A string containing a brief, human readable description of the Hand object.
- * @method toString
- * @memberof Leap.Hand.prototype
- * @returns {String} A description of the Hand as a string.
- */
-Hand.prototype.toString = function () {
-  return "Hand (" + this.type + ") [ id: " + this.id + " | palm velocity:" + this.palmVelocity + " | sphere center:" + this.sphereCenter + " ] ";
-};
-
-/**
- * The pitch angle in radians.
- *
- * Pitch is the angle between the negative z-axis and the projection of
- * the vector onto the y-z plane. In other words, pitch represents rotation
- * around the x-axis.
- * If the vector points upward, the returned angle is between 0 and pi radians
- * (180 degrees); if it points downward, the angle is between 0 and -pi radians.
- *
- * @method pitch
- * @memberof Leap.Hand.prototype
- * @returns {number} The angle of this vector above or below the horizon (x-z plane).
- *
- */
-Hand.prototype.pitch = function () {
-  return Math.atan2(this.direction[1], -this.direction[2]);
-};
-
-/**
- *  The yaw angle in radians.
- *
- * Yaw is the angle between the negative z-axis and the projection of
- * the vector onto the x-z plane. In other words, yaw represents rotation
- * around the y-axis. If the vector points to the right of the negative z-axis,
- * then the returned angle is between 0 and pi radians (180 degrees);
- * if it points to the left, the angle is between 0 and -pi radians.
- *
- * @method yaw
- * @memberof Leap.Hand.prototype
- * @returns {number} The angle of this vector to the right or left of the y-axis.
- *
- */
-Hand.prototype.yaw = function () {
-  return Math.atan2(this.direction[0], -this.direction[2]);
-};
-
-/**
- *  The roll angle in radians.
- *
- * Roll is the angle between the y-axis and the projection of
- * the vector onto the x-y plane. In other words, roll represents rotation
- * around the z-axis. If the vector points to the left of the y-axis,
- * then the returned angle is between 0 and pi radians (180 degrees);
- * if it points to the right, the angle is between 0 and -pi radians.
- *
- * @method roll
- * @memberof Leap.Hand.prototype
- * @returns {number} The angle of this vector to the right or left of the y-axis.
- *
- */
-Hand.prototype.roll = function () {
-  return Math.atan2(this.palmNormal[0], -this.palmNormal[1]);
-};
-
-/**
- * An invalid Hand object.
- *
- * You can use an invalid Hand object in comparisons testing
- * whether a given Hand instance is valid or invalid. (You can also use the
- * Hand valid property.)
- *
- * @static
- * @type {Leap.Hand}
- * @name Invalid
- * @memberof Leap.Hand
- */
-Hand.Invalid = {
-  valid: false,
-  fingers: [],
-  tools: [],
-  pointables: [],
-  left: false,
-  pointable: function () {
-    return Pointable.Invalid;
-  },
-  finger: function () {
-    return Pointable.Invalid;
-  },
-  toString: function () {
-    return "invalid frame";
-  },
-  dump: function () {
-    return this.toString();
-  },
-  rotationAngle: function () {
-    return 0.0;
-  },
-  rotationMatrix: function () {
-    return mat3.create();
-  },
-  rotationAxis: function () {
-    return vec3.create();
-  },
-  scaleFactor: function () {
-    return 1.0;
-  },
-  translation: function () {
-    return vec3.create();
-  }
-};
-
-/***/ }),
-/* 12 */
+/* 6 */
 /***/ (function(module, exports) {
 
 var g;
@@ -7200,7 +6592,7 @@ try {
 module.exports = g;
 
 /***/ }),
-/* 13 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://d3js.org Version 4.9.1. Copyright 2017 Mike Bostock.
@@ -24110,7 +23502,7 @@ module.exports = g;
 });
 
 /***/ }),
-/* 14 */
+/* 8 */
 /***/ (function(module, exports) {
 
 /*
@@ -24189,516 +23581,640 @@ function toComment(sourceMap) {
 }
 
 /***/ }),
-/* 15 */,
-/* 16 */,
-/* 17 */,
-/* 18 */,
-/* 19 */,
-/* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Hand = __webpack_require__(11),
-    Pointable = __webpack_require__(4),
-    createGesture = __webpack_require__(25).createGesture,
-    glMatrix = __webpack_require__(2),
-    mat3 = glMatrix.mat3,
-    vec3 = glMatrix.vec3,
-    InteractionBox = __webpack_require__(54),
-    Finger = __webpack_require__(10),
+var Pointable = __webpack_require__(3),
+    Bone = __webpack_require__(19),
+    Dialog = __webpack_require__(22),
     _ = __webpack_require__(0);
 
 /**
- * Constructs a Frame object.
+* Constructs a Finger object.
+*
+* An uninitialized finger is considered invalid.
+* Get valid Finger objects from a Frame or a Hand object.
+*
+* @class Finger
+* @memberof Leap
+* @classdesc
+* The Finger class reports the physical characteristics of a finger.
+*
+* Both fingers and tools are classified as Pointable objects. Use the
+* Pointable.tool property to determine whether a Pointable object represents a
+* tool or finger. The Leap classifies a detected entity as a tool when it is
+* thinner, straighter, and longer than a typical finger.
+*
+* Note that Finger objects can be invalid, which means that they do not
+* contain valid tracking data and do not correspond to a physical entity.
+* Invalid Finger objects can be the result of asking for a Finger object
+* using an ID from an earlier frame when no Finger objects with that ID
+* exist in the current frame. A Finger object created from the Finger
+* constructor is also invalid. Test for validity with the Pointable.valid
+* property.
+*/
+var Finger = module.exports = function (data) {
+  Pointable.call(this, data); // use pointable as super-constructor
+
+  /**
+  * The position of the distal interphalangeal joint of the finger.
+  * This joint is closest to the tip.
+  * 
+  * The distal interphalangeal joint is located between the most extreme segment
+  * of the finger (the distal phalanx) and the middle segment (the medial
+  * phalanx).
+  *
+  * @member dipPosition
+  * @type {number[]}
+  * @memberof Leap.Finger.prototype
+  */
+  this.dipPosition = data.dipPosition;
+
+  /**
+  * The position of the proximal interphalangeal joint of the finger. This joint is the middle
+  * joint of a finger.
+  *
+  * The proximal interphalangeal joint is located between the two finger segments
+  * closest to the hand (the proximal and the medial phalanges). On a thumb,
+  * which lacks an medial phalanx, this joint index identifies the knuckle joint
+  * between the proximal phalanx and the metacarpal bone.
+  *
+  * @member pipPosition
+  * @type {number[]}
+  * @memberof Leap.Finger.prototype
+  */
+  this.pipPosition = data.pipPosition;
+
+  /**
+  * The position of the metacarpopophalangeal joint, or knuckle, of the finger.
+  *
+  * The metacarpopophalangeal joint is located at the base of a finger between
+  * the metacarpal bone and the first phalanx. The common name for this joint is
+  * the knuckle.
+  *
+  * On a thumb, which has one less phalanx than a finger, this joint index
+  * identifies the thumb joint near the base of the hand, between the carpal
+  * and metacarpal bones.
+  *
+  * @member mcpPosition
+  * @type {number[]}
+  * @memberof Leap.Finger.prototype
+  */
+  this.mcpPosition = data.mcpPosition;
+
+  /**
+   * The position of the Carpometacarpal joint
+   *
+   * This is at the distal end of the wrist, and has no common name.
+   *
+   */
+  this.carpPosition = data.carpPosition;
+
+  /**
+  * Whether or not this finger is in an extended posture.
+  *
+  * A finger is considered extended if it is extended straight from the hand as if
+  * pointing. A finger is not extended when it is bent down and curled towards the 
+  * palm.
+  * @member extended
+  * @type {Boolean}
+  * @memberof Leap.Finger.prototype
+  */
+  this.extended = data.extended;
+
+  /**
+  * An integer code for the name of this finger.
+  * 
+  * * 0 -- thumb
+  * * 1 -- index finger
+  * * 2 -- middle finger
+  * * 3 -- ring finger
+  * * 4 -- pinky
+  *
+  * @member type
+  * @type {number}
+  * @memberof Leap.Finger.prototype
+  */
+  this.type = data.type;
+
+  this.finger = true;
+
+  /**
+  * The joint positions of this finger as an array in the order base to tip.
+  *
+  * @member positions
+  * @type {array[]}
+  * @memberof Leap.Finger.prototype
+  */
+  this.positions = [this.carpPosition, this.mcpPosition, this.pipPosition, this.dipPosition, this.tipPosition];
+
+  if (data.bases) {
+    this.addBones(data);
+  } else {
+    Dialog.warnBones();
+  }
+};
+
+_.extend(Finger.prototype, Pointable.prototype);
+
+Finger.prototype.addBones = function (data) {
+  /**
+  * Four bones per finger, from wrist outwards:
+  * metacarpal, proximal, medial, and distal.
+  *
+  * See http://en.wikipedia.org/wiki/Interphalangeal_articulations_of_hand
+  */
+  this.metacarpal = new Bone(this, {
+    type: 0,
+    width: this.width,
+    prevJoint: this.carpPosition,
+    nextJoint: this.mcpPosition,
+    basis: data.bases[0]
+  });
+
+  this.proximal = new Bone(this, {
+    type: 1,
+    width: this.width,
+    prevJoint: this.mcpPosition,
+    nextJoint: this.pipPosition,
+    basis: data.bases[1]
+  });
+
+  this.medial = new Bone(this, {
+    type: 2,
+    width: this.width,
+    prevJoint: this.pipPosition,
+    nextJoint: this.dipPosition,
+    basis: data.bases[2]
+  });
+
+  /**
+   * Note that the `distal.nextJoint` position is slightly different from the `finger.tipPosition`.
+   * The former is at the very end of the bone, where the latter is the center of a sphere positioned at
+   * the tip of the finger.  The btipPosition "bone tip position" is a few mm closer to the wrist than
+   * the tipPosition.
+   * @type {Bone}
+   */
+  this.distal = new Bone(this, {
+    type: 3,
+    width: this.width,
+    prevJoint: this.dipPosition,
+    nextJoint: data.btipPosition,
+    basis: data.bases[3]
+  });
+
+  this.bones = [this.metacarpal, this.proximal, this.medial, this.distal];
+};
+
+Finger.prototype.toString = function () {
+  return "Finger [ id:" + this.id + " " + this.length + "mmx | width:" + this.width + "mm | direction:" + this.direction + ' ]';
+};
+
+Finger.Invalid = { valid: false };
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Pointable = __webpack_require__(3),
+    Bone = __webpack_require__(19),
+    glMatrix = __webpack_require__(1),
+    mat3 = glMatrix.mat3,
+    vec3 = glMatrix.vec3,
+    _ = __webpack_require__(0);
+
+/**
+ * Constructs a Hand object.
  *
- * Frame instances created with this constructor are invalid.
- * Get valid Frame objects by calling the
- * [Controller.frame]{@link Leap.Controller#frame}() function.
- *<C-D-Space>
- * @class Frame
+ * An uninitialized hand is considered invalid.
+ * Get valid Hand objects from a Frame object.
+ * @class Hand
  * @memberof Leap
  * @classdesc
- * The Frame class represents a set of hand and finger tracking data detected
- * in a single frame.
+ * The Hand class reports the physical characteristics of a detected hand.
  *
- * The Leap detects hands, fingers and tools within the tracking area, reporting
- * their positions, orientations and motions in frames at the Leap frame rate.
+ * Hand tracking data includes a palm position and velocity; vectors for
+ * the palm normal and direction to the fingers; properties of a sphere fit
+ * to the hand; and lists of the attached fingers and tools.
  *
- * Access Frame objects using the [Controller.frame]{@link Leap.Controller#frame}() function.
+ * Note that Hand objects can be invalid, which means that they do not contain
+ * valid tracking data and do not correspond to a physical entity. Invalid Hand
+ * objects can be the result of asking for a Hand object using an ID from an
+ * earlier frame when no Hand objects with that ID exist in the current frame.
+ * A Hand object created from the Hand constructor is also invalid.
+ * Test for validity with the [Hand.valid]{@link Leap.Hand#valid} property.
  */
-var Frame = module.exports = function (data) {
+var Hand = module.exports = function (data) {
   /**
-   * Reports whether this Frame instance is valid.
+   * A unique ID assigned to this Hand object, whose value remains the same
+   * across consecutive frames while the tracked hand remains visible. If
+   * tracking is lost (for example, when a hand is occluded by another hand
+   * or when it is withdrawn from or reaches the edge of the Leap field of view),
+   * the Leap may assign a new ID when it detects the hand in a future frame.
    *
-   * A valid Frame is one generated by the Controller object that contains
-   * tracking data for all detected entities. An invalid Frame contains no
-   * actual tracking data, but you can call its functions without risk of a
-   * undefined object exception. The invalid Frame mechanism makes it more
-   * convenient to track individual data across the frame history. For example,
-   * you can invoke:
+   * Use the ID value with the {@link Frame.hand}() function to find this
+   * Hand object in future frames.
    *
-   * ```javascript
-   * var finger = controller.frame(n).finger(fingerID);
-   * ```
-   *
-   * for an arbitrary Frame history value, "n", without first checking whether
-   * frame(n) returned a null object. (You should still check that the
-   * returned Finger instance is valid.)
-   *
-   * @member valid
-   * @memberof Leap.Frame.prototype
-   * @type {Boolean}
-   */
-  this.valid = true;
-  /**
-   * A unique ID for this Frame. Consecutive frames processed by the Leap
-   * have consecutive increasing values.
    * @member id
-   * @memberof Leap.Frame.prototype
+   * @memberof Leap.Hand.prototype
    * @type {String}
    */
   this.id = data.id;
   /**
-   * The frame capture time in microseconds elapsed since the Leap started.
-   * @member timestamp
-   * @memberof Leap.Frame.prototype
+   * The center position of the palm in millimeters from the Leap origin.
+   * @member palmPosition
+   * @memberof Leap.Hand.prototype
+   * @type {number[]}
+   */
+  this.palmPosition = data.palmPosition;
+  /**
+   * The direction from the palm position toward the fingers.
+   *
+   * The direction is expressed as a unit vector pointing in the same
+   * direction as the directed line from the palm position to the fingers.
+   *
+   * @member direction
+   * @memberof Leap.Hand.prototype
+   * @type {number[]}
+   */
+  this.direction = data.direction;
+  /**
+   * The rate of change of the palm position in millimeters/second.
+   *
+   * @member palmVeclocity
+   * @memberof Leap.Hand.prototype
+   * @type {number[]}
+   */
+  this.palmVelocity = data.palmVelocity;
+  /**
+   * The normal vector to the palm. If your hand is flat, this vector will
+   * point downward, or "out" of the front surface of your palm.
+   *
+   * ![Palm Vectors](images/Leap_Palm_Vectors.png)
+   *
+   * The direction is expressed as a unit vector pointing in the same
+   * direction as the palm normal (that is, a vector orthogonal to the palm).
+   * @member palmNormal
+   * @memberof Leap.Hand.prototype
+   * @type {number[]}
+   */
+  this.palmNormal = data.palmNormal;
+  /**
+   * The center of a sphere fit to the curvature of this hand.
+   *
+   * This sphere is placed roughly as if the hand were holding a ball.
+   *
+   * ![Hand Ball](images/Leap_Hand_Ball.png)
+   * @member sphereCenter
+   * @memberof Leap.Hand.prototype
+   * @type {number[]}
+   */
+  this.sphereCenter = data.sphereCenter;
+  /**
+   * The radius of a sphere fit to the curvature of this hand, in millimeters.
+   *
+   * This sphere is placed roughly as if the hand were holding a ball. Thus the
+   * size of the sphere decreases as the fingers are curled into a fist.
+   *
+   * @member sphereRadius
+   * @memberof Leap.Hand.prototype
    * @type {number}
    */
-  this.timestamp = data.timestamp;
+  this.sphereRadius = data.sphereRadius;
   /**
-   * The list of Hand objects detected in this frame, given in arbitrary order.
-   * The list can be empty if no hands are detected.
+   * Reports whether this is a valid Hand object.
    *
-   * @member hands[]
-   * @memberof Leap.Frame.prototype
-   * @type {Leap.Hand}
+   * @member valid
+   * @memberof Leap.Hand.prototype
+   * @type {boolean}
    */
-  this.hands = [];
-  this.handsMap = {};
+  this.valid = true;
   /**
-   * The list of Pointable objects (fingers and tools) detected in this frame,
-   * given in arbitrary order. The list can be empty if no fingers or tools are
-   * detected.
+   * The list of Pointable objects (fingers and tools) detected in this frame
+   * that are associated with this hand, given in arbitrary order. The list
+   * can be empty if no fingers or tools associated with this hand are detected.
+   *
+   * Use the {@link Pointable} tool property to determine
+   * whether or not an item in the list represents a tool or finger.
+   * You can also get only the tools using the Hand.tools[] list or
+   * only the fingers using the Hand.fingers[] list.
    *
    * @member pointables[]
-   * @memberof Leap.Frame.prototype
-   * @type {Leap.Pointable}
+   * @memberof Leap.Hand.prototype
+   * @type {Leap.Pointable[]}
    */
   this.pointables = [];
   /**
-   * The list of Tool objects detected in this frame, given in arbitrary order.
-   * The list can be empty if no tools are detected.
+   * The list of fingers detected in this frame that are attached to
+   * this hand, given in arbitrary order.
    *
-   * @member tools[]
-   * @memberof Leap.Frame.prototype
-   * @type {Leap.Pointable}
-   */
-  this.tools = [];
-  /**
-   * The list of Finger objects detected in this frame, given in arbitrary order.
-   * The list can be empty if no fingers are detected.
+   * The list can be empty if no fingers attached to this hand are detected.
+   *
    * @member fingers[]
-   * @memberof Leap.Frame.prototype
-   * @type {Leap.Pointable}
+   * @memberof Leap.Hand.prototype
+   * @type {Leap.Pointable[]}
    */
   this.fingers = [];
 
-  /**
-   * The InteractionBox associated with the current frame.
-   *
-   * @member interactionBox
-   * @memberof Leap.Frame.prototype
-   * @type {Leap.InteractionBox}
-   */
-  if (data.interactionBox) {
-    this.interactionBox = new InteractionBox(data.interactionBox);
+  if (data.armBasis) {
+    this.arm = new Bone(this, {
+      type: 4,
+      width: data.armWidth,
+      prevJoint: data.elbow,
+      nextJoint: data.wrist,
+      basis: data.armBasis
+    });
+  } else {
+    this.arm = null;
   }
-  this.gestures = [];
-  this.pointablesMap = {};
+
+  /**
+   * The list of tools detected in this frame that are held by this
+   * hand, given in arbitrary order.
+   *
+   * The list can be empty if no tools held by this hand are detected.
+   *
+   * @member tools[]
+   * @memberof Leap.Hand.prototype
+   * @type {Leap.Pointable[]}
+   */
+  this.tools = [];
   this._translation = data.t;
   this._rotation = _.flatten(data.r);
   this._scaleFactor = data.s;
-  this.data = data;
-  this.type = 'frame'; // used by event emitting
-  this.currentFrameRate = data.currentFrameRate;
 
-  if (data.gestures) {
-    /**
-     * The list of Gesture objects detected in this frame, given in arbitrary order.
-     * The list can be empty if no gestures are detected.
-     *
-     * Circle and swipe gestures are updated every frame. Tap gestures
-     * only appear in the list for a single frame.
-     * @member gestures[]
-     * @memberof Leap.Frame.prototype
-     * @type {Leap.Gesture}
-     */
-    for (var gestureIdx = 0, gestureCount = data.gestures.length; gestureIdx != gestureCount; gestureIdx++) {
-      this.gestures.push(createGesture(data.gestures[gestureIdx]));
-    }
-  }
-  this.postprocessData(data);
-};
+  /**
+   * Time the hand has been visible in seconds.
+   *
+   * @member timeVisible
+   * @memberof Leap.Hand.prototype
+   * @type {number}
+   */
+  this.timeVisible = data.timeVisible;
 
-Frame.prototype.postprocessData = function (data) {
-  if (!data) {
-    data = this.data;
-  }
+  /**
+   * The palm position with stabalization
+   * @member stabilizedPalmPosition
+   * @memberof Leap.Hand.prototype
+   * @type {number[]}
+   */
+  this.stabilizedPalmPosition = data.stabilizedPalmPosition;
 
-  for (var handIdx = 0, handCount = data.hands.length; handIdx != handCount; handIdx++) {
-    var hand = new Hand(data.hands[handIdx]);
-    hand.frame = this;
-    this.hands.push(hand);
-    this.handsMap[hand.id] = hand;
-  }
-
-  data.pointables = _.sortBy(data.pointables, function (pointable) {
-    return pointable.id;
-  });
-
-  for (var pointableIdx = 0, pointableCount = data.pointables.length; pointableIdx != pointableCount; pointableIdx++) {
-    var pointableData = data.pointables[pointableIdx];
-    var pointable = pointableData.dipPosition ? new Finger(pointableData) : new Pointable(pointableData);
-    pointable.frame = this;
-    this.addPointable(pointable);
-  }
+  /**
+  * Reports whether this is a left or a right hand.
+  *
+  * @member type
+  * @type {String}
+  * @memberof Leap.Hand.prototype
+  */
+  this.type = data.type;
+  this.grabStrength = data.grabStrength;
+  this.pinchStrength = data.pinchStrength;
+  this.confidence = data.confidence;
 };
 
 /**
- * Adds data from a pointable element into the pointablesMap; 
- * also adds the pointable to the frame.handsMap hand to which it belongs,
- * and to the hand's tools or hand's fingers map.
- * 
- * @param pointable {Object} a Pointable
- */
-Frame.prototype.addPointable = function (pointable) {
-  this.pointables.push(pointable);
-  this.pointablesMap[pointable.id] = pointable;
-  (pointable.tool ? this.tools : this.fingers).push(pointable);
-  if (pointable.handId !== undefined && this.handsMap.hasOwnProperty(pointable.handId)) {
-    var hand = this.handsMap[pointable.handId];
-    hand.pointables.push(pointable);
-    (pointable.tool ? hand.tools : hand.fingers).push(pointable);
-    switch (pointable.type) {
-      case 0:
-        hand.thumb = pointable;
-        break;
-      case 1:
-        hand.indexFinger = pointable;
-        break;
-      case 2:
-        hand.middleFinger = pointable;
-        break;
-      case 3:
-        hand.ringFinger = pointable;
-        break;
-      case 4:
-        hand.pinky = pointable;
-        break;
-    }
-  }
-};
-
-/**
- * The tool with the specified ID in this frame.
+ * The finger with the specified ID attached to this hand.
  *
- * Use the Frame tool() function to retrieve a tool from
- * this frame using an ID value obtained from a previous frame.
- * This function always returns a Pointable object, but if no tool
+ * Use this function to retrieve a Pointable object representing a finger
+ * attached to this hand using an ID value obtained from a previous frame.
+ * This function always returns a Pointable object, but if no finger
  * with the specified ID is present, an invalid Pointable object is returned.
  *
- * Note that ID values persist across frames, but only until tracking of a
- * particular object is lost. If tracking of a tool is lost and subsequently
- * regained, the new Pointable object representing that tool may have a
- * different ID than that representing the tool in an earlier frame.
- *
- * @method tool
- * @memberof Leap.Frame.prototype
- * @param {String} id The ID value of a Tool object from a previous frame.
- * @returns {Leap.Pointable} The tool with the
- * matching ID if one exists in this frame; otherwise, an invalid Pointable object
- * is returned.
- */
-Frame.prototype.tool = function (id) {
-  var pointable = this.pointable(id);
-  return pointable.tool ? pointable : Pointable.Invalid;
-};
-
-/**
- * The Pointable object with the specified ID in this frame.
- *
- * Use the Frame pointable() function to retrieve the Pointable object from
- * this frame using an ID value obtained from a previous frame.
- * This function always returns a Pointable object, but if no finger or tool
- * with the specified ID is present, an invalid Pointable object is returned.
- *
- * Note that ID values persist across frames, but only until tracking of a
- * particular object is lost. If tracking of a finger or tool is lost and subsequently
- * regained, the new Pointable object representing that finger or tool may have
- * a different ID than that representing the finger or tool in an earlier frame.
- *
- * @method pointable
- * @memberof Leap.Frame.prototype
- * @param {String} id The ID value of a Pointable object from a previous frame.
- * @returns {Leap.Pointable} The Pointable object with
- * the matching ID if one exists in this frame;
- * otherwise, an invalid Pointable object is returned.
- */
-Frame.prototype.pointable = function (id) {
-  return this.pointablesMap[id] || Pointable.Invalid;
-};
-
-/**
- * The finger with the specified ID in this frame.
- *
- * Use the Frame finger() function to retrieve the finger from
- * this frame using an ID value obtained from a previous frame.
- * This function always returns a Finger object, but if no finger
- * with the specified ID is present, an invalid Pointable object is returned.
- *
- * Note that ID values persist across frames, but only until tracking of a
- * particular object is lost. If tracking of a finger is lost and subsequently
- * regained, the new Pointable object representing that physical finger may have
- * a different ID than that representing the finger in an earlier frame.
+ * Note that the ID values assigned to fingers persist across frames, but only
+ * until tracking of a particular finger is lost. If tracking of a finger is
+ * lost and subsequently regained, the new Finger object representing that
+ * finger may have a different ID than that representing the finger in an
+ * earlier frame.
  *
  * @method finger
- * @memberof Leap.Frame.prototype
+ * @memberof Leap.Hand.prototype
  * @param {String} id The ID value of a finger from a previous frame.
- * @returns {Leap.Pointable} The finger with the
- * matching ID if one exists in this frame; otherwise, an invalid Pointable
- * object is returned.
+ * @returns {Leap.Pointable} The Finger object with
+ * the matching ID if one exists for this hand in this frame; otherwise, an
+ * invalid Finger object is returned.
  */
-Frame.prototype.finger = function (id) {
-  var pointable = this.pointable(id);
-  return !pointable.tool ? pointable : Pointable.Invalid;
+Hand.prototype.finger = function (id) {
+  var finger = this.frame.finger(id);
+  return finger && finger.handId == this.id ? finger : Pointable.Invalid;
 };
 
 /**
- * The Hand object with the specified ID in this frame.
+ * The angle of rotation around the rotation axis derived from the change in
+ * orientation of this hand, and any associated fingers and tools, between the
+ * current frame and the specified frame.
  *
- * Use the Frame hand() function to retrieve the Hand object from
- * this frame using an ID value obtained from a previous frame.
- * This function always returns a Hand object, but if no hand
- * with the specified ID is present, an invalid Hand object is returned.
- *
- * Note that ID values persist across frames, but only until tracking of a
- * particular object is lost. If tracking of a hand is lost and subsequently
- * regained, the new Hand object representing that physical hand may have
- * a different ID than that representing the physical hand in an earlier frame.
- *
- * @method hand
- * @memberof Leap.Frame.prototype
- * @param {String} id The ID value of a Hand object from a previous frame.
- * @returns {Leap.Hand} The Hand object with the matching
- * ID if one exists in this frame; otherwise, an invalid Hand object is returned.
- */
-Frame.prototype.hand = function (id) {
-  return this.handsMap[id] || Hand.Invalid;
-};
-
-/**
- * The angle of rotation around the rotation axis derived from the overall
- * rotational motion between the current frame and the specified frame.
- *
- * The returned angle is expressed in radians measured clockwise around
- * the rotation axis (using the right-hand rule) between the start and end frames.
+ * The returned angle is expressed in radians measured clockwise around the
+ * rotation axis (using the right-hand rule) between the start and end frames.
  * The value is always between 0 and pi radians (0 and 180 degrees).
  *
- * The Leap derives frame rotation from the relative change in position and
- * orientation of all objects detected in the field of view.
- *
- * If either this frame or sinceFrame is an invalid Frame object, then the
- * angle of rotation is zero.
+ * If a corresponding Hand object is not found in sinceFrame, or if either
+ * this frame or sinceFrame are invalid Frame objects, then the angle of rotation is zero.
  *
  * @method rotationAngle
- * @memberof Leap.Frame.prototype
+ * @memberof Leap.Hand.prototype
  * @param {Leap.Frame} sinceFrame The starting frame for computing the relative rotation.
- * @param {number[]} [axis] The axis to measure rotation around.
- * @returns {number} A positive value containing the heuristically determined
- * rotational change between the current frame and that specified in the sinceFrame parameter.
+ * @param {numnber[]} [axis] The axis to measure rotation around.
+ * @returns {number} A positive value representing the heuristically determined
+ * rotational change of the hand between the current frame and that specified in
+ * the sinceFrame parameter.
  */
-Frame.prototype.rotationAngle = function (sinceFrame, axis) {
+Hand.prototype.rotationAngle = function (sinceFrame, axis) {
   if (!this.valid || !sinceFrame.valid) return 0.0;
-
+  var sinceHand = sinceFrame.hand(this.id);
+  if (!sinceHand.valid) return 0.0;
   var rot = this.rotationMatrix(sinceFrame);
   var cs = (rot[0] + rot[4] + rot[8] - 1.0) * 0.5;
   var angle = Math.acos(cs);
   angle = isNaN(angle) ? 0.0 : angle;
-
   if (axis !== undefined) {
     var rotAxis = this.rotationAxis(sinceFrame);
     angle *= vec3.dot(rotAxis, vec3.normalize(vec3.create(), axis));
   }
-
   return angle;
 };
 
 /**
- * The axis of rotation derived from the overall rotational motion between
- * the current frame and the specified frame.
+ * The axis of rotation derived from the change in orientation of this hand, and
+ * any associated fingers and tools, between the current frame and the specified frame.
  *
  * The returned direction vector is normalized.
  *
- * The Leap derives frame rotation from the relative change in position and
- * orientation of all objects detected in the field of view.
- *
- * If either this frame or sinceFrame is an invalid Frame object, or if no
- * rotation is detected between the two frames, a zero vector is returned.
+ * If a corresponding Hand object is not found in sinceFrame, or if either
+ * this frame or sinceFrame are invalid Frame objects, then this method returns a zero vector.
  *
  * @method rotationAxis
- * @memberof Leap.Frame.prototype
+ * @memberof Leap.Hand.prototype
  * @param {Leap.Frame} sinceFrame The starting frame for computing the relative rotation.
- * @returns {number[]} A normalized direction vector representing the axis of the heuristically determined
- * rotational change between the current frame and that specified in the sinceFrame parameter.
+ * @returns {number[]} A normalized direction Vector representing the axis of the heuristically determined
+ * rotational change of the hand between the current frame and that specified in the sinceFrame parameter.
  */
-Frame.prototype.rotationAxis = function (sinceFrame) {
+Hand.prototype.rotationAxis = function (sinceFrame) {
   if (!this.valid || !sinceFrame.valid) return vec3.create();
-  return vec3.normalize(vec3.create(), [this._rotation[7] - sinceFrame._rotation[5], this._rotation[2] - sinceFrame._rotation[6], this._rotation[3] - sinceFrame._rotation[1]]);
+  var sinceHand = sinceFrame.hand(this.id);
+  if (!sinceHand.valid) return vec3.create();
+  return vec3.normalize(vec3.create(), [this._rotation[7] - sinceHand._rotation[5], this._rotation[2] - sinceHand._rotation[6], this._rotation[3] - sinceHand._rotation[1]]);
 };
 
 /**
- * The transform matrix expressing the rotation derived from the overall
- * rotational motion between the current frame and the specified frame.
+ * The transform matrix expressing the rotation derived from the change in
+ * orientation of this hand, and any associated fingers and tools, between
+ * the current frame and the specified frame.
  *
- * The Leap derives frame rotation from the relative change in position and
- * orientation of all objects detected in the field of view.
- *
- * If either this frame or sinceFrame is an invalid Frame object, then
- * this method returns an identity matrix.
+ * If a corresponding Hand object is not found in sinceFrame, or if either
+ * this frame or sinceFrame are invalid Frame objects, then this method returns
+ * an identity matrix.
  *
  * @method rotationMatrix
- * @memberof Leap.Frame.prototype
+ * @memberof Leap.Hand.prototype
  * @param {Leap.Frame} sinceFrame The starting frame for computing the relative rotation.
- * @returns {number[]} A transformation matrix containing the heuristically determined
- * rotational change between the current frame and that specified in the sinceFrame parameter.
+ * @returns {number[]} A transformation Matrix containing the heuristically determined
+ * rotational change of the hand between the current frame and that specified in the sinceFrame parameter.
  */
-Frame.prototype.rotationMatrix = function (sinceFrame) {
+Hand.prototype.rotationMatrix = function (sinceFrame) {
   if (!this.valid || !sinceFrame.valid) return mat3.create();
+  var sinceHand = sinceFrame.hand(this.id);
+  if (!sinceHand.valid) return mat3.create();
   var transpose = mat3.transpose(mat3.create(), this._rotation);
-  return mat3.multiply(mat3.create(), sinceFrame._rotation, transpose);
+  var m = mat3.multiply(mat3.create(), sinceHand._rotation, transpose);
+  return m;
 };
 
 /**
- * The scale factor derived from the overall motion between the current frame and the specified frame.
+ * The scale factor derived from the hand's motion between the current frame and the specified frame.
  *
  * The scale factor is always positive. A value of 1.0 indicates no scaling took place.
  * Values between 0.0 and 1.0 indicate contraction and values greater than 1.0 indicate expansion.
  *
- * The Leap derives scaling from the relative inward or outward motion of all
- * objects detected in the field of view (independent of translation and rotation).
+ * The Leap derives scaling from the relative inward or outward motion of a hand
+ * and its associated fingers and tools (independent of translation and rotation).
  *
- * If either this frame or sinceFrame is an invalid Frame object, then this method returns 1.0.
+ * If a corresponding Hand object is not found in sinceFrame, or if either this frame or sinceFrame
+ * are invalid Frame objects, then this method returns 1.0.
  *
  * @method scaleFactor
- * @memberof Leap.Frame.prototype
+ * @memberof Leap.Hand.prototype
  * @param {Leap.Frame} sinceFrame The starting frame for computing the relative scaling.
  * @returns {number} A positive value representing the heuristically determined
- * scaling change ratio between the current frame and that specified in the sinceFrame parameter.
+ * scaling change ratio of the hand between the current frame and that specified in the sinceFrame parameter.
  */
-Frame.prototype.scaleFactor = function (sinceFrame) {
+Hand.prototype.scaleFactor = function (sinceFrame) {
   if (!this.valid || !sinceFrame.valid) return 1.0;
-  return Math.exp(this._scaleFactor - sinceFrame._scaleFactor);
+  var sinceHand = sinceFrame.hand(this.id);
+  if (!sinceHand.valid) return 1.0;
+
+  return Math.exp(this._scaleFactor - sinceHand._scaleFactor);
 };
 
 /**
- * The change of position derived from the overall linear motion between the
- * current frame and the specified frame.
+ * The change of position of this hand between the current frame and the specified frame
  *
  * The returned translation vector provides the magnitude and direction of the
  * movement in millimeters.
  *
- * The Leap derives frame translation from the linear motion of all objects
- * detected in the field of view.
- *
- * If either this frame or sinceFrame is an invalid Frame object, then this
- * method returns a zero vector.
+ * If a corresponding Hand object is not found in sinceFrame, or if either this frame or
+ * sinceFrame are invalid Frame objects, then this method returns a zero vector.
  *
  * @method translation
- * @memberof Leap.Frame.prototype
+ * @memberof Leap.Hand.prototype
  * @param {Leap.Frame} sinceFrame The starting frame for computing the relative translation.
- * @returns {number[]} A vector representing the heuristically determined change in
- * position of all objects between the current frame and that specified in the sinceFrame parameter.
+ * @returns {number[]} A Vector representing the heuristically determined change in hand
+ * position between the current frame and that specified in the sinceFrame parameter.
  */
-Frame.prototype.translation = function (sinceFrame) {
+Hand.prototype.translation = function (sinceFrame) {
   if (!this.valid || !sinceFrame.valid) return vec3.create();
-  return vec3.subtract(vec3.create(), this._translation, sinceFrame._translation);
+  var sinceHand = sinceFrame.hand(this.id);
+  if (!sinceHand.valid) return vec3.create();
+  return [this._translation[0] - sinceHand._translation[0], this._translation[1] - sinceHand._translation[1], this._translation[2] - sinceHand._translation[2]];
 };
 
 /**
- * A string containing a brief, human readable description of the Frame object.
- *
+ * A string containing a brief, human readable description of the Hand object.
  * @method toString
- * @memberof Leap.Frame.prototype
- * @returns {String} A brief description of this frame.
+ * @memberof Leap.Hand.prototype
+ * @returns {String} A description of the Hand as a string.
  */
-Frame.prototype.toString = function () {
-  var str = "Frame [ id:" + this.id + " | timestamp:" + this.timestamp + " | Hand count:(" + this.hands.length + ") | Pointable count:(" + this.pointables.length + ")";
-  if (this.gestures) str += " | Gesture count:(" + this.gestures.length + ")";
-  str += " ]";
-  return str;
+Hand.prototype.toString = function () {
+  return "Hand (" + this.type + ") [ id: " + this.id + " | palm velocity:" + this.palmVelocity + " | sphere center:" + this.sphereCenter + " ] ";
 };
 
 /**
- * Returns a JSON-formatted string containing the hands, pointables and gestures
- * in this frame.
+ * The pitch angle in radians.
  *
- * @method dump
- * @memberof Leap.Frame.prototype
- * @returns {String} A JSON-formatted string.
+ * Pitch is the angle between the negative z-axis and the projection of
+ * the vector onto the y-z plane. In other words, pitch represents rotation
+ * around the x-axis.
+ * If the vector points upward, the returned angle is between 0 and pi radians
+ * (180 degrees); if it points downward, the angle is between 0 and -pi radians.
+ *
+ * @method pitch
+ * @memberof Leap.Hand.prototype
+ * @returns {number} The angle of this vector above or below the horizon (x-z plane).
+ *
  */
-Frame.prototype.dump = function () {
-  var out = '';
-  out += "Frame Info:<br/>";
-  out += this.toString();
-  out += "<br/><br/>Hands:<br/>";
-  for (var handIdx = 0, handCount = this.hands.length; handIdx != handCount; handIdx++) {
-    out += "  " + this.hands[handIdx].toString() + "<br/>";
-  }
-  out += "<br/><br/>Pointables:<br/>";
-  for (var pointableIdx = 0, pointableCount = this.pointables.length; pointableIdx != pointableCount; pointableIdx++) {
-    out += "  " + this.pointables[pointableIdx].toString() + "<br/>";
-  }
-  if (this.gestures) {
-    out += "<br/><br/>Gestures:<br/>";
-    for (var gestureIdx = 0, gestureCount = this.gestures.length; gestureIdx != gestureCount; gestureIdx++) {
-      out += "  " + this.gestures[gestureIdx].toString() + "<br/>";
-    }
-  }
-  out += "<br/><br/>Raw JSON:<br/>";
-  out += JSON.stringify(this.data);
-  return out;
+Hand.prototype.pitch = function () {
+  return Math.atan2(this.direction[1], -this.direction[2]);
 };
 
 /**
- * An invalid Frame object.
+ *  The yaw angle in radians.
  *
- * You can use this invalid Frame in comparisons testing
- * whether a given Frame instance is valid or invalid. (You can also check the
- * [Frame.valid]{@link Leap.Frame#valid} property.)
+ * Yaw is the angle between the negative z-axis and the projection of
+ * the vector onto the x-z plane. In other words, yaw represents rotation
+ * around the y-axis. If the vector points to the right of the negative z-axis,
+ * then the returned angle is between 0 and pi radians (180 degrees);
+ * if it points to the left, the angle is between 0 and -pi radians.
+ *
+ * @method yaw
+ * @memberof Leap.Hand.prototype
+ * @returns {number} The angle of this vector to the right or left of the y-axis.
+ *
+ */
+Hand.prototype.yaw = function () {
+  return Math.atan2(this.direction[0], -this.direction[2]);
+};
+
+/**
+ *  The roll angle in radians.
+ *
+ * Roll is the angle between the y-axis and the projection of
+ * the vector onto the x-y plane. In other words, roll represents rotation
+ * around the z-axis. If the vector points to the left of the y-axis,
+ * then the returned angle is between 0 and pi radians (180 degrees);
+ * if it points to the right, the angle is between 0 and -pi radians.
+ *
+ * @method roll
+ * @memberof Leap.Hand.prototype
+ * @returns {number} The angle of this vector to the right or left of the y-axis.
+ *
+ */
+Hand.prototype.roll = function () {
+  return Math.atan2(this.palmNormal[0], -this.palmNormal[1]);
+};
+
+/**
+ * An invalid Hand object.
+ *
+ * You can use an invalid Hand object in comparisons testing
+ * whether a given Hand instance is valid or invalid. (You can also use the
+ * Hand valid property.)
  *
  * @static
- * @type {Leap.Frame}
+ * @type {Leap.Hand}
  * @name Invalid
- * @memberof Leap.Frame
+ * @memberof Leap.Hand
  */
-Frame.Invalid = {
+Hand.Invalid = {
   valid: false,
-  hands: [],
   fingers: [],
   tools: [],
-  gestures: [],
   pointables: [],
+  left: false,
   pointable: function () {
     return Pointable.Invalid;
   },
   finger: function () {
     return Pointable.Invalid;
-  },
-  hand: function () {
-    return Hand.Invalid;
   },
   toString: function () {
     return "invalid frame";
@@ -24724,495 +24240,7 @@ Frame.Invalid = {
 };
 
 /***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var glMatrix = __webpack_require__(2),
-    vec3 = glMatrix.vec3,
-    EventEmitter = __webpack_require__(3).EventEmitter,
-    _ = __webpack_require__(0);
-
-/**
- * Constructs a new Gesture object.
- *
- * An uninitialized Gesture object is considered invalid. Get valid instances
- * of the Gesture class, which will be one of the Gesture subclasses, from a
- * Frame object.
- *
- * @class Gesture
- * @abstract
- * @memberof Leap
- * @classdesc
- * The Gesture class represents a recognized movement by the user.
- *
- * The Leap watches the activity within its field of view for certain movement
- * patterns typical of a user gesture or command. For example, a movement from side to
- * side with the hand can indicate a swipe gesture, while a finger poking forward
- * can indicate a screen tap gesture.
- *
- * When the Leap recognizes a gesture, it assigns an ID and adds a
- * Gesture object to the frame gesture list. For continuous gestures, which
- * occur over many frames, the Leap updates the gesture by adding
- * a Gesture object having the same ID and updated properties in each
- * subsequent frame.
- *
- * **Important:** Recognition for each type of gesture must be enabled;
- * otherwise **no gestures are recognized or reported**.
- *
- * Subclasses of Gesture define the properties for the specific movement patterns
- * recognized by the Leap.
- *
- * The Gesture subclasses for include:
- *
- * * CircleGesture -- A circular movement by a finger.
- * * SwipeGesture -- A straight line movement by the hand with fingers extended.
- * * ScreenTapGesture -- A forward tapping movement by a finger.
- * * KeyTapGesture -- A downward tapping movement by a finger.
- *
- * Circle and swipe gestures are continuous and these objects can have a
- * state of start, update, and stop.
- *
- * The screen tap gesture is a discrete gesture. The Leap only creates a single
- * ScreenTapGesture object appears for each tap and it always has a stop state.
- *
- * Get valid Gesture instances from a Frame object. You can get a list of gestures
- * from the Frame gestures array. You can also use the Frame gesture() method
- * to find a gesture in the current frame using an ID value obtained in a
- * previous frame.
- *
- * Gesture objects can be invalid. For example, when you get a gesture by ID
- * using Frame.gesture(), and there is no gesture with that ID in the current
- * frame, then gesture() returns an Invalid Gesture object (rather than a null
- * value). Always check object validity in situations where a gesture might be
- * invalid.
- */
-var createGesture = exports.createGesture = function (data) {
-  var gesture;
-  switch (data.type) {
-    case 'circle':
-      gesture = new CircleGesture(data);
-      break;
-    case 'swipe':
-      gesture = new SwipeGesture(data);
-      break;
-    case 'screenTap':
-      gesture = new ScreenTapGesture(data);
-      break;
-    case 'keyTap':
-      gesture = new KeyTapGesture(data);
-      break;
-    default:
-      throw "unknown gesture type";
-  }
-
-  /**
-   * The gesture ID.
-   *
-   * All Gesture objects belonging to the same recognized movement share the
-   * same ID value. Use the ID value with the Frame::gesture() method to
-   * find updates related to this Gesture object in subsequent frames.
-   *
-   * @member id
-   * @memberof Leap.Gesture.prototype
-   * @type {number}
-   */
-  gesture.id = data.id;
-  /**
-   * The list of hands associated with this Gesture, if any.
-   *
-   * If no hands are related to this gesture, the list is empty.
-   *
-   * @member handIds
-   * @memberof Leap.Gesture.prototype
-   * @type {Array}
-   */
-  gesture.handIds = data.handIds.slice();
-  /**
-   * The list of fingers and tools associated with this Gesture, if any.
-   *
-   * If no Pointable objects are related to this gesture, the list is empty.
-   *
-   * @member pointableIds
-   * @memberof Leap.Gesture.prototype
-   * @type {Array}
-   */
-  gesture.pointableIds = data.pointableIds.slice();
-  /**
-   * The elapsed duration of the recognized movement up to the
-   * frame containing this Gesture object, in microseconds.
-   *
-   * The duration reported for the first Gesture in the sequence (with the
-   * start state) will typically be a small positive number since
-   * the movement must progress far enough for the Leap to recognize it as
-   * an intentional gesture.
-   *
-   * @member duration
-   * @memberof Leap.Gesture.prototype
-   * @type {number}
-   */
-  gesture.duration = data.duration;
-  /**
-   * The gesture ID.
-   *
-   * Recognized movements occur over time and have a beginning, a middle,
-   * and an end. The 'state()' attribute reports where in that sequence this
-   * Gesture object falls.
-   *
-   * Possible values for the state field are:
-   *
-   * * start
-   * * update
-   * * stop
-   *
-   * @member state
-   * @memberof Leap.Gesture.prototype
-   * @type {String}
-   */
-  gesture.state = data.state;
-  /**
-   * The gesture type.
-   *
-   * Possible values for the type field are:
-   *
-   * * circle
-   * * swipe
-   * * screenTap
-   * * keyTap
-   *
-   * @member type
-   * @memberof Leap.Gesture.prototype
-   * @type {String}
-   */
-  gesture.type = data.type;
-  return gesture;
-};
-
-/*
- * Returns a builder object, which uses method chaining for gesture callback binding.
- */
-var gestureListener = exports.gestureListener = function (controller, type) {
-  var handlers = {};
-  var gestureMap = {};
-
-  controller.on('gesture', function (gesture, frame) {
-    if (gesture.type == type) {
-      if (gesture.state == "start" || gesture.state == "stop") {
-        if (gestureMap[gesture.id] === undefined) {
-          var gestureTracker = new Gesture(gesture, frame);
-          gestureMap[gesture.id] = gestureTracker;
-          _.each(handlers, function (cb, name) {
-            gestureTracker.on(name, cb);
-          });
-        }
-      }
-      gestureMap[gesture.id].update(gesture, frame);
-      if (gesture.state == "stop") {
-        delete gestureMap[gesture.id];
-      }
-    }
-  });
-  var builder = {
-    start: function (cb) {
-      handlers['start'] = cb;
-      return builder;
-    },
-    stop: function (cb) {
-      handlers['stop'] = cb;
-      return builder;
-    },
-    complete: function (cb) {
-      handlers['stop'] = cb;
-      return builder;
-    },
-    update: function (cb) {
-      handlers['update'] = cb;
-      return builder;
-    }
-  };
-  return builder;
-};
-
-var Gesture = exports.Gesture = function (gesture, frame) {
-  this.gestures = [gesture];
-  this.frames = [frame];
-};
-
-Gesture.prototype.update = function (gesture, frame) {
-  this.lastGesture = gesture;
-  this.lastFrame = frame;
-  this.gestures.push(gesture);
-  this.frames.push(frame);
-  this.emit(gesture.state, this);
-};
-
-Gesture.prototype.translation = function () {
-  return vec3.subtract(vec3.create(), this.lastGesture.startPosition, this.lastGesture.position);
-};
-
-_.extend(Gesture.prototype, EventEmitter.prototype);
-
-/**
- * Constructs a new CircleGesture object.
- *
- * An uninitialized CircleGesture object is considered invalid. Get valid instances
- * of the CircleGesture class from a Frame object.
- *
- * @class CircleGesture
- * @memberof Leap
- * @augments Leap.Gesture
- * @classdesc
- * The CircleGesture classes represents a circular finger movement.
- *
- * A circle movement is recognized when the tip of a finger draws a circle
- * within the Leap field of view.
- *
- * ![CircleGesture](images/Leap_Gesture_Circle.png)
- *
- * Circle gestures are continuous. The CircleGesture objects for the gesture have
- * three possible states:
- *
- * * start -- The circle gesture has just started. The movement has
- *  progressed far enough for the recognizer to classify it as a circle.
- * * update -- The circle gesture is continuing.
- * * stop -- The circle gesture is finished.
- */
-var CircleGesture = function (data) {
-  /**
-   * The center point of the circle within the Leap frame of reference.
-   *
-   * @member center
-   * @memberof Leap.CircleGesture.prototype
-   * @type {number[]}
-   */
-  this.center = data.center;
-  /**
-   * The normal vector for the circle being traced.
-   *
-   * If you draw the circle clockwise, the normal vector points in the same
-   * general direction as the pointable object drawing the circle. If you draw
-   * the circle counterclockwise, the normal points back toward the
-   * pointable. If the angle between the normal and the pointable object
-   * drawing the circle is less than 90 degrees, then the circle is clockwise.
-   *
-   * ```javascript
-   *    var clockwiseness;
-   *    if (circle.pointable.direction.angleTo(circle.normal) <= PI/4) {
-   *        clockwiseness = "clockwise";
-   *    }
-   *    else
-   *    {
-   *        clockwiseness = "counterclockwise";
-   *    }
-   * ```
-   *
-   * @member normal
-   * @memberof Leap.CircleGesture.prototype
-   * @type {number[]}
-   */
-  this.normal = data.normal;
-  /**
-   * The number of times the finger tip has traversed the circle.
-   *
-   * Progress is reported as a positive number of the number. For example,
-   * a progress value of .5 indicates that the finger has gone halfway
-   * around, while a value of 3 indicates that the finger has gone around
-   * the the circle three times.
-   *
-   * Progress starts where the circle gesture began. Since the circle
-   * must be partially formed before the Leap can recognize it, progress
-   * will be greater than zero when a circle gesture first appears in the
-   * frame.
-   *
-   * @member progress
-   * @memberof Leap.CircleGesture.prototype
-   * @type {number}
-   */
-  this.progress = data.progress;
-  /**
-   * The radius of the circle in mm.
-   *
-   * @member radius
-   * @memberof Leap.CircleGesture.prototype
-   * @type {number}
-   */
-  this.radius = data.radius;
-};
-
-CircleGesture.prototype.toString = function () {
-  return "CircleGesture [" + JSON.stringify(this) + "]";
-};
-
-/**
- * Constructs a new SwipeGesture object.
- *
- * An uninitialized SwipeGesture object is considered invalid. Get valid instances
- * of the SwipeGesture class from a Frame object.
- *
- * @class SwipeGesture
- * @memberof Leap
- * @augments Leap.Gesture
- * @classdesc
- * The SwipeGesture class represents a swiping motion of a finger or tool.
- *
- * ![SwipeGesture](images/Leap_Gesture_Swipe.png)
- *
- * Swipe gestures are continuous.
- */
-var SwipeGesture = function (data) {
-  /**
-   * The starting position within the Leap frame of
-   * reference, in mm.
-   *
-   * @member startPosition
-   * @memberof Leap.SwipeGesture.prototype
-   * @type {number[]}
-   */
-  this.startPosition = data.startPosition;
-  /**
-   * The current swipe position within the Leap frame of
-   * reference, in mm.
-   *
-   * @member position
-   * @memberof Leap.SwipeGesture.prototype
-   * @type {number[]}
-   */
-  this.position = data.position;
-  /**
-   * The unit direction vector parallel to the swipe motion.
-   *
-   * You can compare the components of the vector to classify the swipe as
-   * appropriate for your application. For example, if you are using swipes
-   * for two dimensional scrolling, you can compare the x and y values to
-   * determine if the swipe is primarily horizontal or vertical.
-   *
-   * @member direction
-   * @memberof Leap.SwipeGesture.prototype
-   * @type {number[]}
-   */
-  this.direction = data.direction;
-  /**
-   * The speed of the finger performing the swipe gesture in
-   * millimeters per second.
-   *
-   * @member speed
-   * @memberof Leap.SwipeGesture.prototype
-   * @type {number}
-   */
-  this.speed = data.speed;
-};
-
-SwipeGesture.prototype.toString = function () {
-  return "SwipeGesture [" + JSON.stringify(this) + "]";
-};
-
-/**
- * Constructs a new ScreenTapGesture object.
- *
- * An uninitialized ScreenTapGesture object is considered invalid. Get valid instances
- * of the ScreenTapGesture class from a Frame object.
- *
- * @class ScreenTapGesture
- * @memberof Leap
- * @augments Leap.Gesture
- * @classdesc
- * The ScreenTapGesture class represents a tapping gesture by a finger or tool.
- *
- * A screen tap gesture is recognized when the tip of a finger pokes forward
- * and then springs back to approximately the original postion, as if
- * tapping a vertical screen. The tapping finger must pause briefly before beginning the tap.
- *
- * ![ScreenTap](images/Leap_Gesture_Tap2.png)
- *
- * ScreenTap gestures are discrete. The ScreenTapGesture object representing a tap always
- * has the state, STATE_STOP. Only one ScreenTapGesture object is created for each
- * screen tap gesture recognized.
- */
-var ScreenTapGesture = function (data) {
-  /**
-   * The position where the screen tap is registered.
-   *
-   * @member position
-   * @memberof Leap.ScreenTapGesture.prototype
-   * @type {number[]}
-   */
-  this.position = data.position;
-  /**
-   * The direction of finger tip motion.
-   *
-   * @member direction
-   * @memberof Leap.ScreenTapGesture.prototype
-   * @type {number[]}
-   */
-  this.direction = data.direction;
-  /**
-   * The progess value is always 1.0 for a screen tap gesture.
-   *
-   * @member progress
-   * @memberof Leap.ScreenTapGesture.prototype
-   * @type {number}
-   */
-  this.progress = data.progress;
-};
-
-ScreenTapGesture.prototype.toString = function () {
-  return "ScreenTapGesture [" + JSON.stringify(this) + "]";
-};
-
-/**
- * Constructs a new KeyTapGesture object.
- *
- * An uninitialized KeyTapGesture object is considered invalid. Get valid instances
- * of the KeyTapGesture class from a Frame object.
- *
- * @class KeyTapGesture
- * @memberof Leap
- * @augments Leap.Gesture
- * @classdesc
- * The KeyTapGesture class represents a tapping gesture by a finger or tool.
- *
- * A key tap gesture is recognized when the tip of a finger rotates down toward the
- * palm and then springs back to approximately the original postion, as if
- * tapping. The tapping finger must pause briefly before beginning the tap.
- *
- * ![KeyTap](images/Leap_Gesture_Tap.png)
- *
- * Key tap gestures are discrete. The KeyTapGesture object representing a tap always
- * has the state, STATE_STOP. Only one KeyTapGesture object is created for each
- * key tap gesture recognized.
- */
-var KeyTapGesture = function (data) {
-  /**
-   * The position where the key tap is registered.
-   *
-   * @member position
-   * @memberof Leap.KeyTapGesture.prototype
-   * @type {number[]}
-   */
-  this.position = data.position;
-  /**
-   * The direction of finger tip motion.
-   *
-   * @member direction
-   * @memberof Leap.KeyTapGesture.prototype
-   * @type {number[]}
-   */
-  this.direction = data.direction;
-  /**
-   * The progess value is always 1.0 for a key tap gesture.
-   *
-   * @member progress
-   * @memberof Leap.KeyTapGesture.prototype
-   * @type {number}
-   */
-  this.progress = data.progress;
-};
-
-KeyTapGesture.prototype.toString = function () {
-  return "KeyTapGesture [" + JSON.stringify(this) + "]";
-};
-
-/***/ }),
-/* 26 */
+/* 11 */
 /***/ (function(module, exports) {
 
 /* Zepto v1.1.6 - zepto event ajax form ie - zeptojs.com/license */
@@ -26768,7 +25796,7 @@ var Zepto = module.exports = function () {
 })(Zepto);
 
 /***/ }),
-/* 27 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -26814,7 +25842,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(119);
+var	fixUrls = __webpack_require__(37);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -27127,7 +26155,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 28 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30541,15 +29569,15 @@ function Projector(){console.error('THREE.Projector has been moved to /examples/
 function CanvasRenderer(){console.error('THREE.CanvasRenderer has been moved to /examples/js/renderers/CanvasRenderer.js');this.domElement=document.createElementNS('http://www.w3.org/1999/xhtml','canvas');this.clear=function(){};this.render=function(){};this.setClearColor=function(){};this.setSize=function(){};}
 
 /***/ }),
-/* 29 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return event; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return data; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_d3__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_events__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_events__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_events___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_events__);
 
 
@@ -30816,34 +29844,1869 @@ function normalizeCluster(dataInKVShell, labels) {
     }
     return out;
 }
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(6)))
 
 /***/ }),
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */,
-/* 36 */,
-/* 37 */,
-/* 38 */,
-/* 39 */,
-/* 40 */,
-/* 41 */,
-/* 42 */,
-/* 43 */,
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Pointable = __webpack_require__(4),
-    glMatrix = __webpack_require__(2),
+var Hand = __webpack_require__(10),
+    Pointable = __webpack_require__(3),
+    createGesture = __webpack_require__(16).createGesture,
+    glMatrix = __webpack_require__(1),
+    mat3 = glMatrix.mat3,
+    vec3 = glMatrix.vec3,
+    InteractionBox = __webpack_require__(23),
+    Finger = __webpack_require__(9),
+    _ = __webpack_require__(0);
+
+/**
+ * Constructs a Frame object.
+ *
+ * Frame instances created with this constructor are invalid.
+ * Get valid Frame objects by calling the
+ * [Controller.frame]{@link Leap.Controller#frame}() function.
+ *<C-D-Space>
+ * @class Frame
+ * @memberof Leap
+ * @classdesc
+ * The Frame class represents a set of hand and finger tracking data detected
+ * in a single frame.
+ *
+ * The Leap detects hands, fingers and tools within the tracking area, reporting
+ * their positions, orientations and motions in frames at the Leap frame rate.
+ *
+ * Access Frame objects using the [Controller.frame]{@link Leap.Controller#frame}() function.
+ */
+var Frame = module.exports = function (data) {
+  /**
+   * Reports whether this Frame instance is valid.
+   *
+   * A valid Frame is one generated by the Controller object that contains
+   * tracking data for all detected entities. An invalid Frame contains no
+   * actual tracking data, but you can call its functions without risk of a
+   * undefined object exception. The invalid Frame mechanism makes it more
+   * convenient to track individual data across the frame history. For example,
+   * you can invoke:
+   *
+   * ```javascript
+   * var finger = controller.frame(n).finger(fingerID);
+   * ```
+   *
+   * for an arbitrary Frame history value, "n", without first checking whether
+   * frame(n) returned a null object. (You should still check that the
+   * returned Finger instance is valid.)
+   *
+   * @member valid
+   * @memberof Leap.Frame.prototype
+   * @type {Boolean}
+   */
+  this.valid = true;
+  /**
+   * A unique ID for this Frame. Consecutive frames processed by the Leap
+   * have consecutive increasing values.
+   * @member id
+   * @memberof Leap.Frame.prototype
+   * @type {String}
+   */
+  this.id = data.id;
+  /**
+   * The frame capture time in microseconds elapsed since the Leap started.
+   * @member timestamp
+   * @memberof Leap.Frame.prototype
+   * @type {number}
+   */
+  this.timestamp = data.timestamp;
+  /**
+   * The list of Hand objects detected in this frame, given in arbitrary order.
+   * The list can be empty if no hands are detected.
+   *
+   * @member hands[]
+   * @memberof Leap.Frame.prototype
+   * @type {Leap.Hand}
+   */
+  this.hands = [];
+  this.handsMap = {};
+  /**
+   * The list of Pointable objects (fingers and tools) detected in this frame,
+   * given in arbitrary order. The list can be empty if no fingers or tools are
+   * detected.
+   *
+   * @member pointables[]
+   * @memberof Leap.Frame.prototype
+   * @type {Leap.Pointable}
+   */
+  this.pointables = [];
+  /**
+   * The list of Tool objects detected in this frame, given in arbitrary order.
+   * The list can be empty if no tools are detected.
+   *
+   * @member tools[]
+   * @memberof Leap.Frame.prototype
+   * @type {Leap.Pointable}
+   */
+  this.tools = [];
+  /**
+   * The list of Finger objects detected in this frame, given in arbitrary order.
+   * The list can be empty if no fingers are detected.
+   * @member fingers[]
+   * @memberof Leap.Frame.prototype
+   * @type {Leap.Pointable}
+   */
+  this.fingers = [];
+
+  /**
+   * The InteractionBox associated with the current frame.
+   *
+   * @member interactionBox
+   * @memberof Leap.Frame.prototype
+   * @type {Leap.InteractionBox}
+   */
+  if (data.interactionBox) {
+    this.interactionBox = new InteractionBox(data.interactionBox);
+  }
+  this.gestures = [];
+  this.pointablesMap = {};
+  this._translation = data.t;
+  this._rotation = _.flatten(data.r);
+  this._scaleFactor = data.s;
+  this.data = data;
+  this.type = 'frame'; // used by event emitting
+  this.currentFrameRate = data.currentFrameRate;
+
+  if (data.gestures) {
+    /**
+     * The list of Gesture objects detected in this frame, given in arbitrary order.
+     * The list can be empty if no gestures are detected.
+     *
+     * Circle and swipe gestures are updated every frame. Tap gestures
+     * only appear in the list for a single frame.
+     * @member gestures[]
+     * @memberof Leap.Frame.prototype
+     * @type {Leap.Gesture}
+     */
+    for (var gestureIdx = 0, gestureCount = data.gestures.length; gestureIdx != gestureCount; gestureIdx++) {
+      this.gestures.push(createGesture(data.gestures[gestureIdx]));
+    }
+  }
+  this.postprocessData(data);
+};
+
+Frame.prototype.postprocessData = function (data) {
+  if (!data) {
+    data = this.data;
+  }
+
+  for (var handIdx = 0, handCount = data.hands.length; handIdx != handCount; handIdx++) {
+    var hand = new Hand(data.hands[handIdx]);
+    hand.frame = this;
+    this.hands.push(hand);
+    this.handsMap[hand.id] = hand;
+  }
+
+  data.pointables = _.sortBy(data.pointables, function (pointable) {
+    return pointable.id;
+  });
+
+  for (var pointableIdx = 0, pointableCount = data.pointables.length; pointableIdx != pointableCount; pointableIdx++) {
+    var pointableData = data.pointables[pointableIdx];
+    var pointable = pointableData.dipPosition ? new Finger(pointableData) : new Pointable(pointableData);
+    pointable.frame = this;
+    this.addPointable(pointable);
+  }
+};
+
+/**
+ * Adds data from a pointable element into the pointablesMap; 
+ * also adds the pointable to the frame.handsMap hand to which it belongs,
+ * and to the hand's tools or hand's fingers map.
+ * 
+ * @param pointable {Object} a Pointable
+ */
+Frame.prototype.addPointable = function (pointable) {
+  this.pointables.push(pointable);
+  this.pointablesMap[pointable.id] = pointable;
+  (pointable.tool ? this.tools : this.fingers).push(pointable);
+  if (pointable.handId !== undefined && this.handsMap.hasOwnProperty(pointable.handId)) {
+    var hand = this.handsMap[pointable.handId];
+    hand.pointables.push(pointable);
+    (pointable.tool ? hand.tools : hand.fingers).push(pointable);
+    switch (pointable.type) {
+      case 0:
+        hand.thumb = pointable;
+        break;
+      case 1:
+        hand.indexFinger = pointable;
+        break;
+      case 2:
+        hand.middleFinger = pointable;
+        break;
+      case 3:
+        hand.ringFinger = pointable;
+        break;
+      case 4:
+        hand.pinky = pointable;
+        break;
+    }
+  }
+};
+
+/**
+ * The tool with the specified ID in this frame.
+ *
+ * Use the Frame tool() function to retrieve a tool from
+ * this frame using an ID value obtained from a previous frame.
+ * This function always returns a Pointable object, but if no tool
+ * with the specified ID is present, an invalid Pointable object is returned.
+ *
+ * Note that ID values persist across frames, but only until tracking of a
+ * particular object is lost. If tracking of a tool is lost and subsequently
+ * regained, the new Pointable object representing that tool may have a
+ * different ID than that representing the tool in an earlier frame.
+ *
+ * @method tool
+ * @memberof Leap.Frame.prototype
+ * @param {String} id The ID value of a Tool object from a previous frame.
+ * @returns {Leap.Pointable} The tool with the
+ * matching ID if one exists in this frame; otherwise, an invalid Pointable object
+ * is returned.
+ */
+Frame.prototype.tool = function (id) {
+  var pointable = this.pointable(id);
+  return pointable.tool ? pointable : Pointable.Invalid;
+};
+
+/**
+ * The Pointable object with the specified ID in this frame.
+ *
+ * Use the Frame pointable() function to retrieve the Pointable object from
+ * this frame using an ID value obtained from a previous frame.
+ * This function always returns a Pointable object, but if no finger or tool
+ * with the specified ID is present, an invalid Pointable object is returned.
+ *
+ * Note that ID values persist across frames, but only until tracking of a
+ * particular object is lost. If tracking of a finger or tool is lost and subsequently
+ * regained, the new Pointable object representing that finger or tool may have
+ * a different ID than that representing the finger or tool in an earlier frame.
+ *
+ * @method pointable
+ * @memberof Leap.Frame.prototype
+ * @param {String} id The ID value of a Pointable object from a previous frame.
+ * @returns {Leap.Pointable} The Pointable object with
+ * the matching ID if one exists in this frame;
+ * otherwise, an invalid Pointable object is returned.
+ */
+Frame.prototype.pointable = function (id) {
+  return this.pointablesMap[id] || Pointable.Invalid;
+};
+
+/**
+ * The finger with the specified ID in this frame.
+ *
+ * Use the Frame finger() function to retrieve the finger from
+ * this frame using an ID value obtained from a previous frame.
+ * This function always returns a Finger object, but if no finger
+ * with the specified ID is present, an invalid Pointable object is returned.
+ *
+ * Note that ID values persist across frames, but only until tracking of a
+ * particular object is lost. If tracking of a finger is lost and subsequently
+ * regained, the new Pointable object representing that physical finger may have
+ * a different ID than that representing the finger in an earlier frame.
+ *
+ * @method finger
+ * @memberof Leap.Frame.prototype
+ * @param {String} id The ID value of a finger from a previous frame.
+ * @returns {Leap.Pointable} The finger with the
+ * matching ID if one exists in this frame; otherwise, an invalid Pointable
+ * object is returned.
+ */
+Frame.prototype.finger = function (id) {
+  var pointable = this.pointable(id);
+  return !pointable.tool ? pointable : Pointable.Invalid;
+};
+
+/**
+ * The Hand object with the specified ID in this frame.
+ *
+ * Use the Frame hand() function to retrieve the Hand object from
+ * this frame using an ID value obtained from a previous frame.
+ * This function always returns a Hand object, but if no hand
+ * with the specified ID is present, an invalid Hand object is returned.
+ *
+ * Note that ID values persist across frames, but only until tracking of a
+ * particular object is lost. If tracking of a hand is lost and subsequently
+ * regained, the new Hand object representing that physical hand may have
+ * a different ID than that representing the physical hand in an earlier frame.
+ *
+ * @method hand
+ * @memberof Leap.Frame.prototype
+ * @param {String} id The ID value of a Hand object from a previous frame.
+ * @returns {Leap.Hand} The Hand object with the matching
+ * ID if one exists in this frame; otherwise, an invalid Hand object is returned.
+ */
+Frame.prototype.hand = function (id) {
+  return this.handsMap[id] || Hand.Invalid;
+};
+
+/**
+ * The angle of rotation around the rotation axis derived from the overall
+ * rotational motion between the current frame and the specified frame.
+ *
+ * The returned angle is expressed in radians measured clockwise around
+ * the rotation axis (using the right-hand rule) between the start and end frames.
+ * The value is always between 0 and pi radians (0 and 180 degrees).
+ *
+ * The Leap derives frame rotation from the relative change in position and
+ * orientation of all objects detected in the field of view.
+ *
+ * If either this frame or sinceFrame is an invalid Frame object, then the
+ * angle of rotation is zero.
+ *
+ * @method rotationAngle
+ * @memberof Leap.Frame.prototype
+ * @param {Leap.Frame} sinceFrame The starting frame for computing the relative rotation.
+ * @param {number[]} [axis] The axis to measure rotation around.
+ * @returns {number} A positive value containing the heuristically determined
+ * rotational change between the current frame and that specified in the sinceFrame parameter.
+ */
+Frame.prototype.rotationAngle = function (sinceFrame, axis) {
+  if (!this.valid || !sinceFrame.valid) return 0.0;
+
+  var rot = this.rotationMatrix(sinceFrame);
+  var cs = (rot[0] + rot[4] + rot[8] - 1.0) * 0.5;
+  var angle = Math.acos(cs);
+  angle = isNaN(angle) ? 0.0 : angle;
+
+  if (axis !== undefined) {
+    var rotAxis = this.rotationAxis(sinceFrame);
+    angle *= vec3.dot(rotAxis, vec3.normalize(vec3.create(), axis));
+  }
+
+  return angle;
+};
+
+/**
+ * The axis of rotation derived from the overall rotational motion between
+ * the current frame and the specified frame.
+ *
+ * The returned direction vector is normalized.
+ *
+ * The Leap derives frame rotation from the relative change in position and
+ * orientation of all objects detected in the field of view.
+ *
+ * If either this frame or sinceFrame is an invalid Frame object, or if no
+ * rotation is detected between the two frames, a zero vector is returned.
+ *
+ * @method rotationAxis
+ * @memberof Leap.Frame.prototype
+ * @param {Leap.Frame} sinceFrame The starting frame for computing the relative rotation.
+ * @returns {number[]} A normalized direction vector representing the axis of the heuristically determined
+ * rotational change between the current frame and that specified in the sinceFrame parameter.
+ */
+Frame.prototype.rotationAxis = function (sinceFrame) {
+  if (!this.valid || !sinceFrame.valid) return vec3.create();
+  return vec3.normalize(vec3.create(), [this._rotation[7] - sinceFrame._rotation[5], this._rotation[2] - sinceFrame._rotation[6], this._rotation[3] - sinceFrame._rotation[1]]);
+};
+
+/**
+ * The transform matrix expressing the rotation derived from the overall
+ * rotational motion between the current frame and the specified frame.
+ *
+ * The Leap derives frame rotation from the relative change in position and
+ * orientation of all objects detected in the field of view.
+ *
+ * If either this frame or sinceFrame is an invalid Frame object, then
+ * this method returns an identity matrix.
+ *
+ * @method rotationMatrix
+ * @memberof Leap.Frame.prototype
+ * @param {Leap.Frame} sinceFrame The starting frame for computing the relative rotation.
+ * @returns {number[]} A transformation matrix containing the heuristically determined
+ * rotational change between the current frame and that specified in the sinceFrame parameter.
+ */
+Frame.prototype.rotationMatrix = function (sinceFrame) {
+  if (!this.valid || !sinceFrame.valid) return mat3.create();
+  var transpose = mat3.transpose(mat3.create(), this._rotation);
+  return mat3.multiply(mat3.create(), sinceFrame._rotation, transpose);
+};
+
+/**
+ * The scale factor derived from the overall motion between the current frame and the specified frame.
+ *
+ * The scale factor is always positive. A value of 1.0 indicates no scaling took place.
+ * Values between 0.0 and 1.0 indicate contraction and values greater than 1.0 indicate expansion.
+ *
+ * The Leap derives scaling from the relative inward or outward motion of all
+ * objects detected in the field of view (independent of translation and rotation).
+ *
+ * If either this frame or sinceFrame is an invalid Frame object, then this method returns 1.0.
+ *
+ * @method scaleFactor
+ * @memberof Leap.Frame.prototype
+ * @param {Leap.Frame} sinceFrame The starting frame for computing the relative scaling.
+ * @returns {number} A positive value representing the heuristically determined
+ * scaling change ratio between the current frame and that specified in the sinceFrame parameter.
+ */
+Frame.prototype.scaleFactor = function (sinceFrame) {
+  if (!this.valid || !sinceFrame.valid) return 1.0;
+  return Math.exp(this._scaleFactor - sinceFrame._scaleFactor);
+};
+
+/**
+ * The change of position derived from the overall linear motion between the
+ * current frame and the specified frame.
+ *
+ * The returned translation vector provides the magnitude and direction of the
+ * movement in millimeters.
+ *
+ * The Leap derives frame translation from the linear motion of all objects
+ * detected in the field of view.
+ *
+ * If either this frame or sinceFrame is an invalid Frame object, then this
+ * method returns a zero vector.
+ *
+ * @method translation
+ * @memberof Leap.Frame.prototype
+ * @param {Leap.Frame} sinceFrame The starting frame for computing the relative translation.
+ * @returns {number[]} A vector representing the heuristically determined change in
+ * position of all objects between the current frame and that specified in the sinceFrame parameter.
+ */
+Frame.prototype.translation = function (sinceFrame) {
+  if (!this.valid || !sinceFrame.valid) return vec3.create();
+  return vec3.subtract(vec3.create(), this._translation, sinceFrame._translation);
+};
+
+/**
+ * A string containing a brief, human readable description of the Frame object.
+ *
+ * @method toString
+ * @memberof Leap.Frame.prototype
+ * @returns {String} A brief description of this frame.
+ */
+Frame.prototype.toString = function () {
+  var str = "Frame [ id:" + this.id + " | timestamp:" + this.timestamp + " | Hand count:(" + this.hands.length + ") | Pointable count:(" + this.pointables.length + ")";
+  if (this.gestures) str += " | Gesture count:(" + this.gestures.length + ")";
+  str += " ]";
+  return str;
+};
+
+/**
+ * Returns a JSON-formatted string containing the hands, pointables and gestures
+ * in this frame.
+ *
+ * @method dump
+ * @memberof Leap.Frame.prototype
+ * @returns {String} A JSON-formatted string.
+ */
+Frame.prototype.dump = function () {
+  var out = '';
+  out += "Frame Info:<br/>";
+  out += this.toString();
+  out += "<br/><br/>Hands:<br/>";
+  for (var handIdx = 0, handCount = this.hands.length; handIdx != handCount; handIdx++) {
+    out += "  " + this.hands[handIdx].toString() + "<br/>";
+  }
+  out += "<br/><br/>Pointables:<br/>";
+  for (var pointableIdx = 0, pointableCount = this.pointables.length; pointableIdx != pointableCount; pointableIdx++) {
+    out += "  " + this.pointables[pointableIdx].toString() + "<br/>";
+  }
+  if (this.gestures) {
+    out += "<br/><br/>Gestures:<br/>";
+    for (var gestureIdx = 0, gestureCount = this.gestures.length; gestureIdx != gestureCount; gestureIdx++) {
+      out += "  " + this.gestures[gestureIdx].toString() + "<br/>";
+    }
+  }
+  out += "<br/><br/>Raw JSON:<br/>";
+  out += JSON.stringify(this.data);
+  return out;
+};
+
+/**
+ * An invalid Frame object.
+ *
+ * You can use this invalid Frame in comparisons testing
+ * whether a given Frame instance is valid or invalid. (You can also check the
+ * [Frame.valid]{@link Leap.Frame#valid} property.)
+ *
+ * @static
+ * @type {Leap.Frame}
+ * @name Invalid
+ * @memberof Leap.Frame
+ */
+Frame.Invalid = {
+  valid: false,
+  hands: [],
+  fingers: [],
+  tools: [],
+  gestures: [],
+  pointables: [],
+  pointable: function () {
+    return Pointable.Invalid;
+  },
+  finger: function () {
+    return Pointable.Invalid;
+  },
+  hand: function () {
+    return Hand.Invalid;
+  },
+  toString: function () {
+    return "invalid frame";
+  },
+  dump: function () {
+    return this.toString();
+  },
+  rotationAngle: function () {
+    return 0.0;
+  },
+  rotationMatrix: function () {
+    return mat3.create();
+  },
+  rotationAxis: function () {
+    return vec3.create();
+  },
+  scaleFactor: function () {
+    return 1.0;
+  },
+  translation: function () {
+    return vec3.create();
+  }
+};
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var glMatrix = __webpack_require__(1),
+    vec3 = glMatrix.vec3,
+    EventEmitter = __webpack_require__(2).EventEmitter,
+    _ = __webpack_require__(0);
+
+/**
+ * Constructs a new Gesture object.
+ *
+ * An uninitialized Gesture object is considered invalid. Get valid instances
+ * of the Gesture class, which will be one of the Gesture subclasses, from a
+ * Frame object.
+ *
+ * @class Gesture
+ * @abstract
+ * @memberof Leap
+ * @classdesc
+ * The Gesture class represents a recognized movement by the user.
+ *
+ * The Leap watches the activity within its field of view for certain movement
+ * patterns typical of a user gesture or command. For example, a movement from side to
+ * side with the hand can indicate a swipe gesture, while a finger poking forward
+ * can indicate a screen tap gesture.
+ *
+ * When the Leap recognizes a gesture, it assigns an ID and adds a
+ * Gesture object to the frame gesture list. For continuous gestures, which
+ * occur over many frames, the Leap updates the gesture by adding
+ * a Gesture object having the same ID and updated properties in each
+ * subsequent frame.
+ *
+ * **Important:** Recognition for each type of gesture must be enabled;
+ * otherwise **no gestures are recognized or reported**.
+ *
+ * Subclasses of Gesture define the properties for the specific movement patterns
+ * recognized by the Leap.
+ *
+ * The Gesture subclasses for include:
+ *
+ * * CircleGesture -- A circular movement by a finger.
+ * * SwipeGesture -- A straight line movement by the hand with fingers extended.
+ * * ScreenTapGesture -- A forward tapping movement by a finger.
+ * * KeyTapGesture -- A downward tapping movement by a finger.
+ *
+ * Circle and swipe gestures are continuous and these objects can have a
+ * state of start, update, and stop.
+ *
+ * The screen tap gesture is a discrete gesture. The Leap only creates a single
+ * ScreenTapGesture object appears for each tap and it always has a stop state.
+ *
+ * Get valid Gesture instances from a Frame object. You can get a list of gestures
+ * from the Frame gestures array. You can also use the Frame gesture() method
+ * to find a gesture in the current frame using an ID value obtained in a
+ * previous frame.
+ *
+ * Gesture objects can be invalid. For example, when you get a gesture by ID
+ * using Frame.gesture(), and there is no gesture with that ID in the current
+ * frame, then gesture() returns an Invalid Gesture object (rather than a null
+ * value). Always check object validity in situations where a gesture might be
+ * invalid.
+ */
+var createGesture = exports.createGesture = function (data) {
+  var gesture;
+  switch (data.type) {
+    case 'circle':
+      gesture = new CircleGesture(data);
+      break;
+    case 'swipe':
+      gesture = new SwipeGesture(data);
+      break;
+    case 'screenTap':
+      gesture = new ScreenTapGesture(data);
+      break;
+    case 'keyTap':
+      gesture = new KeyTapGesture(data);
+      break;
+    default:
+      throw "unknown gesture type";
+  }
+
+  /**
+   * The gesture ID.
+   *
+   * All Gesture objects belonging to the same recognized movement share the
+   * same ID value. Use the ID value with the Frame::gesture() method to
+   * find updates related to this Gesture object in subsequent frames.
+   *
+   * @member id
+   * @memberof Leap.Gesture.prototype
+   * @type {number}
+   */
+  gesture.id = data.id;
+  /**
+   * The list of hands associated with this Gesture, if any.
+   *
+   * If no hands are related to this gesture, the list is empty.
+   *
+   * @member handIds
+   * @memberof Leap.Gesture.prototype
+   * @type {Array}
+   */
+  gesture.handIds = data.handIds.slice();
+  /**
+   * The list of fingers and tools associated with this Gesture, if any.
+   *
+   * If no Pointable objects are related to this gesture, the list is empty.
+   *
+   * @member pointableIds
+   * @memberof Leap.Gesture.prototype
+   * @type {Array}
+   */
+  gesture.pointableIds = data.pointableIds.slice();
+  /**
+   * The elapsed duration of the recognized movement up to the
+   * frame containing this Gesture object, in microseconds.
+   *
+   * The duration reported for the first Gesture in the sequence (with the
+   * start state) will typically be a small positive number since
+   * the movement must progress far enough for the Leap to recognize it as
+   * an intentional gesture.
+   *
+   * @member duration
+   * @memberof Leap.Gesture.prototype
+   * @type {number}
+   */
+  gesture.duration = data.duration;
+  /**
+   * The gesture ID.
+   *
+   * Recognized movements occur over time and have a beginning, a middle,
+   * and an end. The 'state()' attribute reports where in that sequence this
+   * Gesture object falls.
+   *
+   * Possible values for the state field are:
+   *
+   * * start
+   * * update
+   * * stop
+   *
+   * @member state
+   * @memberof Leap.Gesture.prototype
+   * @type {String}
+   */
+  gesture.state = data.state;
+  /**
+   * The gesture type.
+   *
+   * Possible values for the type field are:
+   *
+   * * circle
+   * * swipe
+   * * screenTap
+   * * keyTap
+   *
+   * @member type
+   * @memberof Leap.Gesture.prototype
+   * @type {String}
+   */
+  gesture.type = data.type;
+  return gesture;
+};
+
+/*
+ * Returns a builder object, which uses method chaining for gesture callback binding.
+ */
+var gestureListener = exports.gestureListener = function (controller, type) {
+  var handlers = {};
+  var gestureMap = {};
+
+  controller.on('gesture', function (gesture, frame) {
+    if (gesture.type == type) {
+      if (gesture.state == "start" || gesture.state == "stop") {
+        if (gestureMap[gesture.id] === undefined) {
+          var gestureTracker = new Gesture(gesture, frame);
+          gestureMap[gesture.id] = gestureTracker;
+          _.each(handlers, function (cb, name) {
+            gestureTracker.on(name, cb);
+          });
+        }
+      }
+      gestureMap[gesture.id].update(gesture, frame);
+      if (gesture.state == "stop") {
+        delete gestureMap[gesture.id];
+      }
+    }
+  });
+  var builder = {
+    start: function (cb) {
+      handlers['start'] = cb;
+      return builder;
+    },
+    stop: function (cb) {
+      handlers['stop'] = cb;
+      return builder;
+    },
+    complete: function (cb) {
+      handlers['stop'] = cb;
+      return builder;
+    },
+    update: function (cb) {
+      handlers['update'] = cb;
+      return builder;
+    }
+  };
+  return builder;
+};
+
+var Gesture = exports.Gesture = function (gesture, frame) {
+  this.gestures = [gesture];
+  this.frames = [frame];
+};
+
+Gesture.prototype.update = function (gesture, frame) {
+  this.lastGesture = gesture;
+  this.lastFrame = frame;
+  this.gestures.push(gesture);
+  this.frames.push(frame);
+  this.emit(gesture.state, this);
+};
+
+Gesture.prototype.translation = function () {
+  return vec3.subtract(vec3.create(), this.lastGesture.startPosition, this.lastGesture.position);
+};
+
+_.extend(Gesture.prototype, EventEmitter.prototype);
+
+/**
+ * Constructs a new CircleGesture object.
+ *
+ * An uninitialized CircleGesture object is considered invalid. Get valid instances
+ * of the CircleGesture class from a Frame object.
+ *
+ * @class CircleGesture
+ * @memberof Leap
+ * @augments Leap.Gesture
+ * @classdesc
+ * The CircleGesture classes represents a circular finger movement.
+ *
+ * A circle movement is recognized when the tip of a finger draws a circle
+ * within the Leap field of view.
+ *
+ * ![CircleGesture](images/Leap_Gesture_Circle.png)
+ *
+ * Circle gestures are continuous. The CircleGesture objects for the gesture have
+ * three possible states:
+ *
+ * * start -- The circle gesture has just started. The movement has
+ *  progressed far enough for the recognizer to classify it as a circle.
+ * * update -- The circle gesture is continuing.
+ * * stop -- The circle gesture is finished.
+ */
+var CircleGesture = function (data) {
+  /**
+   * The center point of the circle within the Leap frame of reference.
+   *
+   * @member center
+   * @memberof Leap.CircleGesture.prototype
+   * @type {number[]}
+   */
+  this.center = data.center;
+  /**
+   * The normal vector for the circle being traced.
+   *
+   * If you draw the circle clockwise, the normal vector points in the same
+   * general direction as the pointable object drawing the circle. If you draw
+   * the circle counterclockwise, the normal points back toward the
+   * pointable. If the angle between the normal and the pointable object
+   * drawing the circle is less than 90 degrees, then the circle is clockwise.
+   *
+   * ```javascript
+   *    var clockwiseness;
+   *    if (circle.pointable.direction.angleTo(circle.normal) <= PI/4) {
+   *        clockwiseness = "clockwise";
+   *    }
+   *    else
+   *    {
+   *        clockwiseness = "counterclockwise";
+   *    }
+   * ```
+   *
+   * @member normal
+   * @memberof Leap.CircleGesture.prototype
+   * @type {number[]}
+   */
+  this.normal = data.normal;
+  /**
+   * The number of times the finger tip has traversed the circle.
+   *
+   * Progress is reported as a positive number of the number. For example,
+   * a progress value of .5 indicates that the finger has gone halfway
+   * around, while a value of 3 indicates that the finger has gone around
+   * the the circle three times.
+   *
+   * Progress starts where the circle gesture began. Since the circle
+   * must be partially formed before the Leap can recognize it, progress
+   * will be greater than zero when a circle gesture first appears in the
+   * frame.
+   *
+   * @member progress
+   * @memberof Leap.CircleGesture.prototype
+   * @type {number}
+   */
+  this.progress = data.progress;
+  /**
+   * The radius of the circle in mm.
+   *
+   * @member radius
+   * @memberof Leap.CircleGesture.prototype
+   * @type {number}
+   */
+  this.radius = data.radius;
+};
+
+CircleGesture.prototype.toString = function () {
+  return "CircleGesture [" + JSON.stringify(this) + "]";
+};
+
+/**
+ * Constructs a new SwipeGesture object.
+ *
+ * An uninitialized SwipeGesture object is considered invalid. Get valid instances
+ * of the SwipeGesture class from a Frame object.
+ *
+ * @class SwipeGesture
+ * @memberof Leap
+ * @augments Leap.Gesture
+ * @classdesc
+ * The SwipeGesture class represents a swiping motion of a finger or tool.
+ *
+ * ![SwipeGesture](images/Leap_Gesture_Swipe.png)
+ *
+ * Swipe gestures are continuous.
+ */
+var SwipeGesture = function (data) {
+  /**
+   * The starting position within the Leap frame of
+   * reference, in mm.
+   *
+   * @member startPosition
+   * @memberof Leap.SwipeGesture.prototype
+   * @type {number[]}
+   */
+  this.startPosition = data.startPosition;
+  /**
+   * The current swipe position within the Leap frame of
+   * reference, in mm.
+   *
+   * @member position
+   * @memberof Leap.SwipeGesture.prototype
+   * @type {number[]}
+   */
+  this.position = data.position;
+  /**
+   * The unit direction vector parallel to the swipe motion.
+   *
+   * You can compare the components of the vector to classify the swipe as
+   * appropriate for your application. For example, if you are using swipes
+   * for two dimensional scrolling, you can compare the x and y values to
+   * determine if the swipe is primarily horizontal or vertical.
+   *
+   * @member direction
+   * @memberof Leap.SwipeGesture.prototype
+   * @type {number[]}
+   */
+  this.direction = data.direction;
+  /**
+   * The speed of the finger performing the swipe gesture in
+   * millimeters per second.
+   *
+   * @member speed
+   * @memberof Leap.SwipeGesture.prototype
+   * @type {number}
+   */
+  this.speed = data.speed;
+};
+
+SwipeGesture.prototype.toString = function () {
+  return "SwipeGesture [" + JSON.stringify(this) + "]";
+};
+
+/**
+ * Constructs a new ScreenTapGesture object.
+ *
+ * An uninitialized ScreenTapGesture object is considered invalid. Get valid instances
+ * of the ScreenTapGesture class from a Frame object.
+ *
+ * @class ScreenTapGesture
+ * @memberof Leap
+ * @augments Leap.Gesture
+ * @classdesc
+ * The ScreenTapGesture class represents a tapping gesture by a finger or tool.
+ *
+ * A screen tap gesture is recognized when the tip of a finger pokes forward
+ * and then springs back to approximately the original postion, as if
+ * tapping a vertical screen. The tapping finger must pause briefly before beginning the tap.
+ *
+ * ![ScreenTap](images/Leap_Gesture_Tap2.png)
+ *
+ * ScreenTap gestures are discrete. The ScreenTapGesture object representing a tap always
+ * has the state, STATE_STOP. Only one ScreenTapGesture object is created for each
+ * screen tap gesture recognized.
+ */
+var ScreenTapGesture = function (data) {
+  /**
+   * The position where the screen tap is registered.
+   *
+   * @member position
+   * @memberof Leap.ScreenTapGesture.prototype
+   * @type {number[]}
+   */
+  this.position = data.position;
+  /**
+   * The direction of finger tip motion.
+   *
+   * @member direction
+   * @memberof Leap.ScreenTapGesture.prototype
+   * @type {number[]}
+   */
+  this.direction = data.direction;
+  /**
+   * The progess value is always 1.0 for a screen tap gesture.
+   *
+   * @member progress
+   * @memberof Leap.ScreenTapGesture.prototype
+   * @type {number}
+   */
+  this.progress = data.progress;
+};
+
+ScreenTapGesture.prototype.toString = function () {
+  return "ScreenTapGesture [" + JSON.stringify(this) + "]";
+};
+
+/**
+ * Constructs a new KeyTapGesture object.
+ *
+ * An uninitialized KeyTapGesture object is considered invalid. Get valid instances
+ * of the KeyTapGesture class from a Frame object.
+ *
+ * @class KeyTapGesture
+ * @memberof Leap
+ * @augments Leap.Gesture
+ * @classdesc
+ * The KeyTapGesture class represents a tapping gesture by a finger or tool.
+ *
+ * A key tap gesture is recognized when the tip of a finger rotates down toward the
+ * palm and then springs back to approximately the original postion, as if
+ * tapping. The tapping finger must pause briefly before beginning the tap.
+ *
+ * ![KeyTap](images/Leap_Gesture_Tap.png)
+ *
+ * Key tap gestures are discrete. The KeyTapGesture object representing a tap always
+ * has the state, STATE_STOP. Only one KeyTapGesture object is created for each
+ * key tap gesture recognized.
+ */
+var KeyTapGesture = function (data) {
+  /**
+   * The position where the key tap is registered.
+   *
+   * @member position
+   * @memberof Leap.KeyTapGesture.prototype
+   * @type {number[]}
+   */
+  this.position = data.position;
+  /**
+   * The direction of finger tip motion.
+   *
+   * @member direction
+   * @memberof Leap.KeyTapGesture.prototype
+   * @type {number[]}
+   */
+  this.direction = data.direction;
+  /**
+   * The progess value is always 1.0 for a key tap gesture.
+   *
+   * @member progress
+   * @memberof Leap.KeyTapGesture.prototype
+   * @type {number}
+   */
+  this.progress = data.progress;
+};
+
+KeyTapGesture.prototype.toString = function () {
+  return "KeyTapGesture [" + JSON.stringify(this) + "]";
+};
+
+/***/ }),
+/* 17 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return StickState; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_webpack_zepto__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_webpack_zepto___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_webpack_zepto__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__styles_stick_less__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__styles_stick_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__styles_stick_less__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__global_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__map_refac_js__ = __webpack_require__(18);
+
+
+
+
+
+const lineDashSegs = [3, 3];
+
+var StickState = {
+    Selection: -1,
+    SelectionType: undefined,
+    Overview: false
+};
+
+function unitRound(unit) {
+    return (/万|亿/.test(unit) ? 100 : /\%/.test(unit) ? 10 : 1
+    );
+}
+//shit code
+class stick {
+    //a stick
+    constructor(stickParent, title, unit, roundTo, baseAngle, hue = 0.56) {
+        this.selected = 0;
+        this.hue = hue;
+        this.selected_e = 0;
+        this.angle_e = baseAngle;
+        this.angle = baseAngle;
+        this.baseAngle = baseAngle;
+        this.scale = 1;
+        this.title = title;
+        this.data = 0;
+        this.data_e = 0;
+        this.enabled = true;
+        this.visibility_e = 0;
+        this.enabled_e = 0;
+        this.roundTo = roundTo;
+        this.scale_e = 1;
+        this.hitBox = __WEBPACK_IMPORTED_MODULE_0_webpack_zepto___default()(`<div></div>`);
+        this.hitBox.css({
+            width: '150px',
+            height: '50px',
+            opacity: 0,
+            background: "Red",
+            color: "#2fafff",
+            position: "absolute",
+            "top": '-25px',
+            "left": "-75px",
+            "text-align": "right",
+            "font-size": "15px",
+            "transform-origin": "50% 50%"
+        });
+        this.dataBox = __WEBPACK_IMPORTED_MODULE_0_webpack_zepto___default()(`
+        <div class='dataViz'>
+            <div class='number'><span class='number-text'>18374</span><span>${unit}</span></div>
+            <div class='title' style='background: ${hsl(this.hue, 0.65, 0.5)}'>${title}</div>
+        </div>`);
+        this.dataTitle = this.dataBox.find(".title");
+        this.dataNumber = this.dataBox.find(".number-text");
+        this.parent = stickParent;
+        this.hitBox.appendTo(stickParent.container);
+        this.dataBox.appendTo(stickParent.container);
+    }
+
+    setData(d) {
+        if (d != undefined) {
+            this.data = d;
+        }
+        this.enabled = d != undefined;
+    }
+
+    render() {
+        var mirror = this.baseAngle >= 180;
+        ease(this, 'enabled', 'enabled_e');
+        ease(this, 'angle', 'angle_e');
+        ease(this, 'scale', 'scale_e');
+        if (!this.selected) {
+            this.data_e = 0;
+        } else {
+            ease(this, 'data', 'data_e', 0.4);
+        }
+        ease(this, 'selected', 'selected_e', 0.4);
+        this.hitBox.get(0).style.transform = `rotate(${this.angle_e}deg) translate3d(-${Math.round(500 - this.visibility_e * 100)}px, 0px, 0px) scale(1, ${this.scale_e})`;
+        //do canvas stuff
+        __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineCap = "round";
+        __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineJoin = "round";
+        var deg = this.angle_e / 180 * Math.PI;
+        var visibility = this.enabled_e * this.visibility_e;
+        pushMatrix(__WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */], () => {
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineWidth = 3;
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].rotate(deg);
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].beginPath();
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(this.hue, 1, this.selected_e + 0.1);
+            var arclen = 4 / 180 * Math.PI * this.scale_e;
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].arc(0, 0, 600 - visibility * 100, -Math.PI - arclen, -Math.PI + arclen);
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].stroke();
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].beginPath();
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(this.hue, 0.8 * (visibility + 0.2), this.selected_e + 0.4);
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].translate(-500 + visibility * 100, 0);
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].moveTo(0, 0);
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineTo(-50 * (0.1 + 0.9 * visibility) - this.selected_e * 40, 0);
+            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].stroke();
+        });
+        if (!this.dataTitle.measured) {
+            this.dataTitle.measured = this.dataTitle.width();
+        }
+        if (this.selected && this.parent.focused && (!__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].flying || __WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].highlock)) {
+            pushMatrix(__WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */], () => {
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineWidth = 2;
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].beginPath();
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].setLineDash(lineDashSegs);
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].globalAlpha = this.selected_e;
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(this.hue, 0.8, this.selected_e + 0.4);
+                var baseX, baseY;
+                baseX = -Math.cos(deg) * 400;
+                baseY = -Math.sin(deg) * 400;
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].translate(baseX, baseY);
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].moveTo(mirror ? -5 : 5, 0);
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineTo((mirror ? -50 : 50) * this.scale_e * this.scale_e, 0);
+                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].stroke();
+                this.dataBox.get(0).style.display = "block";
+                if (!mirror) {
+                    this.dataBox.get(0).style.transform = `translate3d(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 20}px, 0px)`;
+                } else {
+                    this.dataBox.get(0).style.transform = `translate3d(${-this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 20}px, 0px)`;
+                }
+                if (hoveringElement && (hoveringElement.parentElement == this.dataBox.get(0) || hoveringElement.parentElement && hoveringElement.parentElement.parentElement == this.dataBox.get(0))) {
+                    this.dataBox.get(0).style.opacity = 0.3;
+                } else {
+                    this.dataBox.get(0).style.opacity = 1;
+                }
+                this.dataNumber.text(Math.round(this.data_e * this.roundTo) / this.roundTo);
+            });
+        } else {
+            this.dataBox.get(0).style.display = "none";
+        }
+    }
+}
+/* unused harmony export stick */
+
+
+var managedSticks = [];
+class stickHolder {
+
+    constructor(dataSet, baseAngle = 0, hue = 0.56, type = "") {
+        managedSticks.push(this);
+        this.dataSet = dataSet;
+        this.type = type;
+        this.children = [];
+        this.selection = -1;
+        this.visibility = 1;
+        this.focused = false;
+        this.baseAngle = baseAngle;
+        this.visibility_e = 0;
+        this.hue = hue;
+        this.container = __WEBPACK_IMPORTED_MODULE_0_webpack_zepto___default()(`
+        <div 
+            id='stickHolder' 
+            style='top:0; left:0; z-index:9999999; position: absolute; display: block; transform: translate(540px, 540px)'></div>`);
+    }
+
+    setup() {
+        this.container.appendTo(document.querySelector("body"));
+        this.dataSet.forEach(dt => {
+            var s = new stick(this, dt.split("|")[0], dt.split("|")[1], unitRound(dt.split("|")[1]), this.baseAngle, this.hue);
+            this.children.push(s);
+        });
+    }
+
+    render() {
+        global.map = __WEBPACK_IMPORTED_MODULE_4__map_refac_js__;
+        var related = true;
+        if (this.type) {
+            //well..
+            if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity) {
+                if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity[this.type + "_data"]) {
+                    related = true;
+                } else if (this.type == 'cities' && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity.batch > 0) {
+                    related = true;
+                } else if (this.type == 'counties' && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity.pos) {
+                    related = true;
+                } else {
+                    related = false;
+                }
+            }
+        }
+
+        if (!this.focused || !__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].dataRingVisible || !related) {
+            this.visibility = 0;
+        } else {
+            this.visibility = 1;
+        }
+
+        if (!related) {
+            this.focused = false;
+        }
+
+        ease(this, 'visibility', 'visibility_e', 0.06, 0.00001);
+        if (__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].dataRingVisible && related) {
+            var _found = false;
+            for (var i = 0; i < this.children.length; i++) {
+                if (this.children[i].enabled && global.hoveringElement == this.children[i].hitBox.get(0)) {
+                    _found = true;
+                    if (this.selection !== i) {
+                        this.selection = i;
+                    }
+                }
+            }
+            // if (!_found) this.selection = -1;
+            if (_found) {
+                this.focused = true;
+                //force to deselect peers ops
+                StickState.Selection = this.selection;
+                StickState.SelectionType = this.type;
+                // console.log(StickState);
+                StickState.Overview = StickState.Selection >= 0 && !StickState.SelectionType;
+                for (var i = 0; i < managedSticks.length; i++) {
+                    if (managedSticks[i] != this) {
+                        managedSticks[i].focused = false;
+                    }
+                }
+            }
+        } else {
+            if (StickState.Selection == this.selection && StickState.SelectionType == this.type) {
+                StickState.Selection = -1;
+                StickState.SelectionType = undefined;
+            }
+        }
+
+        var deg_span = 4;
+        var deg = this.children.length / 2 * deg_span + this.baseAngle; //init position
+        if (this.selection >= 0) {
+            deg += deg_span; //fix :)
+        }
+        for (var i = 0; i < this.children.length; i++) {
+            var stick = this.children[i];
+            stick.visibility_e = this.visibility_e;
+            stick.selected = this.selection == i ? 1 : 0;
+            deg -= stick.selected || i - 1 == this.selection && this.selection >= 0 ? deg_span * 2 : deg_span;
+            stick.angle = deg;
+            stick.scale = stick.selected ? 1 : 0.5;
+
+            if (this.type) {
+                //well..
+                if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity[this.type + "_data"]) {
+                    this.children[i].setData(__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity[this.type + "_data"][i]);
+                } else if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity && this.type == 'cities' && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity.batch > 0) {
+                    try {
+                        this.children[i].setData(__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity["data"][i]);
+                    } catch (e) {
+                        this.children[i].setData();
+                    }
+                } else if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity && this.type == 'counties' && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity.pos) {
+                    try {
+                        this.children[i].setData(__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity["data"][i]);
+                    } catch (e) {
+                        this.children[i].setData();
+                    }
+                }
+            }
+            this.children[i].render();
+        }
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["b"] = stickHolder;
+
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(6)))
+
+/***/ }),
+/* 18 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["render"] = render;
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Map_State", function() { return Map_State; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_d3__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_three__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__styles_map_less__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__styles_map_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__styles_map_less__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__input_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__global_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__stick_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__data_js__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__math_particlesys_js__ = __webpack_require__(41);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__detail_js__ = __webpack_require__(39);
+
+
+
+
+
+
+
+
+
+
+
+function unitRound(unit) {
+    return (/万|亿/.test(unit) ? 100 : /\%/.test(unit) ? 10 : 1
+    );
+}
+
+var selection_title = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__("<div class='selection_title'>国家</div>");
+selection_title.appendTo(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__("body"));
+
+var container = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__(`<div class='labelContainer'></div>`);
+container.appendTo(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__("body"));
+
+__WEBPACK_IMPORTED_MODULE_9__detail_js__["a" /* initDetail */]();
+
+var svg = __WEBPACK_IMPORTED_MODULE_0_d3__["select"]("svg");
+var projector = __WEBPACK_IMPORTED_MODULE_0_d3__["geoMercator"]().center([105.5, 38.7]).scale(800).translate([1080 / 2, 1080 / 2]);
+
+var scene = new __WEBPACK_IMPORTED_MODULE_1_three__["a" /* Scene */]();
+var camera = new __WEBPACK_IMPORTED_MODULE_1_three__["b" /* PerspectiveCamera */](50, 1, 0.1, 6000);
+var renderer = new __WEBPACK_IMPORTED_MODULE_1_three__["c" /* WebGLRenderer */]({ antialias: true, alpha: true, canvas: document.querySelector('#canvasMap') });
+var raycaster = new __WEBPACK_IMPORTED_MODULE_1_three__["d" /* Raycaster */]();
+var mouse = new __WEBPACK_IMPORTED_MODULE_1_three__["e" /* Vector2 */]();
+
+var plane = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Mesh */](new __WEBPACK_IMPORTED_MODULE_1_three__["g" /* PlaneGeometry */](1080, 1080), new __WEBPACK_IMPORTED_MODULE_1_three__["h" /* MeshBasicMaterial */]({ color: 0xffaaff, transparent: true, opacity: 0.0 }));
+
+function setup() {
+
+    var geoPathGenerator = __WEBPACK_IMPORTED_MODULE_0_d3__["geoPath"]().projection(projector);
+    svg.append("g").attr("class", "map states").selectAll("path").data(__WEBPACK_IMPORTED_MODULE_7__data_js__["a" /* data */].map.geojson.features).enter().append("path").attr("d", geoPathGenerator);
+
+    camera.position.set(0, 0, 1080 + 80);
+    camera.position.tx = 0;
+    camera.position.ty = 0;
+    camera.position.tz = 0;
+
+    plane.position.z = 0;
+    scene.add(camera);
+    scene.add(plane);
+
+    renderer.setClearColor(0x000000, 0);
+    renderer.setSize(1080, 1080);
+
+    setupProvinces();
+}
+
+__WEBPACK_IMPORTED_MODULE_7__data_js__["b" /* event */].on("ready", setup);
+
+function render() {
+
+    if (!__WEBPACK_IMPORTED_MODULE_7__data_js__["a" /* data */].ready) return;
+
+    if (__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying || __WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Overview) {
+        Map_State.Selection_Spot = undefined;
+        if (__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].highlock || __WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Overview) {
+            Map_State.Mode = -1;
+            Map_State.Selection = -1;
+            camera.position.ty = 0;
+            camera.position.tx = 0;
+            camera.position.tz = 1080;
+        } else {
+            Map_State.Mode = 0; //Province Selection
+            camera.position.ty = (-__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ey + 1080 / 2) * 0.9;
+            camera.position.tx = (+__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ex - 1080 / 2) * 0.9;
+            camera.position.tz = __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ez / 1.5 + 30;
+        }
+    } else if (!__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].highlock && Map_State.Mode >= 0) {
+        //good pos
+        Map_State.Mode = 1;
+    }
+
+    if (Map_State.Mode < 0) {
+        var minsq = 100000;
+        var minid = -1;
+        for (var i = 0; i < spots.length; i++) {
+            var s = spots[i];
+            spots[i].touchnear = 0;
+            if (s.touchring >= 0) {
+                s.update2d();
+                var dx = (s.vec2.x + 1) / 2 * 1080 - __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ex;
+                var dy = (1 - s.vec2.y) / 2 * 1080 - __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ey;
+                var val = dx * dx + dy * dy;
+                // console.log(val);
+                if (val < s.touchring && val < minsq) {
+                    minsq = val;
+                    minid = i;
+                }
+            }
+        }
+        if (minid >= 0) {
+            spots[minid].touchnear = 1;
+            // console.log(spots[minid]);
+        }
+    }
+
+    ease(camera.position, 'tx', 'x');
+    ease(camera.position, 'ty', 'y');
+    ease(camera.position, 'tz', 'z');
+
+    if (Map_State.Mode >= 0 && __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying) {
+
+        //raycast
+        mouse.x = __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ex / 1080 * 2 - 1;
+        mouse.y = 1 - __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ey / 1080 * 2;
+        raycaster.setFromCamera(mouse, camera);
+
+        var intersects = raycaster.intersectObject(plane);
+        if (intersects.length) {
+            var point = intersects[0].point;
+            var x = point.x + 1080 / 2;
+            var y = 1080 / 2 - point.y;
+            var elems = document.elementsFromPoint(x, y);
+            for (var i = 0; i < elems.length; i++) {
+                if (elems[i].tagName.toUpperCase() == "PATH") {
+                    // console.log("hit", elems[i].__data__.properties.id);
+                    // test_set_highlight(parseInt())
+                    var hit = parseInt(elems[i].__data__.properties.id);
+                    Map_State.Selection = hit;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (Map_State.Mode == 1 && Map_State.Selection_Spot) {
+        selection_title.text(Map_State.Selection_Spot.name);
+        Map_State.SelectedEntity = Map_State.Selection_Spot;
+    } else if (Map_State.Mode >= 0) {
+        if (__WEBPACK_IMPORTED_MODULE_7__data_js__["a" /* data */].map.provinces[Map_State.Selection]) {
+            selection_title.text(__WEBPACK_IMPORTED_MODULE_7__data_js__["a" /* data */].map.provinces[Map_State.Selection].name);
+            Map_State.SelectedEntity = __WEBPACK_IMPORTED_MODULE_7__data_js__["a" /* data */].map.provinces[Map_State.Selection];
+        }
+    } else if (Map_State.Mode == -1) {
+        selection_title.text("全国数据");
+        Map_State.SelectedEntity = __WEBPACK_IMPORTED_MODULE_7__data_js__["a" /* data */].map;
+    }
+
+    renderProvinces();
+    renderer.render(scene, camera);
+}
+
+var Map_State = {
+    Mode: -1,
+    Selection: -1,
+    Selection_Spot: undefined,
+    SelectedEntity: undefined
+};
+
+var Provinces = {};
+
+function setupProvinces() {
+    for (var i in __WEBPACK_IMPORTED_MODULE_7__data_js__["a" /* data */].map_postfab.points_l) {
+        var pv = new Province(__WEBPACK_IMPORTED_MODULE_7__data_js__["a" /* data */].map.provinces[i], __WEBPACK_IMPORTED_MODULE_7__data_js__["a" /* data */].map_postfab.points_l[i]);
+        Provinces[i] = pv;
+    }
+}
+
+function renderProvinces() {
+    for (var i in Provinces) {
+        Provinces[i].render();
+    }
+}
+
+class position_2d {
+    constructor(pos) {
+        this.cp_vector = projector(pos);
+        this.vec3 = new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* Vector3 */](this.cp_vector[0] - 1080 / 2, 1080 / 2 - this.cp_vector[1], 0);
+        this.vec2 = undefined;
+    }
+
+    update2d() {
+        this.vec2 = new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* Vector3 */](this.vec3.x, this.vec3.y, this.vec3.z).project(camera);
+    }
+}
+
+class Province extends position_2d {
+    //point cloud
+    //0.05 + Math.random() * 0.1
+    constructor(d, points) {
+        super(d.cp);
+
+        this.data = d;
+        this.name = this.data.name;
+        this.points = points;
+        this.id = d.id;
+
+        this.spotsArr = [];
+        this.spots = {};
+        this.spotCount = 0;
+        for (var i = 0; i < __WEBPACK_IMPORTED_MODULE_7__data_js__["a" /* data */].map.markers.cities.length; i++) {
+            var cur = __WEBPACK_IMPORTED_MODULE_7__data_js__["a" /* data */].map.markers.cities[i];
+            if (cur.area == this.name) {
+                this.spots[cur.name] = new Spot(cur, 'cities');
+                this.spotsArr.push(this.spots[cur.name]);
+                this.spotCount++;
+            }
+        }
+
+        for (var i = 0; i < __WEBPACK_IMPORTED_MODULE_7__data_js__["a" /* data */].map.markers.counties.length; i++) {
+            var cur = __WEBPACK_IMPORTED_MODULE_7__data_js__["a" /* data */].map.markers.counties[i];
+            if (cur.area == this.name) {
+                this.spots[cur.name] = new Spot(cur, 'counties');
+                this.spotsArr.push(this.spots[cur.name]);
+                this.spotCount++;
+            }
+        }
+
+        this.collisionRemoval = new Array(this.spotCount);
+
+        this.color = {
+            o: 1, to: 1, h: 0.55, s: 1, l: 0.5, tl: 1, ol: 1
+        };
+        this.psys = new __WEBPACK_IMPORTED_MODULE_8__math_particlesys_js__["a" /* ParticleSys */](points.length);
+        this.three_material = new __WEBPACK_IMPORTED_MODULE_1_three__["j" /* PointsMaterial */]({
+            size: 3, sizeAttenuation: true,
+            // vertexColors: THREE.VertexColors,
+            color: new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](0.2, 0.2, 0.2),
+            blending: __WEBPACK_IMPORTED_MODULE_1_three__["l" /* AdditiveBlending */],
+            depthTest: false,
+            transparent: false
+        });
+        this.three_geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["m" /* Geometry */]();
+        for (var i = 0; i < points.length; i++) {
+            var pt = points[i];
+            this.psys.Points[i].x = pt.x - 1080 / 2;
+            this.psys.Points[i].y = 1080 / 2 - pt.y;
+            this.psys.Points[i].z = 0;
+
+            this.three_geometry.colors.push(new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](1, 1, 1));
+            this.three_geometry.vertices.push(new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* Vector3 */](this.psys.Points[i].x, this.psys.Points[i].y, this.psys.Points[i].z));
+        }
+        this.three_pointCloud = new __WEBPACK_IMPORTED_MODULE_1_three__["n" /* Points */](this.three_geometry, this.three_material);
+        scene.add(this.three_pointCloud);
+
+        if (!/香港|澳门|台湾/.test(this.name)) {
+            this.label = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__(`<div class='label'>${this.name}</div>`).css({
+                'transform-origin': "50% 50%",
+                transform: "translate3d(540px, 540px, 0px)",
+                position: "absolute"
+            }).appendTo(container).get(0);
+        }
+        this.selection = 0;
+        this.tselection = 0;
+    }
+
+    render() {
+        super.update2d();
+        if (this.label) {
+            var scale = this.selection * 0.3 + 1;
+            this.label.style.opacity = (0.5 - this.selection / 2) * (Map_State.Mode >= 0 ? 1 : 0);
+            this.label.style.transform = `translate3d(${(this.vec2.x + 1) / 2 * 1080}px, ${(1 - this.vec2.y) / 2 * 1080}px, -1px) scale(${scale}, ${scale})`;
+            this.label.style.backgroundColor = `rgba(0, 0, 0, ${this.selection})`;
+        }
+        this.tselection = 0;
+        if (this.id == Map_State.Selection) {
+            //selected!
+            this.three_material.tsize = 1; //Math.min(1, Math.max(Math.sqrt(camera.position.z / 150 - 0.7), 0.01)) * (5 + 2 * Math.abs(Math.sin(t * 20)));
+            this.color.to = 1; //0.5 // - camera.position.z / 1000;
+            this.color.tl = 2; //0.8 //camera.position.z / 100;
+            this.tselection = 1;
+        } else if (!__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying && Map_State.Mode >= 0) {
+            this.three_material.tsize = 4;
+            this.color.tl = 0.2;
+            this.color.to = 0;
+        } else {
+            this.color.tl = 0.4;
+            this.color.to = 1;
+            this.three_material.tsize = 4 + Math.abs(Math.sin(this.data.cp[0] / 2) * 3);
+        }
+
+        ease(this, 'tselection', 'selection', 0.1, 0.01);
+        ease(this.color, 'to', 'o', 0.1, 0.001);
+        ease(this.color, 'tl', 'ol', 0.1, 0.001);
+        var hsl = hsl_raw(this.color.h, this.color.s * this.color.o, this.color.l * this.color.ol);
+        this.three_material.color.setRGB(hsl[0], hsl[1], hsl[2]);
+        ease(this.three_material, "tsize", "size", 0.08, 0.01);
+        // this.psys.update();
+        // for (var i = 0; i < this.psys.Points.length; i++) {
+        //     var p = this.psys.Points[i];
+        //     this.three_geometry.vertices[i].x = p.x;
+        //     this.three_geometry.vertices[i].y = p.y;
+        //     this.three_geometry.vertices[i].z = p.z;
+        //     // this.three_geometry.colors[i].r = p.r;
+        //     // this.three_geometry.colors[i].g = p.g;
+        //     // this.three_geometry.colors[i].b = p.b;
+        // }
+
+        // var dt = [];
+        if (this.tselection && Map_State.Mode == 1) {
+            var minsq = 99999;
+            var minid = undefined;
+            for (var i in this.spots) {
+                if (this.spots.hasOwnProperty(i)) {
+                    this.spots[i].update2d();
+                    var dx = (this.spots[i].vec2.x + 1) / 2 * 1080 - __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ex;
+                    var dy = (1 - this.spots[i].vec2.y) / 2 * 1080 - __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ey;
+                    var val = dx * dx + dy * dy;
+                    // console.log(val);
+                    if (val < 100 * 100 && val < minsq) {
+                        minsq = val;
+                        minid = i;
+                    }
+                }
+            }
+            if (minid) {
+                this.spots[minid].selecting = true;
+            }
+        }
+
+        // var strategy = layoutTool.layoutAnnealing();
+        // var result = strategy(dt);
+        // var count = 0;
+
+        for (var i in this.spots) {
+            this.spots[i].update2d();
+            this.spots[i].show = this.tselection;
+            if (this.spots.hasOwnProperty(i)) {
+                // this.spots[i].vec2.x = result[count].x;
+                // this.spots[i].vec2.y = result[count].y;
+                this.spots[i].render();
+                // count++;
+                this.spots[i].selecting = false; //restore
+            }
+        }
+    }
+
+}
+
+var spots = [];
+
+//city, county
+class Spot extends position_2d {
+
+    constructor(data, type) {
+        super(data.pos);
+        this.data = data;
+        this.type = type;
+        spots.push(this);
+        this.opacity = 1;
+        this.touchring = -1;
+        this.topacity = 1;
+        this.selecting = false;
+        this.selectionHold = 0;
+        this.touchring = 0;
+        this.ttouchring = 0;
+
+        this.show = false;
+        this.name = this.data.name;
+        this.province = this.data.area;
+
+        this.three_material = new __WEBPACK_IMPORTED_MODULE_1_three__["h" /* MeshBasicMaterial */]({
+            opacity: 1,
+            blending: __WEBPACK_IMPORTED_MODULE_1_three__["l" /* AdditiveBlending */],
+            // depthTest: false,
+            color: new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](1, 1, 1),
+            transparent: true
+        });
+        this.three_geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["o" /* CircleGeometry */](1, 90);
+        this.three_mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Mesh */](this.three_geometry, this.three_material);
+
+        this.three_mesh.position.x = this.vec3.x;
+        this.three_mesh.position.y = this.vec3.y;
+        this.three_mesh.position.z = 2;
+
+        scene.add(this.three_mesh);
+
+        this.three_selection_material = new __WEBPACK_IMPORTED_MODULE_1_three__["h" /* MeshBasicMaterial */]({
+            opacity: 1,
+            // blending: THREE.AdditiveBlending,
+            // depthTest: false,
+            color: new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](1, 1, 1),
+            transparent: true
+        });
+
+        this.three_selection_geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["o" /* CircleGeometry */](9, 90);
+        this.three_selection_mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Mesh */](this.three_selection_geometry, this.three_selection_material);
+
+        this.three_selection_mesh.position.x = this.vec3.x;
+        this.three_selection_mesh.position.y = this.vec3.y;
+        this.three_selection_mesh.position.z = 1;
+        this.three_selection_mesh.scale.setLength(0.1);
+
+        scene.add(this.three_selection_mesh);
+
+        this.label = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__(`<div class='label-tiny'>${this.name}</div>`).css({
+            'transform-origin': "50% 50%",
+            transform: "translate3d(540px, 540px, 0px)",
+            position: "absolute"
+        }).appendTo(container).get(0);
+        this.selection = 0;
+        this.tselection = 0;
+
+        this.meshScale = 0;
+        this.tmeshScale = 0;
+        if (this.type == 'cities') {
+            this.color = {
+                th: 0.55, ts: 1, tl: 0.5,
+                h: 0.55, s: 1, l: 0.5
+            };
+            this.colorScheme = {
+                th: 0.55, ts: 1, tl: 0.5,
+                h: 0.55, s: 1, l: 0.5
+            };
+            this.scale = 3;
+        } else {
+            this.color = {
+                th: 0.4, ts: 1, tl: 0.5,
+                h: 0.4, s: 1, l: 0.5
+            };
+            this.colorScheme = {
+                th: 0.4, ts: 1, tl: 0.5,
+                h: 0.4, s: 1, l: 0.5
+            };
+            this.scale = 2;
+        }
+    }
+
+    render() {
+        this.touchring = -1;
+        this.label.style.display = 'none';
+        ease(this, 'tselection', 'selection', 0.1, 0.01);
+        ease(this, "topacity", "opacity", 0.1, 0.01);
+        this.three_material.opacity = this.opacity;
+        var ox = Math.sin(t * 50 + this.vec2.x * 4);
+        var offset = 1 + 0.3 * ox;
+        this.topacity = 1;
+
+        if (this.type == "cities" && __WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Overview && 5 - __WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Selection == this.data.batch) {
+            this.color.th = this.colorScheme.th;
+            this.color.ts = this.colorScheme.ts;
+            this.color.tl = this.colorScheme.tl;
+            this.tmeshScale = this.scale * (offset * (0.5 + this.selection * 0.7)) * 15;
+        } else if (this.type == "cities" && __WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Overview && this.data.batch && 4 - __WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Selection < 3 && 5 - __WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Selection > this.data.batch) {
+            this.color.th = this.colorScheme.th;
+            this.color.ts = this.colorScheme.ts;
+            this.color.tl = this.colorScheme.tl;
+            this.tmeshScale = this.scale * (offset * (0.5 + this.selection * 0.7)) * 5;
+        } else if (this.type == "counties" && __WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Overview && __WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Selection == 1) {
+            this.color.th = this.colorScheme.th;
+            this.color.ts = this.colorScheme.ts;
+            this.color.tl = this.colorScheme.tl;
+            this.tmeshScale = this.scale * (offset * (0.5 + this.selection * 0.7)) * 5;
+        } else if (__WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Overview && __WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Selection == 0) {
+            this.color.th = this.colorScheme.th;
+            this.color.ts = this.colorScheme.ts;
+            this.color.tl = this.colorScheme.tl;
+            this.tmeshScale = this.scale * (offset * (0.5 + this.selection * 0.7)) * 3;
+        } else if (this.show) {
+            this.color.th = this.colorScheme.th;
+            this.color.ts = this.colorScheme.ts;
+            this.color.tl = this.colorScheme.tl;
+
+            this.label.innerText = this.data.name;
+
+            this.tmeshScale = this.scale * (offset * (0.5 + this.selection * 0.7)) * 1.5;
+            this.label.style.display = 'block';
+            var scale = this.selection * 0.3 + 1;
+            this.label.style.opacity = 1;
+            this.label.style.transform = `translate3d(${(this.vec2.x + 1) / 2 * 1080}px, ${(1 - this.vec2.y) / 2 * 1080 + 30}px, -1px) scale(${scale}, ${scale})`;
+            this.label.style.backgroundColor = `rgba(0, 0, 0, 1)`;
+            if (this.tselection) {
+                this.label.style.zIndex = 888888;
+            } else {
+                this.label.style.zIndex = 10;
+            }
+        } else if ((__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying || Map_State.Mode < 0) && !__WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].SelectionType) {
+            this.tmeshScale = offset * offset;
+            this.color.ts = 1;
+            this.color.tl = 2;
+            this.label.style.display = 'none';
+        } else if (Map_State.Mode < 0 && __WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Selection >= 0 && __WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].SelectionType == this.type) {
+            this.color.ts = this.colorScheme.th;
+
+            if (this.touchnear) {
+                var scale = 1.2;
+                this.label.style.display = "block";
+                this.label.style.transform = `translate3d(${(this.vec2.x + 1) / 2 * 1080}px, ${(1 - this.vec2.y) / 2 * 1080 + 30}px, -1px) scale(${scale}, ${scale})`;
+                this.label.style.backgroundColor = `rgba(0, 0, 0, 1)`;
+                this.label.innerText = this.data.name + " : " + Math.round(this.data.data[__WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Selection]);
+            }
+
+            var sc = this.data.data_normal[__WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Selection];
+            if (sc == undefined) {
+                sc = 1;
+            }
+            this.color.tl = offset * (0.2 + 0.4 * sc);
+            if (this.data.data_normal[__WEBPACK_IMPORTED_MODULE_6__stick_js__["a" /* StickState */].Selection]) {
+                this.tmeshScale = 25 * sc + 1 + this.touchnear * 5;
+                this.touchring = (sc + 1) * 10000;
+            } else {
+                this.tmeshScale = sc;
+            }
+            this.topacity = 1;
+        } else {
+            this.tmeshScale = 1;
+            this.color.ts = 0.8;
+            this.color.tl = .1;
+            this.three_material.color.setRGB(0.3, 0.3, 0.3);
+            this.label.style.display = 'none';
+        }
+
+        ease(this.color, 'th', 'h');
+        ease(this.color, 'ts', 's');
+        ease(this.color, 'tl', 'l');
+        ease(this, 'ttouchring', 'touchring');
+        ease(this, 'tmeshScale', 'meshScale');
+
+        var rgb = hsl_raw(this.color.h, this.color.s, this.color.l);
+        this.three_material.color.setRGB(rgb[0], rgb[1], rgb[2]);
+        this.three_mesh.scale.set(this.meshScale, this.meshScale, this.meshScale);
+
+        if (this.selecting && !this.tselection) {
+            this.selectionHold += (2 - this.selectionHold) * 0.03;
+            if (this.selectionHold > 1.8) {
+                Map_State.Selection_Spot = this.data;
+            }
+        } else {
+            this.selectionHold += (0.1 - this.selectionHold) * 0.1;
+        }
+
+        if (this.data == Map_State.Selection_Spot) {
+            this.tselection = 1;
+        } else {
+            this.tselection = 0;
+        }
+        // this.three_material.blending = this.topacity ? THREE.NormalBlending : THREE.AdditiveBlending;
+        ease(this, 'tselection', 'selection');
+        this.three_selection_mesh.scale.setLength(this.selectionHold + this.selection);
+    }
+
+}
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Pointable = __webpack_require__(3),
+    glMatrix = __webpack_require__(1),
     vec3 = glMatrix.vec3,
     mat3 = glMatrix.mat3,
     mat4 = glMatrix.mat4,
@@ -30996,7 +31859,7 @@ Bone.prototype.direction = function () {
 };
 
 /***/ }),
-/* 51 */
+/* 20 */
 /***/ (function(module, exports) {
 
 var CircularBuffer = module.exports = function (size) {
@@ -31018,11 +31881,11 @@ CircularBuffer.prototype.push = function (o) {
 };
 
 /***/ }),
-/* 52 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var chooseProtocol = __webpack_require__(55).chooseProtocol,
-    EventEmitter = __webpack_require__(3).EventEmitter,
+var chooseProtocol = __webpack_require__(24).chooseProtocol,
+    EventEmitter = __webpack_require__(2).EventEmitter,
     _ = __webpack_require__(0);
 
 var BaseConnection = module.exports = function (opts) {
@@ -31189,7 +32052,7 @@ BaseConnection.prototype.reportFocus = function (state) {
 _.extend(BaseConnection.prototype, EventEmitter.prototype);
 
 /***/ }),
-/* 53 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {var Dialog = module.exports = function (message, options) {
@@ -31325,13 +32188,13 @@ Dialog.warnBones = function () {
     this.warnOutOfDate({ reason: 'bones' });
   }
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(56)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)))
 
 /***/ }),
-/* 54 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var glMatrix = __webpack_require__(2),
+var glMatrix = __webpack_require__(1),
     vec3 = glMatrix.vec3;
 
 /**
@@ -31465,15 +32328,15 @@ InteractionBox.prototype.toString = function () {
 InteractionBox.Invalid = { valid: false };
 
 /***/ }),
-/* 55 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Frame = __webpack_require__(24),
-    Hand = __webpack_require__(11),
-    Pointable = __webpack_require__(4),
-    Finger = __webpack_require__(10),
+var Frame = __webpack_require__(15),
+    Hand = __webpack_require__(10),
+    Pointable = __webpack_require__(3),
+    Finger = __webpack_require__(9),
     _ = __webpack_require__(0),
-    EventEmitter = __webpack_require__(3).EventEmitter;
+    EventEmitter = __webpack_require__(2).EventEmitter;
 
 var Event = function (data) {
   this.type = data.type;
@@ -31539,7 +32402,7 @@ var JSONProtocol = exports.JSONProtocol = function (header) {
 };
 
 /***/ }),
-/* 56 */
+/* 25 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -31729,486 +32592,14 @@ process.umask = function () {
 };
 
 /***/ }),
-/* 57 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["render"] = render;
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Map_State", function() { return Map_State; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_d3__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_three__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__styles_map_less__ = __webpack_require__(127);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__styles_map_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__styles_map_less__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__input_js__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__global_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__data_js__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__math_particlesys_js__ = __webpack_require__(122);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__stick_js__ = __webpack_require__(123);
-
-
-
-
-
-
-
-
-
-
-var selection_title = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__("<div class='selection_title'>国家</div>");
-selection_title.appendTo(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__("body"));
-
-var container = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__(`<div class='labelContainer'></div>`);
-container.appendTo(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__("body"));
-
-var svg = __WEBPACK_IMPORTED_MODULE_0_d3__["select"]("svg");
-var projector = __WEBPACK_IMPORTED_MODULE_0_d3__["geoMercator"]().center([105.5, 38.7]).scale(800).translate([1080 / 2, 1080 / 2]);
-
-var scene = new __WEBPACK_IMPORTED_MODULE_1_three__["a" /* Scene */]();
-var camera = new __WEBPACK_IMPORTED_MODULE_1_three__["b" /* PerspectiveCamera */](50, 1, 0.1, 6000);
-var renderer = new __WEBPACK_IMPORTED_MODULE_1_three__["c" /* WebGLRenderer */]({ antialias: true, alpha: true, canvas: document.querySelector('#canvasMap') });
-var raycaster = new __WEBPACK_IMPORTED_MODULE_1_three__["d" /* Raycaster */]();
-var mouse = new __WEBPACK_IMPORTED_MODULE_1_three__["e" /* Vector2 */]();
-
-var plane = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Mesh */](new __WEBPACK_IMPORTED_MODULE_1_three__["g" /* PlaneGeometry */](1080, 1080), new __WEBPACK_IMPORTED_MODULE_1_three__["h" /* MeshBasicMaterial */]({ color: 0xffaaff, transparent: true, opacity: 0.0 }));
-
-function setup() {
-
-    var geoPathGenerator = __WEBPACK_IMPORTED_MODULE_0_d3__["geoPath"]().projection(projector);
-    svg.append("g").attr("class", "map states").selectAll("path").data(__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.geojson.features).enter().append("path").attr("d", geoPathGenerator);
-
-    camera.position.set(0, 0, 1080 + 80);
-    camera.position.tx = 0;
-    camera.position.ty = 0;
-    camera.position.tz = 0;
-
-    plane.position.z = 0;
-    scene.add(camera);
-    scene.add(plane);
-
-    renderer.setClearColor(0x000000, 0);
-    renderer.setSize(1080, 1080);
-
-    setupProvinces();
-}
-
-__WEBPACK_IMPORTED_MODULE_6__data_js__["b" /* event */].on("ready", setup);
-
-function render() {
-
-    if (!__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].ready) return;
-
-    if (__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying) {
-        Map_State.Selection_Spot = undefined;
-        if (__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].highlock) {
-            Map_State.Mode = -1;
-            Map_State.Selection = -1;
-            camera.position.ty = 0;
-            camera.position.tx = 0;
-            camera.position.tz = 1080;
-        } else {
-            Map_State.Mode = 0; //Province Selection
-            camera.position.ty = (-__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ey + 1080 / 2) * 0.9;
-            camera.position.tx = (+__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ex - 1080 / 2) * 0.9;
-            camera.position.tz = __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ez / 1.5 + 30;
-        }
-    } else if (!__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].highlock && Map_State.Mode >= 0) {
-        //good pos
-        Map_State.Mode = 1;
-    }
-
-    ease(camera.position, 'tx', 'x');
-    ease(camera.position, 'ty', 'y');
-    ease(camera.position, 'tz', 'z');
-
-    if (Map_State.Mode >= 0 && __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying) {
-
-        //raycast
-        mouse.x = __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ex / 1080 * 2 - 1;
-        mouse.y = 1 - __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ey / 1080 * 2;
-        raycaster.setFromCamera(mouse, camera);
-
-        var intersects = raycaster.intersectObject(plane);
-        if (intersects.length) {
-            var point = intersects[0].point;
-            var x = point.x + 1080 / 2;
-            var y = 1080 / 2 - point.y;
-            var elems = document.elementsFromPoint(x, y);
-            for (var i = 0; i < elems.length; i++) {
-                if (elems[i].tagName.toUpperCase() == "PATH") {
-                    // console.log("hit", elems[i].__data__.properties.id);
-                    // test_set_highlight(parseInt())
-                    var hit = parseInt(elems[i].__data__.properties.id);
-                    Map_State.Selection = hit;
-                    break;
-                }
-            }
-        }
-    }
-
-    if (Map_State.Mode == 1 && Map_State.Selection_Spot) {
-        selection_title.text(Map_State.Selection_Spot.name);
-        Map_State.SelectedEntity = Map_State.Selection_Spot;
-    } else if (Map_State.Mode >= 0) {
-        if (__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.provinces[Map_State.Selection]) {
-            selection_title.text(__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.provinces[Map_State.Selection].name);
-            Map_State.SelectedEntity = __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.provinces[Map_State.Selection];
-        }
-    } else if (Map_State.Mode == -1) {
-        selection_title.text("全国数据");
-        Map_State.SelectedEntity = __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map;
-    }
-
-    renderProvinces();
-    renderer.render(scene, camera);
-}
-
-var Map_State = {
-    Mode: -1,
-    Selection: -1,
-    Selection_Spot: undefined,
-    SelectedEntity: undefined
-};
-
-var Provinces = {};
-
-function setupProvinces() {
-    for (var i in __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map_postfab.points_l) {
-        var pv = new Province(__WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.provinces[i], __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map_postfab.points_l[i]);
-        Provinces[i] = pv;
-    }
-}
-
-function renderProvinces() {
-    for (var i in Provinces) {
-        Provinces[i].render();
-    }
-}
-
-class position_2d {
-    constructor(pos) {
-        this.cp_vector = projector(pos);
-        this.vec3 = new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* Vector3 */](this.cp_vector[0] - 1080 / 2, 1080 / 2 - this.cp_vector[1], 0);
-        this.vec2 = undefined;
-    }
-
-    update2d() {
-        this.vec2 = new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* Vector3 */](this.vec3.x, this.vec3.y, this.vec3.z).project(camera);
-    }
-}
-
-class Province extends position_2d {
-    //point cloud
-    //0.05 + Math.random() * 0.1
-    constructor(d, points) {
-        super(d.cp);
-
-        this.data = d;
-        this.name = this.data.name;
-        this.points = points;
-        this.id = d.id;
-
-        this.spotsArr = [];
-        this.spots = {};
-        this.spotCount = 0;
-        for (var i = 0; i < __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.markers.cities.length; i++) {
-            var cur = __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.markers.cities[i];
-            if (cur.area == this.name) {
-                this.spots[cur.name] = new Spot(cur, 'city');
-                this.spotsArr.push(this.spots[cur.name]);
-                this.spotCount++;
-            }
-        }
-
-        for (var i = 0; i < __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.markers.counties.length; i++) {
-            var cur = __WEBPACK_IMPORTED_MODULE_6__data_js__["a" /* data */].map.markers.counties[i];
-            if (cur.area == this.name) {
-                this.spots[cur.name] = new Spot(cur, 'county');
-                this.spotsArr.push(this.spots[cur.name]);
-                this.spotCount++;
-            }
-        }
-
-        this.collisionRemoval = new Array(this.spotCount);
-
-        this.color = {
-            o: 1, to: 1, h: 0.55, s: 1, l: 0.5, tl: 1, ol: 1
-        };
-        this.psys = new __WEBPACK_IMPORTED_MODULE_7__math_particlesys_js__["a" /* ParticleSys */](points.length);
-        this.three_material = new __WEBPACK_IMPORTED_MODULE_1_three__["j" /* PointsMaterial */]({
-            size: 3, sizeAttenuation: true,
-            // vertexColors: THREE.VertexColors,
-            color: new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](0.2, 0.2, 0.2),
-            blending: __WEBPACK_IMPORTED_MODULE_1_three__["l" /* AdditiveBlending */],
-            depthTest: false,
-            transparent: false
-        });
-        this.three_geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["m" /* Geometry */]();
-        for (var i = 0; i < points.length; i++) {
-            var pt = points[i];
-            this.psys.Points[i].x = pt.x - 1080 / 2;
-            this.psys.Points[i].y = 1080 / 2 - pt.y;
-            this.psys.Points[i].z = 0;
-
-            this.three_geometry.colors.push(new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](1, 1, 1));
-            this.three_geometry.vertices.push(new __WEBPACK_IMPORTED_MODULE_1_three__["i" /* Vector3 */](this.psys.Points[i].x, this.psys.Points[i].y, this.psys.Points[i].z));
-        }
-        this.three_pointCloud = new __WEBPACK_IMPORTED_MODULE_1_three__["n" /* Points */](this.three_geometry, this.three_material);
-        scene.add(this.three_pointCloud);
-
-        if (!/香港|澳门|台湾/.test(this.name)) {
-            this.label = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__(`<div class='label'>${this.name}</div>`).css({
-                'transform-origin': "50% 50%",
-                transform: "translate3d(540px, 540px, 0px)",
-                position: "absolute"
-            }).appendTo(container).get(0);
-        }
-        this.selection = 0;
-        this.tselection = 0;
-    }
-
-    render() {
-        super.update2d();
-        if (this.label) {
-            var scale = this.selection * 0.3 + 1;
-            this.label.style.opacity = (0.5 - this.selection / 2) * (Map_State.Mode >= 0 ? 1 : 0);
-            this.label.style.transform = `translate3d(${(this.vec2.x + 1) / 2 * 1080}px, ${(1 - this.vec2.y) / 2 * 1080}px, -1px) scale(${scale}, ${scale})`;
-            this.label.style.backgroundColor = `rgba(0, 0, 0, ${this.selection})`;
-        }
-        this.tselection = 0;
-        if (this.id == Map_State.Selection) {
-            //selected!
-            this.three_material.tsize = Math.min(1, Math.max(Math.sqrt(camera.position.z / 150 - 0.7), 0.01)) * (5 + 2 * Math.abs(Math.sin(t * 20)));
-            this.color.to = 1; // - camera.position.z / 1000;
-            this.color.tl = 2; //camera.position.z / 100;
-            this.tselection = 1;
-        } else if (!__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying && Map_State.Mode >= 0) {
-            this.three_material.tsize = 4;
-            this.color.tl = 0.2;
-            this.color.to = 0;
-        } else {
-            this.color.tl = 0.4;
-            this.color.to = 1;
-            this.three_material.tsize = 4 + Math.abs(Math.sin(this.data.cp[0] / 2) * 3);
-        }
-
-        ease(this, 'tselection', 'selection', 0.1, 0.01);
-        ease(this.color, 'to', 'o', 0.1, 0.001);
-        ease(this.color, 'tl', 'ol', 0.1, 0.001);
-        var hsl = hsl_raw(this.color.h, this.color.s * this.color.o, this.color.l * this.color.ol);
-        this.three_material.color.setRGB(hsl[0], hsl[1], hsl[2]);
-        ease(this.three_material, "tsize", "size", 0.08, 0.01);
-        // this.psys.update();
-        // for (var i = 0; i < this.psys.Points.length; i++) {
-        //     var p = this.psys.Points[i];
-        //     this.three_geometry.vertices[i].x = p.x;
-        //     this.three_geometry.vertices[i].y = p.y;
-        //     this.three_geometry.vertices[i].z = p.z;
-        //     // this.three_geometry.colors[i].r = p.r;
-        //     // this.three_geometry.colors[i].g = p.g;
-        //     // this.three_geometry.colors[i].b = p.b;
-        // }
-
-        // var dt = [];
-        if (this.tselection && Map_State.Mode == 1) {
-            var minsq = 99999;
-            var minid = undefined;
-            for (var i in this.spots) {
-                if (this.spots.hasOwnProperty(i)) {
-                    this.spots[i].update2d();
-                    var dx = (this.spots[i].vec2.x + 1) / 2 * 1080 - __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ex;
-                    var dy = (1 - this.spots[i].vec2.y) / 2 * 1080 - __WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].ey;
-                    var val = dx * dx + dy * dy;
-                    // console.log(val);
-                    if (val < 100 * 100 && val < minsq) {
-                        minsq = val;
-                        minid = i;
-                    }
-                }
-            }
-            if (minid) {
-                this.spots[minid].selecting = true;
-            }
-        }
-
-        // var strategy = layoutTool.layoutAnnealing();
-        // var result = strategy(dt);
-        // var count = 0;
-
-        for (var i in this.spots) {
-            this.spots[i].update2d();
-            this.spots[i].show = this.tselection;
-            if (this.spots.hasOwnProperty(i)) {
-                // this.spots[i].vec2.x = result[count].x;
-                // this.spots[i].vec2.y = result[count].y;
-                this.spots[i].render();
-                // count++;
-                this.spots[i].selecting = false; //restore
-            }
-        }
-    }
-
-}
-
-//city, county
-class Spot extends position_2d {
-
-    constructor(data, type) {
-        super(data.pos);
-        this.data = data;
-        this.type = type;
-
-        this.selecting = false;
-        this.selectionHold = 0;
-
-        this.show = false;
-        this.name = this.data.name;
-        this.province = this.data.area;
-
-        this.three_material = new __WEBPACK_IMPORTED_MODULE_1_three__["h" /* MeshBasicMaterial */]({
-            opacity: 1,
-            // blending: THREE.AdditiveBlending,
-            // depthTest: false,
-            color: new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](1, 1, 1),
-            transparent: true
-        });
-        this.three_geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["o" /* CircleGeometry */](1, 90);
-        this.three_mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Mesh */](this.three_geometry, this.three_material);
-
-        this.three_mesh.position.x = this.vec3.x;
-        this.three_mesh.position.y = this.vec3.y;
-        this.three_mesh.position.z = 2;
-
-        scene.add(this.three_mesh);
-
-        this.three_selection_material = new __WEBPACK_IMPORTED_MODULE_1_three__["h" /* MeshBasicMaterial */]({
-            opacity: 1,
-            // blending: THREE.AdditiveBlending,
-            // depthTest: false,
-            color: new __WEBPACK_IMPORTED_MODULE_1_three__["k" /* Color */](1, 1, 1),
-            transparent: true
-        });
-
-        this.three_selection_geometry = new __WEBPACK_IMPORTED_MODULE_1_three__["o" /* CircleGeometry */](9, 90);
-        this.three_selection_mesh = new __WEBPACK_IMPORTED_MODULE_1_three__["f" /* Mesh */](this.three_selection_geometry, this.three_selection_material);
-
-        this.three_selection_mesh.position.x = this.vec3.x;
-        this.three_selection_mesh.position.y = this.vec3.y;
-        this.three_selection_mesh.position.z = 1;
-        this.three_selection_mesh.scale.setLength(0.1);
-
-        scene.add(this.three_selection_mesh);
-
-        this.label = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__(`<div class='label-tiny'>${this.name}</div>`).css({
-            'transform-origin': "50% 50%",
-            transform: "translate3d(540px, 540px, 0px)",
-            position: "absolute"
-        }).appendTo(container).get(0);
-        this.selection = 0;
-        this.tselection = 0;
-
-        this.meshScale = 0;
-        this.tmeshScale = 0;
-        if (this.type == 'city') {
-            this.color = {
-                th: 0.55, ts: 1, tl: 0.5,
-                h: 0.55, s: 1, l: 0.5
-            };
-            this.colorScheme = {
-                th: 0.55, ts: 1, tl: 0.5,
-                h: 0.55, s: 1, l: 0.5
-            };
-            this.scale = 3;
-        } else {
-            this.color = {
-                th: 0.4, ts: 1, tl: 0.5,
-                h: 0.4, s: 1, l: 0.5
-            };
-            this.colorScheme = {
-                th: 0.4, ts: 1, tl: 0.5,
-                h: 0.4, s: 1, l: 0.5
-            };
-            this.scale = 2;
-        }
-    }
-
-    render() {
-        ease(this, 'tselection', 'selection', 0.1, 0.01);
-
-        var ox = Math.sin(t * 50 + this.vec2.x * 4);
-        var offset = 1 + 0.3 * ox;
-
-        if (this.show) {
-            this.color.th = this.colorScheme.th;
-            this.color.ts = this.colorScheme.ts;
-            this.color.tl = this.colorScheme.tl;
-
-            this.tmeshScale = this.scale * (offset * (0.5 + this.selection * 0.7)) * 1.5;
-            this.label.style.display = 'block';
-            var scale = this.selection * 0.3 + 1;
-            this.label.style.opacity = 1;
-            this.label.style.transform = `translate3d(${(this.vec2.x + 1) / 2 * 1080}px, ${(1 - this.vec2.y) / 2 * 1080 + 30}px, -1px) scale(${scale}, ${scale})`;
-            this.label.style.backgroundColor = `rgba(0, 0, 0, 1)`;
-            if (this.tselection) {
-                this.label.style.zIndex = 888888;
-            } else {
-                this.label.style.zIndex = 10;
-            }
-        } else if (__WEBPACK_IMPORTED_MODULE_4__input_js__["c" /* mouse */].flying || Map_State.Mode < 0) {
-            this.tmeshScale = offset * offset;
-            this.color.ts = 1;
-            this.color.tl = 2;
-            this.label.style.display = 'none';
-        } else {
-            this.tmeshScale = 1;
-            this.color.ts = 0.8;
-            this.color.tl = .1;
-            this.three_material.color.setRGB(0.3, 0.3, 0.3);
-            this.label.style.display = 'none';
-        }
-
-        ease(this.color, 'th', 'h');
-        ease(this.color, 'ts', 's');
-        ease(this.color, 'tl', 'l');
-        ease(this, 'tmeshScale', 'meshScale');
-
-        var rgb = hsl_raw(this.color.h, this.color.s, this.color.l);
-        this.three_material.color.setRGB(rgb[0], rgb[1], rgb[2]);
-        this.three_mesh.scale.set(this.meshScale, this.meshScale, this.meshScale);
-
-        if (this.selecting && !this.tselection) {
-            this.selectionHold += (2 - this.selectionHold) * 0.03;
-            if (this.selectionHold > 1.8) {
-                Map_State.Selection_Spot = this.data;
-            }
-        } else {
-            this.selectionHold += (0.1 - this.selectionHold) * 0.1;
-        }
-
-        if (this.data == Map_State.Selection_Spot) {
-            this.tselection = 1;
-        } else {
-            this.tselection = 0;
-        }
-
-        ease(this, 'tselection', 'selection');
-        this.three_selection_mesh.scale.setLength(this.selectionHold + this.selection);
-    }
-
-}
-
-/***/ }),
-/* 58 */
+/* 26 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = render;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__global_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__stick_js__ = __webpack_require__(123);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__global_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__stick_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__);
 
 
@@ -32270,24 +32661,30 @@ function render() {
     });
 }
 
-var holder_left = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["城市常住人口|万人", "公共财政预算收入|亿元", "食品工业产值|亿元", "食品生产经营单位数|家", "食品工业产值年增幅|%", "食品工业产值占地区生产总值比重|%", "食品安全经费决算金额|万元", "食品执法车辆总数|辆", "执法装备价值|万元", "食品安全工作考核占比|%", "检查食品生产经营主体次数|家次", "抽检数量|批次", "办案数量|件", "涉案货值|万元", "罚没款金额|万元", "刑事立案数量|件", "追究刑责人数|人", "抽检合格率|%", "创建工作知晓度|%", "当地食品安全总体满意度|%", "受理投诉举报数量|件", "办结投诉举报数量|件"], 0, 0.56, "cities");
+var holder_left = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["b" /* stickHolder */](["城市常住人口|万人", "公共财政预算收入|亿元", "食品工业产值|亿元", "食品生产经营单位数|家", "食品工业产值年增幅|%", "食品工业产值占地区生产总值比重|%", "食品安全经费决算金额|万元", "食品执法车辆总数|辆", "执法装备价值|万元", "食品安全工作考核占比|%", "检查食品生产经营主体次数|家次", "抽检数量|批次", "办案数量|件", "涉案货值|万元", "罚没款金额|万元", "刑事立案数量|件", "追究刑责人数|人", "抽检合格率|%", "创建工作知晓度|%", "当地食品安全总体满意度|%", "受理投诉举报数量|件", "办结投诉举报数量|件"], 0, 0.56, "cities");
 
-var holder_right = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["农产品质量安全监管工作在县级人民政府绩效考核体系中的比重|%", "关于农产品质量安全纳入财政预算的资金规摸|万元", "县级监管/协管人员|名", "乡镇级监管/协管人员|名", "村级监管/协管人员|名", "群众满意度|%", "质量安全水平|%", "全县设有监管机构的乡镇数|个", "定性检测检测产品数量|个", "定量检测检测产品数量|个", "检测产品数量|个", "“三品一标”产品数量|个", "“三品一标”产地面积占耕地面积比|%", "“三园两场”数量|个", "标准化生产基地面积 总面积占比|%", "标准化生产园（场）占比|%", "纳入追溯平台管理的农产品生产经营主体|个", "纳入监管信息平台管理的农业投入品生产经营主体|个", "组织开展农产品质量安全培训|人次", "开展农产品质量安全执法|次", "开展农产品质量安全宣传|次"], 180, 0.3, 'counties');
+var holder_right = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["b" /* stickHolder */](["农产品质量安全监管工作在县级人民政府绩效考核体系中的比重|%", "关于农产品质量安全纳入财政预算的资金规摸|万元", "县级监管/协管人员|名", "乡镇级监管/协管人员|名", "村级监管/协管人员|名", "群众满意度|%", "质量安全水平|%", "全县设有监管机构的乡镇数|个", "定性检测检测产品数量|个", "定量检测检测产品数量|个", "检测产品数量|个", "“三品一标”产品数量|个", "“三品一标”产地面积占耕地面积比|%", "“三园两场”数量|个", "标准化生产基地面积 总面积占比|%", "标准化生产园（场）占比|%", "纳入追溯平台管理的农产品生产经营主体|个", "纳入监管信息平台管理的农业投入品生产经营主体|个", "组织开展农产品质量安全培训|人次", "开展农产品质量安全执法|次", "开展农产品质量安全宣传|次"], 180, 0.3, 'counties');
 
-var holder_time_l = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["a" /* stickHolder */](["全览| ", "创县| ", "创城 - 第三批| ", "创城 - 第二批| ", "创城 - 第一批| "], 70, 0, undefined);
+var holder_time_l = new __WEBPACK_IMPORTED_MODULE_1__stick_js__["b" /* stickHolder */](["全览| ", "创县|区县", "创城 - 第三批|城", "创城 - 第二批|城", "创城 - 第一批|城"], 70, 0, undefined);
 
 holder_left.setup();
 holder_time_l.setup();
 holder_right.setup();
 
+holder_time_l.children[0].setData(107 + 67);
+holder_time_l.children[1].setData(107);
+holder_time_l.children[2].setData(37);
+holder_time_l.children[3].setData(15);
+holder_time_l.children[4].setData(15);
+
 /***/ }),
-/* 59 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(124);
+var content = __webpack_require__(43);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -32295,7 +32692,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(27)(content, options);
+var update = __webpack_require__(12)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -32312,60 +32709,10 @@ if(false) {
 }
 
 /***/ }),
-/* 60 */,
-/* 61 */,
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */,
-/* 72 */,
-/* 73 */,
-/* 74 */,
-/* 75 */,
-/* 76 */,
-/* 77 */,
-/* 78 */,
-/* 79 */,
-/* 80 */,
-/* 81 */,
-/* 82 */,
-/* 83 */,
-/* 84 */,
-/* 85 */,
-/* 86 */,
-/* 87 */,
-/* 88 */,
-/* 89 */,
-/* 90 */,
-/* 91 */,
-/* 92 */,
-/* 93 */,
-/* 94 */,
-/* 95 */,
-/* 96 */,
-/* 97 */,
-/* 98 */,
-/* 99 */,
-/* 100 */,
-/* 101 */,
-/* 102 */,
-/* 103 */,
-/* 104 */,
-/* 105 */,
-/* 106 */,
-/* 107 */,
-/* 108 */,
-/* 109 */,
-/* 110 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var BaseConnection = module.exports = __webpack_require__(52),
+var BaseConnection = module.exports = __webpack_require__(21),
     _ = __webpack_require__(0);
 
 var BrowserConnection = module.exports = function (opts) {
@@ -32473,11 +32820,11 @@ BrowserConnection.prototype.stopFocusLoop = function () {
 };
 
 /***/ }),
-/* 111 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var WebSocket = __webpack_require__(120),
-    BaseConnection = __webpack_require__(52),
+var WebSocket = __webpack_require__(38),
+    BaseConnection = __webpack_require__(21),
     _ = __webpack_require__(0);
 
 var NodeConnection = module.exports = function (opts) {
@@ -32511,18 +32858,18 @@ NodeConnection.prototype.setupSocket = function () {
 };
 
 /***/ }),
-/* 112 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(process) {var Frame = __webpack_require__(24),
-    Hand = __webpack_require__(11),
-    Pointable = __webpack_require__(4),
-    Finger = __webpack_require__(10),
-    CircularBuffer = __webpack_require__(51),
-    Pipeline = __webpack_require__(114),
-    EventEmitter = __webpack_require__(3).EventEmitter,
-    gestureListener = __webpack_require__(25).gestureListener,
-    Dialog = __webpack_require__(53),
+/* WEBPACK VAR INJECTION */(function(process) {var Frame = __webpack_require__(15),
+    Hand = __webpack_require__(10),
+    Pointable = __webpack_require__(3),
+    Finger = __webpack_require__(9),
+    CircularBuffer = __webpack_require__(20),
+    Pipeline = __webpack_require__(32),
+    EventEmitter = __webpack_require__(2).EventEmitter,
+    gestureListener = __webpack_require__(16).gestureListener,
+    Dialog = __webpack_require__(22),
     _ = __webpack_require__(0);
 
 /**
@@ -32604,7 +32951,7 @@ var Controller = module.exports = function (opts) {
   this.accumulatedGestures = [];
   this.checkVersion = opts.checkVersion;
   if (opts.connectionType === undefined) {
-    this.connectionType = this.inBrowser() ? __webpack_require__(110) : __webpack_require__(111);
+    this.connectionType = this.inBrowser() ? __webpack_require__(28) : __webpack_require__(29);
   } else {
     this.connectionType = opts.connectionType;
   }
@@ -33222,10 +33569,10 @@ Controller.prototype.useRegisteredPlugins = function () {
 };
 
 _.extend(Controller.prototype, EventEmitter.prototype);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(56)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)))
 
 /***/ }),
-/* 113 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33233,21 +33580,21 @@ _.extend(Controller.prototype, EventEmitter.prototype);
  * @namespace Leap
  */
 module.exports = {
-  Controller: __webpack_require__(112),
-  Frame: __webpack_require__(24),
-  Gesture: __webpack_require__(25),
-  Hand: __webpack_require__(11),
-  Pointable: __webpack_require__(4),
-  Finger: __webpack_require__(10),
-  InteractionBox: __webpack_require__(54),
-  CircularBuffer: __webpack_require__(51),
-  UI: __webpack_require__(115),
-  JSONProtocol: __webpack_require__(55).JSONProtocol,
-  glMatrix: __webpack_require__(2),
-  mat3: __webpack_require__(2).mat3,
-  vec3: __webpack_require__(2).vec3,
+  Controller: __webpack_require__(30),
+  Frame: __webpack_require__(15),
+  Gesture: __webpack_require__(16),
+  Hand: __webpack_require__(10),
+  Pointable: __webpack_require__(3),
+  Finger: __webpack_require__(9),
+  InteractionBox: __webpack_require__(23),
+  CircularBuffer: __webpack_require__(20),
+  UI: __webpack_require__(33),
+  JSONProtocol: __webpack_require__(24).JSONProtocol,
+  glMatrix: __webpack_require__(1),
+  mat3: __webpack_require__(1).mat3,
+  vec3: __webpack_require__(1).vec3,
   loopController: undefined,
-  version: __webpack_require__(118),
+  version: __webpack_require__(36),
 
   /**
    * Expose utility libraries for convenience
@@ -33255,7 +33602,7 @@ module.exports = {
    *
    */
   _: __webpack_require__(0),
-  EventEmitter: __webpack_require__(3).EventEmitter,
+  EventEmitter: __webpack_require__(2).EventEmitter,
 
   /**
    * The Leap.loop() function passes a frame of Leap data to your
@@ -33315,7 +33662,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 114 */
+/* 32 */
 /***/ (function(module, exports) {
 
 var Pipeline = module.exports = function (controller) {
@@ -33373,16 +33720,16 @@ Pipeline.prototype.addWrappedStep = function (type, callback) {
 };
 
 /***/ }),
-/* 115 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports.UI = {
-  Region: __webpack_require__(117),
-  Cursor: __webpack_require__(116)
+  Region: __webpack_require__(35),
+  Cursor: __webpack_require__(34)
 };
 
 /***/ }),
-/* 116 */
+/* 34 */
 /***/ (function(module, exports) {
 
 var Cursor = module.exports = function () {
@@ -33398,10 +33745,10 @@ var Cursor = module.exports = function () {
 };
 
 /***/ }),
-/* 117 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var EventEmitter = __webpack_require__(3).EventEmitter,
+var EventEmitter = __webpack_require__(2).EventEmitter,
     _ = __webpack_require__(0);
 
 var Region = module.exports = function (start, end) {
@@ -33478,7 +33825,7 @@ Region.prototype.mapToXY = function (position, width, height) {
 _.extend(Region.prototype, EventEmitter.prototype);
 
 /***/ }),
-/* 118 */
+/* 36 */
 /***/ (function(module, exports) {
 
 // This file is automatically updated from package.json by grunt.
@@ -33490,7 +33837,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 119 */
+/* 37 */
 /***/ (function(module, exports) {
 
 
@@ -33583,7 +33930,7 @@ module.exports = function (css) {
 };
 
 /***/ }),
-/* 120 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/// shim for browser packaging
@@ -33591,24 +33938,61 @@ module.exports = function (css) {
 module.exports = function () {
   return global.WebSocket || global.MozWebSocket;
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
-/* 121 */
+/* 39 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = initDetail;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_d3__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_three__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_webpack_zepto___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_webpack_zepto__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__stick_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__data_js__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__global_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__styles_detail_less__ = __webpack_require__(46);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__styles_detail_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__styles_detail_less__);
+
+
+
+
+
+
+
+
+
+var detailArea = __WEBPACK_IMPORTED_MODULE_2_webpack_zepto__(`
+    <div class='detailContainer'>
+        <div class='textArea'>测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容</div>
+        
+    </div>
+`);
+
+function initDetail() {
+    detailArea.appendTo(document.body);
+}
+
+/***/ }),
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_three__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_three__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_d3__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__global_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ring_js__ = __webpack_require__(58);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__styles_main_less__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__global_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ring_js__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__styles_main_less__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__styles_main_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__styles_main_less__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__data_js__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__map_refac_js__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__data_js__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__map_refac_js__ = __webpack_require__(18);
 
 
 
@@ -33635,7 +34019,7 @@ function render() {
 render();
 
 /***/ }),
-/* 122 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -33753,296 +34137,24 @@ var Behaviors = {
 };
 
 /***/ }),
-/* 123 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/* unused harmony export StickState */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_webpack_zepto__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_webpack_zepto___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_webpack_zepto__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__styles_stick_less__ = __webpack_require__(128);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__styles_stick_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__styles_stick_less__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__global_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__input_js__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__map_refac_js__ = __webpack_require__(57);
-
-
-
-
-
-const lineDashSegs = [3, 3];
-
-var StickState = {
-    Selection: -1,
-    SelectionType: undefined
-};
-
-function unitRound(unit) {
-    return (/万|亿/.test(unit) ? 100 : /\%/.test(unit) ? 10 : 1
-    );
-}
-//shit code
-class stick {
-    //a stick
-    constructor(stickParent, title, unit, roundTo, baseAngle, hue = 0.56) {
-        this.selected = 0;
-        this.hue = hue;
-        this.selected_e = 0;
-        this.angle_e = baseAngle;
-        this.angle = baseAngle;
-        this.baseAngle = baseAngle;
-        this.scale = 1;
-        this.title = title;
-        this.data = 0;
-        this.data_e = 0;
-        this.enabled = true;
-        this.visibility_e = 0;
-        this.enabled_e = 0;
-        this.roundTo = roundTo;
-        this.scale_e = 1;
-        this.hitBox = __WEBPACK_IMPORTED_MODULE_0_webpack_zepto___default()(`<div></div>`);
-        this.hitBox.css({
-            width: '150px',
-            height: '50px',
-            opacity: 0,
-            background: "Red",
-            color: "#2fafff",
-            position: "absolute",
-            "top": '-25px',
-            "left": "-75px",
-            "text-align": "right",
-            "font-size": "15px",
-            "transform-origin": "50% 50%"
-        });
-        this.dataBox = __WEBPACK_IMPORTED_MODULE_0_webpack_zepto___default()(`
-        <div class='dataViz'>
-            <div class='number'><span class='number-text'>18374</span><span>${unit}</span></div>
-            <div class='title' style='background: ${hsl(this.hue, 0.65, 0.5)}'>${title}</div>
-        </div>`);
-        this.dataTitle = this.dataBox.find(".title");
-        this.dataNumber = this.dataBox.find(".number-text");
-        this.parent = stickParent;
-        this.hitBox.appendTo(stickParent.container);
-        this.dataBox.appendTo(stickParent.container);
-    }
-
-    setData(d) {
-        if (d != undefined) {
-            this.data = d;
-        }
-        this.enabled = d != undefined;
-    }
-
-    render() {
-
-        var mirror = this.baseAngle >= 180;
-        ease(this, 'enabled', 'enabled_e');
-        ease(this, 'angle', 'angle_e');
-        ease(this, 'scale', 'scale_e');
-        if (!this.selected) {
-            this.data_e = 0;
-        } else {
-            ease(this, 'data', 'data_e', 0.4);
-        }
-        ease(this, 'selected', 'selected_e', 0.4);
-
-        this.hitBox.get(0).style.transform = `rotate(${this.angle_e}deg) translate3d(-${Math.round(500 - this.visibility_e * 100)}px, 0px, 0px) scale(1, ${this.scale_e})`;
-
-        //do canvas stuff
-        __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineCap = "round";
-        __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineJoin = "round";
-        var deg = this.angle_e / 180 * Math.PI;
-        var visibility = this.enabled_e * this.visibility_e;
-        pushMatrix(__WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */], () => {
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineWidth = 3;
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].rotate(deg);
-
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].beginPath();
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(this.hue, 1, this.selected_e + 0.1);
-            var arclen = 4 / 180 * Math.PI * this.scale_e;
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].arc(0, 0, 600 - visibility * 100, -Math.PI - arclen, -Math.PI + arclen);
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].stroke();
-
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].beginPath();
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(this.hue, 0.8 * (visibility + 0.2), this.selected_e + 0.4);
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].translate(-500 + visibility * 100, 0);
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].moveTo(0, 0);
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineTo(-50 * (0.1 + 0.9 * visibility) - this.selected_e * 40, 0);
-            __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].stroke();
-        });
-
-        if (!this.dataTitle.measured) {
-            this.dataTitle.measured = this.dataTitle.width();
-        }
-        if (this.selected && this.parent.focused && (!__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].flying || __WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].highlock)) {
-            pushMatrix(__WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */], () => {
-                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineWidth = 2;
-                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].beginPath();
-                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].setLineDash(lineDashSegs);
-                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].globalAlpha = this.selected_e;
-                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].strokeStyle = hsl(this.hue, 0.8, this.selected_e + 0.4);
-                var baseX, baseY;
-                baseX = -Math.cos(deg) * 400;
-                baseY = -Math.sin(deg) * 400;
-                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].translate(baseX, baseY);
-                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].moveTo(mirror ? -5 : 5, 0);
-                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].lineTo((mirror ? -50 : 50) * this.scale_e * this.scale_e, 0);
-                __WEBPACK_IMPORTED_MODULE_2__global_js__["b" /* ctx2d */].stroke();
-                this.dataBox.get(0).style.display = "block";
-                if (!mirror) {
-                    this.dataBox.get(0).style.transform = `translate3d(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 20}px, 0px)`;
-                } else {
-                    this.dataBox.get(0).style.transform = `translate3d(${-this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 20}px, 0px)`;
-                }
-                if (hoveringElement && (hoveringElement.parentElement == this.dataBox.get(0) || hoveringElement.parentElement && hoveringElement.parentElement.parentElement == this.dataBox.get(0))) {
-                    this.dataBox.get(0).style.opacity = 0.3;
-                } else {
-                    this.dataBox.get(0).style.opacity = 1;
-                }
-                this.dataNumber.text(Math.round(this.data_e * this.roundTo) / this.roundTo);
-            });
-        } else {
-            this.dataBox.get(0).style.display = "none";
-        }
-    }
-}
-/* unused harmony export stick */
-
-
-var managedSticks = [];
-
-class stickHolder {
-
-    constructor(dataSet, baseAngle = 0, hue = 0.56, type = "") {
-        managedSticks.push(this);
-        this.dataSet = dataSet;
-        this.type = type;
-        this.children = [];
-        this.selection = -1;
-        this.visibility = 1;
-        this.focused = false;
-        this.baseAngle = baseAngle;
-        this.visibility_e = 0;
-        this.hue = hue;
-        this.container = __WEBPACK_IMPORTED_MODULE_0_webpack_zepto___default()(`
-        <div 
-            id='stickHolder' 
-            style='top:0; left:0; z-index:9999999; position: absolute; display: block; transform: translate(540px, 540px)'></div>`);
-    }
-
-    setup() {
-
-        this.container.appendTo(document.querySelector("body"));
-        this.dataSet.forEach(dt => {
-            var s = new stick(this, dt.split("|")[0], dt.split("|")[1], unitRound(dt.split("|")[1]), this.baseAngle, this.hue);
-            this.children.push(s);
-        });
-    }
-
-    render() {
-        global.map = __WEBPACK_IMPORTED_MODULE_4__map_refac_js__;
-        var related = true;
-        if (this.type) {
-            //well..
-            if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity) {
-                if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity[this.type + "_data"]) {
-                    related = true;
-                } else if (this.type == 'cities' && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity.batch > 0) {
-                    related = true;
-                } else if (this.type == 'counties' && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity.pos) {
-                    related = true;
-                } else {
-                    related = false;
-                }
-            }
-        }
-
-        if (!this.focused || !__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].dataRingVisible || !related) {
-            this.visibility = 0;
-        } else {
-            this.visibility = 1;
-        }
-
-        if (!related) {
-            this.focused = false;
-        }
-
-        // console.log(global.hoveringElement)
-
-
-        ease(this, 'visibility', 'visibility_e', 0.06, 0.00001);
-        if (__WEBPACK_IMPORTED_MODULE_3__input_js__["c" /* mouse */].dataRingVisible && related) {
-            var _found = false;
-            for (var i = 0; i < this.children.length; i++) {
-                if (this.children[i].enabled && global.hoveringElement == this.children[i].hitBox.get(0)) {
-                    _found = true;
-                    if (this.selection !== i) {
-                        this.selection = i;
-                    }
-                }
-            }
-            // if (!_found) this.selection = -1;
-            if (_found) {
-                this.focused = true;
-                //force to deselect peers ops
-                StickState.Selection = this.selection;
-                StickState.SelectionType = this.type;
-                // console.log(StickState);
-
-
-                for (var i = 0; i < managedSticks.length; i++) {
-                    if (managedSticks[i] != this) {
-                        managedSticks[i].focused = false;
-                    }
-                }
-            }
-        }
-
-        var deg_span = 4;
-
-        var deg = this.children.length / 2 * deg_span + this.baseAngle; //init position
-        if (this.selection >= 0) {
-            deg += deg_span; //fix :)
-        }
-        for (var i = 0; i < this.children.length; i++) {
-            var stick = this.children[i];
-            stick.visibility_e = this.visibility_e;
-            stick.selected = this.selection == i ? 1 : 0;
-            deg -= stick.selected || i - 1 == this.selection && this.selection >= 0 ? deg_span * 2 : deg_span;
-            stick.angle = deg;
-            stick.scale = stick.selected ? 1 : 0.5;
-
-            if (this.type) {
-                //well..
-                if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity[this.type + "_data"]) {
-                    this.children[i].setData(__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity[this.type + "_data"][i]);
-                } else if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity && this.type == 'cities' && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity.batch > 0) {
-                    try {
-                        this.children[i].setData(__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity["data"][i]);
-                    } catch (e) {
-                        this.children[i].setData();
-                    }
-                } else if (__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity && this.type == 'counties' && __WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity.pos) {
-                    try {
-                        this.children[i].setData(__WEBPACK_IMPORTED_MODULE_4__map_refac_js__["Map_State"].SelectedEntity["data"][i]);
-                    } catch (e) {
-                        this.children[i].setData();
-                    }
-                }
-            }
-            this.children[i].render();
-        }
-    }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = stickHolder;
-
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
-
-/***/ }),
-/* 124 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(14)(undefined);
+exports = module.exports = __webpack_require__(8)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".detailContainer {\n  position: absolute;\n  bottom: 300px;\n  left: 350px;\n  max-width: 400px;\n  pointer-events: none;\n  z-index: 99999;\n  display: none;\n  text-align: left;\n  font-size: 22px;\n  line-height: 2.2;\n}\n.detailContainer .textArea {\n  box-shadow: 5px 5px 0px #2fafff;\n  padding: 5px 10px;\n  /* Needs prefixing */\n  color: #2fafff;\n  box-decoration-break: clone;\n  -webkit-box-decoration-break: clone;\n  background: #ffffff;\n  display: inline;\n  text-align: left;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(8)(undefined);
 // imports
 
 
@@ -34053,24 +34165,24 @@ exports.push([module.i, "body,\nhtml {\n  margin: 0;\n  padding: 0;\n  backgroun
 
 
 /***/ }),
-/* 125 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(14)(undefined);
+exports = module.exports = __webpack_require__(8)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, "svg {\n  display: block;\n  position: absolute;\n}\nsvg * {\n  stroke: transparent;\n  fill: transparent;\n}\n.label {\n  color: white;\n  padding: 10px 10px;\n  font-size: 20px;\n  font-family: \"PingFang SC\";\n  font-weight: 800;\n}\n.label-tiny {\n  color: white;\n  padding: 10px 10px;\n  font-size: 15px;\n  font-family: \"PingFang SC\";\n  font-weight: 800;\n}\n.selection_title {\n  background: #ffffff;\n  color: black;\n  font-size: 30px;\n  font-family: \"PingFang SC\";\n  position: absolute;\n  font-weight: 700;\n  z-index: 1399999;\n  padding: 10px 25px;\n  top: 70px;\n  left: 480px;\n}\n", ""]);
+exports.push([module.i, "svg {\n  display: block;\n  position: absolute;\n}\nsvg * {\n  stroke: transparent;\n  fill: transparent;\n}\n.label {\n  color: white;\n  padding: 10px 10px;\n  font-size: 20px;\n  font-family: \"PingFang SC\";\n  font-weight: 800;\n}\n.label-tiny {\n  color: white;\n  padding: 10px 10px;\n  font-size: 15px;\n  font-family: \"PingFang SC\";\n  font-weight: 800;\n}\n.selection_title {\n  background: #ffffff;\n  color: black;\n  font-size: 30px;\n  font-family: \"PingFang SC\";\n  position: absolute;\n  font-weight: 700;\n  z-index: 1399999;\n  padding: 10px 25px;\n  top: 70px;\n  left: 500px;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 126 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(14)(undefined);
+exports = module.exports = __webpack_require__(8)(undefined);
 // imports
 
 
@@ -34081,13 +34193,13 @@ exports.push([module.i, ".dataViz {\n  opacity: 1;\n  position: absolute;\n  tra
 
 
 /***/ }),
-/* 127 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(125);
+var content = __webpack_require__(42);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -34095,7 +34207,38 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(27)(content, options);
+var update = __webpack_require__(12)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/dist/index.js!./detail.less", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/dist/index.js!./detail.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(44);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(12)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -34112,13 +34255,13 @@ if(false) {
 }
 
 /***/ }),
-/* 128 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(126);
+var content = __webpack_require__(45);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -34126,7 +34269,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(27)(content, options);
+var update = __webpack_require__(12)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {

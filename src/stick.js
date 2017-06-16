@@ -7,7 +7,8 @@ const lineDashSegs = [3, 3];
 
 export var StickState = {
     Selection: -1,
-    SelectionType: undefined
+    SelectionType: undefined,
+    Overview: false
 };
 
 function unitRound(unit) {
@@ -67,7 +68,6 @@ export class stick {
     }
 
     render() {
-
         var mirror = this.baseAngle >= 180;
         ease(this, 'enabled', 'enabled_e');
         ease(this, 'angle', 'angle_e');
@@ -78,9 +78,7 @@ export class stick {
             ease(this, 'data', 'data_e', 0.4);
         }
         ease(this, 'selected', 'selected_e', 0.4);
-
         this.hitBox.get(0).style.transform = `rotate(${this.angle_e}deg) translate3d(-${Math.round(500 - this.visibility_e * 100)}px, 0px, 0px) scale(1, ${this.scale_e})`;
-
         //do canvas stuff
         ctx2d.lineCap = "round";
         ctx2d.lineJoin = "round";
@@ -89,23 +87,18 @@ export class stick {
         pushMatrix(ctx2d, () => {
             ctx2d.lineWidth = 3;
             ctx2d.rotate(deg);
-
             ctx2d.beginPath();
             ctx2d.strokeStyle = hsl(this.hue, 1, this.selected_e + 0.1);
             var arclen = 4 / 180 * Math.PI * this.scale_e;
             ctx2d.arc(0, 0, 600 - visibility * 100, -Math.PI - arclen, -Math.PI + arclen);
             ctx2d.stroke();
-
             ctx2d.beginPath();
             ctx2d.strokeStyle = hsl(this.hue, 0.8 * (visibility + 0.2), this.selected_e + 0.4);
             ctx2d.translate(-500 + visibility * 100, 0);
             ctx2d.moveTo(0, 0);
             ctx2d.lineTo(-50 * (0.1 + 0.9 * visibility) - this.selected_e * 40, 0);
             ctx2d.stroke();
-
         });
-
-
         if (!this.dataTitle.measured) {
             this.dataTitle.measured = this.dataTitle.width();
         }
@@ -143,8 +136,7 @@ export class stick {
     }
 }
 
-var managedSticks = []
-
+var managedSticks = [];
 export class stickHolder {
 
     constructor(dataSet, baseAngle = 0, hue = 0.56, type = "") {
@@ -165,7 +157,6 @@ export class stickHolder {
     }
 
     setup() {
-
         this.container.appendTo(document.querySelector("body"));
         this.dataSet.forEach((dt) => {
             var s = new stick(this,
@@ -203,13 +194,9 @@ export class stickHolder {
             this.visibility = 1;
         }
 
-
         if (!related) {
             this.focused = false;
         }
-
-        // console.log(global.hoveringElement)
-
 
         ease(this, 'visibility', 'visibility_e', 0.06, 0.00001);
         if (input.mouse.dataRingVisible && related) {
@@ -229,8 +216,7 @@ export class stickHolder {
                 StickState.Selection = this.selection;
                 StickState.SelectionType = this.type;
                 // console.log(StickState);
-
-
+                StickState.Overview = (StickState.Selection >= 0 && !StickState.SelectionType);
                 for (var i = 0; i < managedSticks.length; i++) {
                     if (managedSticks[i] != this) {
                         managedSticks[i].focused = false;
@@ -238,9 +224,17 @@ export class stickHolder {
                 }
             }
         }
+        else {
+            if (
+                StickState.Selection == this.selection &&
+                StickState.SelectionType == this.type
+            ) {
+                StickState.Selection = -1;
+                StickState.SelectionType = undefined;
+            }
+        }
 
         var deg_span = 4;
-
         var deg = this.children.length / 2 * deg_span + this.baseAngle; //init position
         if (this.selection >= 0) {
             deg += deg_span; //fix :)
@@ -277,5 +271,3 @@ export class stickHolder {
         }
     }
 }
-
-

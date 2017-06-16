@@ -26,16 +26,39 @@ export var mouse = {
     dataRingVisible: false
 };
 
+function updateMouseLogic() {
+    mouse.z = Math.min(1500, Math.max(mouse.z, 100));
+    var highlock = mouse.ez > 1000;
+    if (highlock != mouse.highlock) {
+        //highlock
+        mouse.highlock = highlock;
+        if (!highlock) {
+            mouse.flying = true;
+        }
+    }
+    if (mouse.highlock) {
+        mouse.flying = true;
+    }
+    else {
+        if (mouse.clicked) {
+            mouse.flying = !mouse.flying;
+        }
+    }
+    mouse.clicked = false;
+    mouse.dataRingVisible = !mouse.flying || mouse.highlock;
+}
+
+
 function map(val, a, b, c, d) {
     return ((val - a) / (b - a)) * (d - c) + c;
 }
 
-global.NOLEAP = false;
+global.NOLEAP = true;
 
 Leap.loop(function (frame) {
     if (!global.NOLEAP) {
         if (frame.hands.length > 0) {
-            
+
             var h = frame.hands[0].palmPosition;
             //   console.log(frame.hands[0]);
             mouse.x = map(h[0], -150, 150, 0, 1080);
@@ -54,27 +77,61 @@ Leap.loop(function (frame) {
     }
 });
 
-document.addEventListener("mousedown", function (e) {
-    mouse.flying = true;
-});
+if (global.NOLEAP) {
+    window.addEventListener("wheel", function (e) {
+        // if (mouse.flying) {
+        mouse.z += e.deltaY * 10;
+        // }
+        // console.log(mouse.ez);
+        // var highlock = mouse.ez > 1000;
+        // if (highlock != mouse.highlock) {
+        //     if (highlock) {
+        //         mouse.highlock = true;
+        //     } else {
+        //         mouse.highlock = false;
+        //     }
+        //     mouse.flying = false;
+        // }
+        // mouse.dataRingVisible = !(mouse.flying && !mouse.highlock);
 
-document.addEventListener("mouseup", function (e) {
-    mouse.flying = false;
-});
+    });
 
-document.addEventListener("mousemove", function (e) {
-    mouse.x = e.pageX;
-    mouse.y = e.pageY;
-    mouse.z = 2080;
-    if(mouse.flying) {
-        mouse.z = 1000;
-    }
-});
+    document.addEventListener("mousedown", function (e) {
+        mouse.clicked = true;
+    });
+
+    document.addEventListener("mouseup", function (e) {
+        // mouse.flying = !mouse.flying;
+        // mouse.dataRingVisible = !(mouse.flying && !mouse.highlock);
+        // mouse.z = 1000;
+        // mouse.z = 1000;
+    });
+
+    document.addEventListener("mousemove", function (e) {
+
+        // mouse.px = mouse.px || 0;
+        // mouse.py = mouse.py || 0;
+
+        mouse.x = e.pageX;
+        mouse.y = e.pageY;
+
+        // mouse.prevx = e.x;
+        // mouse.prevy = e.y;
+
+        // mouse.z = 2080;
+        // if (mouse.flying) {
+        //     mouse.z = 1000;
+        // }
+    });
+}
 
 export function updateInputEase() {
+
+
     ease(mouse, 'x', 'ex', EASE_RATIO, EASE_THRESHOLD);
     ease(mouse, 'y', 'ey', EASE_RATIO, EASE_THRESHOLD);
-    ease(mouse, 'z', 'ez', EASE_RATIO, EASE_THRESHOLD);
+    ease(mouse, 'z', 'ez', 0.03, EASE_THRESHOLD);
+
 
     mouse.dx = mouse.ex - mouse.px;
     mouse.dy = mouse.ey - mouse.py;
@@ -82,6 +139,8 @@ export function updateInputEase() {
     mouse.px = mouse.ex;
     mouse.py = mouse.ey;
     mouse.pz = mouse.ez;
+
+    updateMouseLogic();
     // console.log(mouse.z);
 
     global.hoveringElement = document.elementFromPoint(mouse.ex, mouse.ey);
@@ -117,4 +176,5 @@ export function render_debug() {
 }
 
 
+mouse.z = 1000;
 global.mouse = mouse;
