@@ -60,31 +60,8 @@ export function render() {
     
 }
 
-var holder_left = new stickHolder(
-    [
-        "城市常住人口|万人",
-        "公共财政预算收入|亿元",
-        "食品工业产值|亿元",
-        "食品生产经营单位数|家",
-        "食品工业产值年增幅|%",
-        "食品工业产值占地区生产总值比重|%",
-        "食品安全经费决算金额|万元",
-        "食品执法车辆总数|辆",
-        "执法装备价值|万元",
-        "食品安全工作考核占比|%",
-        "检查食品生产经营主体次数|家次",
-        "抽检数量|批次",
-        "办案数量|件",
-        "涉案货值|万元",
-        "罚没款金额|万元",
-        "刑事立案数量|件",
-        "追究刑责人数|人",
-        "抽检合格率|%",
-        "创建工作知晓度|%",
-        "当地食品安全总体满意度|%",
-        "受理投诉举报数量|件",
-        "办结投诉举报数量|件"
-    ], 0, 0.56, "cities");
+// var holder_left = new stickHolder(raw_city_labels, 0, 0.56, "cities");
+var holder_left = new stickHolder(raw_city_labels, 0, 0.56, "cities");
 
 
 
@@ -112,18 +89,17 @@ var holder_right = new stickHolder([
     "开展农产品质量安全宣传|次"
 ], 180, 0.3, 'counties');
 
-
 var holder_time_l = new stickHolder([
     "全览| ",
     "创县|区县",
     "创城 - 第三批|城",
     "创城 - 第二批|城",
     "创城 - 第一批|城",
-], 70, 0, undefined);
+], 60, 0, undefined);
 
-holder_left.setup();
 holder_time_l.setup();
 holder_right.setup();
+holder_left.setup();
 
 
 holder_time_l.children[0].setData(107 + 67);

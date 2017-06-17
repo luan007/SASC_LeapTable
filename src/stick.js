@@ -11,6 +11,8 @@ export var StickState = {
     Overview: false
 };
 
+global.StickState = StickState;
+
 function unitRound(unit) {
     return /万|亿/.test(unit) ? 100 :
         (/\%/.test(unit) ? 10 : 1);
@@ -32,6 +34,7 @@ export class stick {
         this.enabled = true;
         this.visibility_e = 0;
         this.enabled_e = 0;
+        this.normal = 1;
         this.roundTo = roundTo;
         this.scale_e = 1;
         this.hitBox = $(`<div></div>`);
@@ -55,16 +58,32 @@ export class stick {
         </div>`);
         this.dataTitle = this.dataBox.find(".title");
         this.dataNumber = this.dataBox.find(".number-text");
+
+        this.titleBox = $(`
+            <div class="titleViz">
+                <div class="title">${title}<b class="number-text"></b><b>${unit}</b></div>
+            </div>
+        `);
+
         this.parent = stickParent;
         this.hitBox.appendTo(stickParent.container);
         this.dataBox.appendTo(stickParent.container);
+        this.titleBox.appendTo(stickParent.container);
+        this.titleNumber = this.titleBox.find(".number-text");
     }
 
-    setData(d) {
+    setData(d, norm) {
         if (d != undefined) {
             this.data = d;
+            this.normal = 1;
+        }
+        if (norm == undefined) {
+            this.normal = 1;
+        } else {
+            this.normal = norm;
         }
         this.enabled = d != undefined;
+        this.titleNumber.text(Math.round(this.data * this.roundTo) / this.roundTo);
     }
 
     render() {
@@ -77,26 +96,30 @@ export class stick {
         } else {
             ease(this, 'data', 'data_e', 0.4);
         }
-        ease(this, 'selected', 'selected_e', 0.4);
+        ease(this, 'selected', 'selected_e', 0.14);
         this.hitBox.get(0).style.transform = `rotate(${this.angle_e}deg) translate3d(-${Math.round(500 - this.visibility_e * 100)}px, 0px, 0px) scale(1, ${this.scale_e})`;
         //do canvas stuff
         ctx2d.lineCap = "round";
         ctx2d.lineJoin = "round";
         var deg = this.angle_e / 180 * Math.PI;
         var visibility = this.enabled_e * this.visibility_e;
+        var highlight = (this.enabled && this.parent.visibility) ? this.selected_e : (visibility * this.selected_e);
         pushMatrix(ctx2d, () => {
             ctx2d.lineWidth = 3;
             ctx2d.rotate(deg);
             ctx2d.beginPath();
-            ctx2d.strokeStyle = hsl(this.hue, 1, this.selected_e + 0.1);
+            ctx2d.strokeStyle = hsl(this.hue, 1, highlight + 0.1);
             var arclen = 4 / 180 * Math.PI * this.scale_e;
             ctx2d.arc(0, 0, 600 - visibility * 100, -Math.PI - arclen, -Math.PI + arclen);
             ctx2d.stroke();
             ctx2d.beginPath();
-            ctx2d.strokeStyle = hsl(this.hue, 0.8 * (visibility + 0.2), this.selected_e + 0.4);
+            ctx2d.strokeStyle = hsl(this.hue, 0.8 * (visibility + 0.2), highlight + 0.4);
             ctx2d.translate(-500 + visibility * 100, 0);
-            ctx2d.moveTo(0, 0);
+            ctx2d.moveTo(-10, 0);
             ctx2d.lineTo(-50 * (0.1 + 0.9 * visibility) - this.selected_e * 40, 0);
+            // ctx2d.translate(-500 + visibility * 100, 0);
+            // ctx2d.moveTo(-470, 0);
+            // ctx2d.lineTo(-470 + (320 * (highlight * 0.8 + 0.2)), 0);
             ctx2d.stroke();
         });
         if (!this.dataTitle.measured) {
@@ -118,13 +141,13 @@ export class stick {
                 ctx2d.stroke();
                 this.dataBox.get(0).style.display = "block";
                 if (!mirror) {
-                    this.dataBox.get(0).style.transform = `translate3d(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 20}px, 0px)`;
+                    this.dataBox.get(0).style.transform = `translate3d(${baseX - 50 + 50 * this.scale_e + 50}px, ${baseY - 60}px, 0px)`;
                 } else {
-                    this.dataBox.get(0).style.transform = `translate3d(${- this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 20}px, 0px)`;
+                    this.dataBox.get(0).style.transform = `translate3d(${- this.dataTitle.measured + baseX - 50 * this.scale_e}px, ${baseY - 60}px, 0px)`;
                 }
                 if (hoveringElement && (hoveringElement.parentElement == this.dataBox.get(0)
                     || (hoveringElement.parentElement && hoveringElement.parentElement.parentElement == this.dataBox.get(0)))) {
-                    this.dataBox.get(0).style.opacity = 0.3;
+                    this.dataBox.get(0).style.opacity = 0.2;
                 } else {
                     this.dataBox.get(0).style.opacity = 1;
                 }
@@ -133,10 +156,24 @@ export class stick {
         } else {
             this.dataBox.get(0).style.display = "none";
         }
+
+        if (this.enabled && this.parent.focused && this.parent.visibility && !this.selected) {
+            this.titleBox.get(0).style.display = "block";
+            var baseX, baseY;
+            baseX = -Math.cos(deg) * 400;
+            baseY = -Math.sin(deg) * 400;
+            if (!mirror) {
+                this.titleBox.get(0).style.transform = `translate3d(${baseX - 50 + 50 * this.scale_e + 20}px, ${baseY - 20}px, 0px)`;
+            } else {
+                this.titleBox.get(0).style.transform = `translate3d(${- this.dataTitle.measured + baseX}px, ${baseY - 20}px, 0px)`;
+            }
+        } else {
+            this.titleBox.get(0).style.display = "none";
+        }
     }
 }
 
-var managedSticks = [];
+global.managedSticks = [];
 export class stickHolder {
 
     constructor(dataSet, baseAngle = 0, hue = 0.56, type = "") {
@@ -171,21 +208,21 @@ export class stickHolder {
 
     render() {
         global.map = map;
-        var related = true;
+        var related = false;
         if (this.type) {
             //well..
             if (map.Map_State.SelectedEntity) {
                 if (map.Map_State.SelectedEntity[this.type + "_data"]) {
                     related = true;
                 }
-                else if (this.type == 'cities' && map.Map_State.SelectedEntity.batch > 0) {
-                    related = true;
-                } else if (this.type == 'counties' && map.Map_State.SelectedEntity.pos) {
+                else if (this.type == map.Map_State.SelectedEntity.type) {
                     related = true;
                 } else {
                     related = false;
                 }
             }
+        } else {
+            related = true;
         }
 
         if (!this.focused || !input.mouse.dataRingVisible || !related) {
@@ -243,28 +280,21 @@ export class stickHolder {
             var stick = this.children[i];
             stick.visibility_e = this.visibility_e;
             stick.selected = this.selection == i ? 1 : 0;
-            deg -= (stick.selected || ((i - 1) == this.selection && this.selection >= 0)) ? (deg_span * 2) : deg_span;
+            deg -= (this.focused && this.visibility && (stick.selected || ((i - 1) == this.selection && this.selection >= 0))) ? (deg_span * 3.3) : deg_span;
             stick.angle = deg;
             stick.scale = stick.selected ? 1 : 0.5;
 
             if (this.type) {
                 //well..
-                if (map.Map_State.SelectedEntity
+                if (map.Map_State.SelectedEntity && this.type == map.Map_State.SelectedEntity.type) {
+                    try {
+                        this.children[i].setData(map.Map_State.SelectedEntity["data"][i], map.Map_State.SelectedEntity["data_normal"][i])
+                    } catch (e) {
+                        this.children[i].setData()
+                    }
+                } else if (map.Map_State.SelectedEntity
                     && map.Map_State.SelectedEntity[this.type + "_data"]) {
                     this.children[i].setData(map.Map_State.SelectedEntity[this.type + "_data"][i])
-                }
-                else if (map.Map_State.SelectedEntity && this.type == 'cities' && map.Map_State.SelectedEntity.batch > 0) {
-                    try {
-                        this.children[i].setData(map.Map_State.SelectedEntity["data"][i])
-                    } catch (e) {
-                        this.children[i].setData()
-                    }
-                } else if (map.Map_State.SelectedEntity && this.type == 'counties' && map.Map_State.SelectedEntity.pos) {
-                    try {
-                        this.children[i].setData(map.Map_State.SelectedEntity["data"][i])
-                    } catch (e) {
-                        this.children[i].setData()
-                    }
                 }
             }
             this.children[i].render();

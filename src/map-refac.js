@@ -92,7 +92,7 @@ export function render() {
 
 
     if (Map_State.Mode < 0) {
-        var minsq = 100000;
+        var minsq = 1000;
         var minid = -1;
         for (var i = 0; i < spots.length; i++) {
             var s = spots[i];
@@ -102,7 +102,7 @@ export function render() {
                 var dx = (s.vec2.x + 1) / 2 * 1080 - input.mouse.ex;
                 var dy = (1 - s.vec2.y) / 2 * 1080 - input.mouse.ey;
                 var val = (dx * dx) + (dy * dy)
-                // console.log(val);
+                //console.log(val);
                 if (val < s.touchring && val < minsq) {
                     minsq = val;
                     minid = i;
@@ -148,14 +148,17 @@ export function render() {
     if (Map_State.Mode == 1 && Map_State.Selection_Spot) {
         selection_title.text(Map_State.Selection_Spot.name);
         Map_State.SelectedEntity = Map_State.Selection_Spot;
+        Map_State.SelectedType = Map_State.Selection_Spot.type;
     }
     else if (Map_State.Mode >= 0) {
         if (data.map.provinces[Map_State.Selection]) {
             selection_title.text(data.map.provinces[Map_State.Selection].name);
             Map_State.SelectedEntity = data.map.provinces[Map_State.Selection];
+            Map_State.SelectedType = 'province';
         }
     } else if (Map_State.Mode == -1) {
         selection_title.text("全国数据");
+        Map_State.SelectedType = undefined;
         Map_State.SelectedEntity = data.map;
     }
 
@@ -168,14 +171,16 @@ export var Map_State = {
     Mode: -1,
     Selection: -1,
     Selection_Spot: undefined,
+    SelectedType: undefined,
     SelectedEntity: undefined
 };
 
+global.Map_State = Map_State;
 var Provinces = {};
 
 function setupProvinces() {
-    for (var i in data.map_postfab.points_l) {
-        var pv = new Province(data.map.provinces[i], data.map_postfab.points_l[i]);
+    for (var i in data.map_postfab.points_h) {
+        var pv = new Province(data.map.provinces[i], data.map_postfab.points_h[i]);
         Provinces[i] = pv;
     }
 }
@@ -286,7 +291,7 @@ class Province extends position_2d {
         this.tselection = 0;
         if (this.id == Map_State.Selection) {
             //selected!
-            this.three_material.tsize = 1; //Math.min(1, Math.max(Math.sqrt(camera.position.z / 150 - 0.7), 0.01)) * (5 + 2 * Math.abs(Math.sin(t * 20)));
+            this.three_material.tsize = 1.2; //Math.min(1, Math.max(Math.sqrt(camera.position.z / 150 - 0.7), 0.01)) * (5 + 2 * Math.abs(Math.sin(t * 20)));
             this.color.to = 1; //0.5 // - camera.position.z / 1000;
             this.color.tl = 2; //0.8 //camera.position.z / 100;
             this.tselection = 1;
@@ -322,7 +327,7 @@ class Province extends position_2d {
 
         // var dt = [];
         if (this.tselection && Map_State.Mode == 1) {
-            var minsq = 99999;
+            var minsq = 9999;
             var minid = undefined;
             for (var i in this.spots) {
                 if (this.spots.hasOwnProperty(i)) {
@@ -330,7 +335,6 @@ class Province extends position_2d {
                     var dx = (this.spots[i].vec2.x + 1) / 2 * 1080 - input.mouse.ex;
                     var dy = (1 - this.spots[i].vec2.y) / 2 * 1080 - input.mouse.ey;
                     var val = (dx * dx) + (dy * dy)
-                    // console.log(val);
                     if (val < 100 * 100 && val < minsq) {
                         minsq = val;
                         minid = i;
@@ -370,6 +374,7 @@ class Spot extends position_2d {
         super(data.pos);
         this.data = data;
         this.type = type;
+        this.data.type = this.type;
         spots.push(this);
         this.opacity = 1;
         this.touchring = -1;
@@ -497,18 +502,19 @@ class Spot extends position_2d {
 
             this.label.innerText = this.data.name;
 
-            this.tmeshScale = this.scale * (offset * (0.5 + this.selection * 0.7)) * 1.5;
+            this.tmeshScale = this.scale * (offset * (0.5 + this.selection * 0.1)) * 1.5;
             this.label.style.display = 'block';
             var scale = this.selection * 0.3 + 1;
             this.label.style.opacity = 1;
             this.label.style.transform = `translate3d(${(this.vec2.x + 1) / 2 * 1080}px, ${(1 - this.vec2.y) / 2 * 1080 + 30}px, -1px) scale(${scale}, ${scale})`;
-            this.label.style.backgroundColor = `rgba(0, 0, 0, 1)`;
+            // this.label.style.backgroundColor = `rgba(0, 0, 0, 1)`;
             if (this.tselection) {
+                this.label.classList.add("selected");
                 this.label.style.zIndex = 888888;
             } else {
+                this.label.classList.remove("selected");
                 this.label.style.zIndex = 10;
             }
-
         } else if ((input.mouse.flying || Map_State.Mode < 0) &&
             !stick.StickState.SelectionType
         ) {
@@ -520,7 +526,6 @@ class Spot extends position_2d {
             stick.StickState.Selection >= 0 &&
             stick.StickState.SelectionType == this.type) {
             this.color.ts = this.colorScheme.th;
-
             if (this.touchnear) {
                 var scale = 1.2;
                 this.label.style.display = "block";
@@ -576,7 +581,7 @@ class Spot extends position_2d {
         }
         // this.three_material.blending = this.topacity ? THREE.NormalBlending : THREE.AdditiveBlending;
         ease(this, 'tselection', 'selection');
-        this.three_selection_mesh.scale.setLength(this.selectionHold + this.selection);
+        this.three_selection_mesh.scale.setLength(0.5 * (this.selectionHold + this.selection));
     }
 
 }
